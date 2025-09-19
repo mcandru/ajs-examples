@@ -1,6 +1,5 @@
 class FilmDatabase {
   constructor(initialFilms = []) {
-    // TODO: Initialize the films array
     this.films = initialFilms;
   }
 
@@ -41,27 +40,27 @@ class FilmDatabase {
       return {
         totalFilms: 0,
         averageRating: null,
-        highestRated: null,
-        lowestRated: null,
+        highestRating: null,
+        lowestRating: null,
       };
     }
 
     const ratings = this.films.map((film) => film.rating);
     const averageRating = ratings.reduce((sum, r) => sum + r, 0) / totalFilms;
-    const highestRated = this.films.reduce(
-      (max, film) => (film.rating > max.rating ? film : max),
-      this.films[0]
+    const highestRating = this.films.reduce(
+      (maxRating, film) => (film.rating > maxRating ? film.rating : maxRating),
+      this.films[0].rating
     );
-    const lowestRated = this.films.reduce(
-      (min, film) => (film.rating < min.rating ? film : min),
-      this.films[0]
+    const lowestRating = this.films.reduce(
+      (minRating, film) => (film.rating < minRating ? film.rating : minRating),
+      this.films[0].rating
     );
 
     return {
       totalFilms,
       averageRating,
-      highestRated,
-      lowestRated,
+      highestRating,
+      lowestRating,
     };
   }
 
