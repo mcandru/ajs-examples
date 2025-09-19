@@ -8,7 +8,7 @@ class FilmDatabase {
   }
 
   addFilm(title, year, genre, rating, watched) {
-    // TODO: Create a new film object with auto-incrementing ID
+    // TODO: Create a new film object with auto-incrementing ID and add it to the database
     // TODO:  Return the new film object
   }
 
@@ -24,7 +24,7 @@ class FilmDatabase {
 
   getStatistics() {
     // TODO: Calculate statistics
-    // TODO: Return an object with totalFilms, averageRating, highestRated, lowestRated
+    // TODO: Return an object with totalFilms, averageFilmRating, highestFilmRating, lowestFilmRating
   }
 
   displayReport() {
