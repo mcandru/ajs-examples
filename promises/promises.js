@@ -4,30 +4,37 @@ const getUser = (userId) => {
     .then((user) => {
       console.log("User name:", user.name);
       console.log("User email:", user.email);
-    })
-    .catch((error) => {
-      console.log("Error fetching user:", error);
+      return user;
     });
 };
 
-const user = getUser(1);
+getUser(1)
+  .then((user) => console.log(user))
+  .catch((error) => console.error(`Failed to get user: ${error}`));
 
 // Using async/await
 const getAsyncUser = async (userId) => {
-  try {
-    const userResponse = await fetch(
-      `https://jsonplaceholder.typicode.com/users/${userId}`
-    );
-    const user = await userResponse.json();
-    console.log("User name:", user.name);
-    console.log("User email:", user.email);
-    return user;
-  } catch (error) {
-    console.log("Error fetching user:", error);
-  }
+  const userResponse = await fetch(
+    `https://jsonplaceholder.typicode.com/users/${userId}`
+  );
+
+  const user = await userResponse.json();
+  console.log("User name:", user.name);
+  console.log("User email:", user.email);
+  return user;
 };
 
-const userAsync = getAsyncUser(1);
+getAsyncUser(1)
+  .then((user) => console.log(user))
+  .catch((error) => console.error(`Failed to get user: ${error}`));
+
+// This doesn't work at the top level
+// try {
+//   const user = await getAsyncUser(1);
+//   console.log(user);
+// } catch (error) {
+//   console.error("Failed to get user:", error);
+// }
 
 // Promises example activity to get a user and their posts.
 const getUserAndPosts = (userId) => {
@@ -39,12 +46,33 @@ const getUserAndPosts = (userId) => {
     `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
   ).then((res) => res.json());
 
-  return Promise.all([userPromise, postsPromise])
-    .then(([user, posts]) => {
-      return {
-        ...user,
-        posts,
-      };
-    })
-    .catch((err) => console.error("Error fetching user and posts", err));
+  return Promise.all([userPromise, postsPromise]).then(([user, posts]) => {
+    return {
+      ...user,
+      posts,
+    };
+  });
+};
+
+const getUserAndPostsAsync = async (userId) => {
+  const userRequest = fetch(
+    `https://jsonplaceholder.typicode.com/users/${userId}`
+  );
+
+  const postsRequest = fetch(
+    `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
+  );
+
+  const [userResponse, postsResponse] = await Promise.all([
+    userRequest,
+    postsRequest,
+  ]);
+
+  const user = await userResponse.json();
+  const posts = await postsResponse.json();
+
+  return {
+    ...user,
+    posts,
+  };
 };
