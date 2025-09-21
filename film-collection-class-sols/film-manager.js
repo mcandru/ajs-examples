@@ -8,8 +8,13 @@ class FilmDatabase {
   }
 
   addFilm(title, year, genre, rating, watched) {
-    const lastMaxId = Math.max(...this.films.map((obj) => obj.id));
-    this.films.push({ id: lastMaxId + 1, title, year, genre, rating, watched });
+    const lastMaxId = this.films.reduce(
+      (maxId, obj) => (obj.id > maxId ? obj.id : maxId),
+      0
+    );
+    const newFilm = { id: lastMaxId + 1, title, year, genre, rating, watched };
+    this.films.push(newFilm);
+    return newFilm;
   }
 
   searchFilms({ title, year, genre }) {
