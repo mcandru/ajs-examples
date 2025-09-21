@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <h1>JavaScript Main Thread Blocking Demo</h1>
+
+    <button id="normalButton">Normal Button (click me anytime!)</button>
+    <button id="blockingButton" class="blocking">
+      Start Blocking Loop (5 seconds)
+    </button>
+
+    <div id="counter">Button clicks: 0</div>
+
+    <script>
+      let clickCount = 0;
+      const counterDiv = document.getElementById("counter");
+      const normalButton = document.getElementById("normalButton");
+      const blockingButton = document.getElementById("blockingButton");
+
+      // Normal button - should always work (except when blocked)
+      normalButton.addEventListener("click", () => {
+        clickCount++;
+        counterDiv.textContent = `Button clicks: ${clickCount}`;
+      });
+
+      // Blocking button - this will freeze the UI
+      blockingButton.addEventListener("click", () => {
+        // This loop will block the main thread for about 5 seconds
+        const startTime = Date.now();
+        const blockDuration = 5000; // 5 seconds
+
+        // Busy loop that does nothing but waste time
+        while (Date.now() - startTime < blockDuration) {
+          // This loop keeps the main thread busy
+          // During this time, NO other JavaScript can run
+          // Including button click handlers, animations, etc.
+        }
+      });
+    </script>
+  </body>
+</html>
