@@ -46,7 +46,8 @@ const getUserAndPosts = (userId) => {
     `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
   ).then((res) => res.json());
 
-  return Promise.all([userPromise, postsPromise]).then(([user, posts]) => {
+  return Promise.all([userPromise, postsPromise]).then((result) => {
+    const [user, posts] = result;
     return {
       ...user,
       posts,
