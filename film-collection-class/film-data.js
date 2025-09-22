@@ -1,6 +1,6 @@
 // Initial movie dataset for the Film Database Manager
 
-const initialFilms = [
+export default [
   {
     id: 1,
     title: "The Shawshank Redemption",

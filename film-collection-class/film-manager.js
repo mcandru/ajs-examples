@@ -1,3 +1,5 @@
+import initialFilms from "./film-data.js";
+
 class FilmDatabase {
   constructor(initialFilms = []) {
     // TODO: Initialise a films array instance variable
@@ -33,3 +35,4 @@ class FilmDatabase {
 }
 
 const filmDB = new FilmDatabase(initialFilms);
+window.filmDB = filmDB;
