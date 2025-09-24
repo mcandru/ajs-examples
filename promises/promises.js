@@ -36,6 +36,24 @@ getAsyncUser(1)
 //   console.error("Failed to get user:", error);
 // }
 
+// Promises example activity making requests sequentially instead of in parallel
+const getUserAndPostsSeq = (userId) => {
+  return fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+    .then((res) => res.json())
+    .then((user) => {
+      return fetch(
+        `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
+      )
+        .then((res) => res.json())
+        .then((posts) => {
+          return {
+            ...user,
+            posts,
+          };
+        });
+    });
+};
+
 // Promises example activity to get a user and their posts.
 const getUserAndPosts = (userId) => {
   const userPromise = fetch(
