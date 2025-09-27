@@ -34,6 +34,6 @@ Promise.all([
   loadImagePromise("https://picsum.photos/200/200?random=4"),
 ])
   .then((images) =>
-    console.log(`All images are loaded with promises in parallel!`)
+    console.log("All images are loaded with promises in parallel!")
   )
   .catch((err) => console.error(err));
