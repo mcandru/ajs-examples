@@ -1,0 +1,98 @@
+import express from "express";
+import Note from "./models/note.js";
+import mongoose from "mongoose";
+import { HttpError } from "./utils.js";
+
+const INTERNAL_SERVER_ERROR = 500;
+
+const app = express();
+
+// Remember, middleware functions are called in the order that they're encountered
+
+// Middleware to parse JSON from request bodies.
+app.use(express.json());
+
+app.get("/api/notes", async (_req, res) => {
+  const notes = await Note.find({});
+  res.json(notes);
+});
+
+app.get("/api/notes/:id", async (req, res) => {
+  const note = await Note.findById(req.params.id);
+
+  if (!note) {
+    throw new HttpError(404, "Could not find note");
+  }
+
+  res.json(note);
+});
+
+app.post("/api/notes", async (req, res) => {
+  const body = req.body;
+
+  if (!body.content) {
+    throw new HttpError(400, "Missing content");
+  }
+
+  const { content, important } = body;
+
+  const note = new Note({
+    content,
+    important,
+  });
+
+  const savedNote = await note.save();
+
+  res.json(savedNote);
+});
+
+app.delete("/api/notes/:id", async (req, res) => {
+  const result = await Note.findByIdAndDelete(req.params.id);
+
+  if (!result) {
+    throw new HttpError(404, "Could not find note");
+  }
+
+  res.status(204).end();
+});
+
+// Error handling middleware
+const errorHandler = async (error, _req, res, next) => {
+  console.error("Error:", error.message);
+
+  const { status, message } = error;
+
+  if (!status || !message) {
+    res.status(INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+  }
+
+  res.status(status).json({ error: message });
+
+  next(error);
+};
+
+// Important that this is at the end so that it only handles requests that did not match
+// previous routes
+const unknownEndpoint = (_req, res) => {
+  res.status(404).send({ error: "Unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
+app.use(errorHandler);
+
+app.connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+    throw error;
+  }
+};
+
+const PORT = process.env.PORT || 3001;
+app.connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+});
