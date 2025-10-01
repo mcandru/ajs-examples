@@ -1,7 +1,7 @@
 import express from "express";
-import Note from "./models/note.js";
+import Note from "./models/Note.js";
 import mongoose from "mongoose";
-import { HttpError } from "./utils.js";
+import { HttpError } from "./utils/HttpError.js";
 
 const INTERNAL_SERVER_ERROR = 500;
 
@@ -13,12 +13,12 @@ const app = express();
 app.use(express.json());
 
 app.get("/api/notes", async (_req, res) => {
-  const notes = await Note.find({});
+  const notes = await Note.find({}).exec();
   res.json(notes);
 });
 
 app.get("/api/notes/:id", async (req, res) => {
-  const note = await Note.findById(req.params.id);
+  const note = await Note.findById(req.params.id).exec();
 
   if (!note) {
     throw new HttpError(404, "Could not find note");
@@ -36,18 +36,16 @@ app.post("/api/notes", async (req, res) => {
 
   const { content, important } = body;
 
-  const note = new Note({
+  const note = await Note.create({
     content,
     important,
   });
 
-  const savedNote = await note.save();
-
-  res.json(savedNote);
+  res.json(note);
 });
 
 app.delete("/api/notes/:id", async (req, res) => {
-  const result = await Note.findByIdAndDelete(req.params.id);
+  const result = await Note.findByIdAndDelete(req.params.id).exec();
 
   if (!result) {
     throw new HttpError(404, "Could not find note");

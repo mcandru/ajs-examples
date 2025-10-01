@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Note from "./models/note.js";
+import Note from "../models/Note.js";
 
 let notes = [
   {
@@ -18,15 +18,14 @@ let notes = [
 
 mongoose.connect(process.env.MONGODB_URI).then(async () => {
   // Delete any already existing data
-  await Note.deleteMany({});
+  await Note.deleteMany({}).exec();
 
   // Add new notes
   const promises = notes.map((note) => {
-    const noteElement = new Note({
+    return Note.create({
       content: note.content,
       important: note.important,
     });
-    return noteElement.save();
   });
 
   // Close connection once new notes have been added
