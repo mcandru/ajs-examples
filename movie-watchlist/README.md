@@ -15,7 +15,7 @@ docker run -d -p 27017:27017 --name mongodb mongo
 
 ### Instructions
 
-1. Create the model(s) needed to store user and movie the watchlist data needed for the API.
+1. Create the model(s) needed to store user and movie the watchlist data needed for the API. Add a `models` folder and create a file with the Mongoose schema and model definition of each collection in the file.
 2. Implement the endpoints in this file with calls to the database. [find()](<https://mongoosejs.com/docs/api/model.html#Model.find()>), [create()](https://mongoosejs.com/docs/models.html#constructing-documents), and [findById()](<https://mongoosejs.com/docs/api/model.html#Model.findById()>) may come in useful in your implementation.
 3. Add error handling and validation as needed.
 
