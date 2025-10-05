@@ -1,7 +1,7 @@
 import { Router } from "express";
 import Note from "../models/note.js";
 import { HttpError, NOT_FOUND, BAD_REQUEST } from "../utils/HttpError.js";
-import { validationResult } from "express-validator";
+import { validationResult, matchedData } from "express-validator";
 import { createNoteValidator, noteIdValidator } from "../utils/validators.js";
 
 const SUCCESS_NO_CONTENT = 204;
@@ -19,7 +19,9 @@ notesRouter.get("/:id", noteIdValidator, async (req, res) => {
     throw new HttpError(BAD_REQUEST, errors.array()[0].msg);
   }
 
-  const note = await Note.findById(req.params.id).exec();
+  const { id } = matchedData(req);
+
+  const note = await Note.findById(id).exec();
 
   if (!note) {
     throw new HttpError(NOT_FOUND, "Could not find note");
@@ -34,9 +36,7 @@ notesRouter.post("/", createNoteValidator, async (req, res) => {
     throw new HttpError(BAD_REQUEST, errors.array()[0].msg);
   }
 
-  const body = req.body;
-
-  const { content, important } = body;
+  const { content, important } = matchedData(req);
 
   const note = await Note.create({
     content,
@@ -52,7 +52,9 @@ notesRouter.delete("/:id", noteIdValidator, async (req, res) => {
     throw new HttpError(BAD_REQUEST, errors.array()[0].msg);
   }
 
-  const result = await Note.findByIdAndDelete(req.params.id).exec();
+  const { id } = matchedData(req);
+
+  const result = await Note.findByIdAndDelete(id).exec();
 
   if (!result) {
     throw new HttpError(NOT_FOUND, "Could not find note");
