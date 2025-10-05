@@ -1,36 +1,25 @@
 import mongoose from "mongoose";
+import { body } from "express-validator";
 
-export const createNoteSchema = {
-  content: {
-    in: ["body"],
-    notEmpty: {
-      errorMessage: "'content' field is required",
-    },
-    isString: {
-      errorMessage: "'content' field value must be a string",
-    },
-    isLength: {
-      options: { min: 5, max: 1000 },
-      errorMessage:
-        "'content' field value must be between 5 and 1000 characters",
-    },
-    trim: true,
-  },
-  important: {
-    in: ["body"],
-    optional: true,
-    isBoolean: {
-      errorMessage: "'important' field must be a boolean value",
-    },
-  },
-};
+export const createNoteValidator = [
+  body("content")
+    .notEmpty()
+    .withMessage("'content' field is required")
+    .isString()
+    .withMessage("'content' field value must be a string")
+    .isLength({ min: 5, max: 1000 })
+    .withMessage("'content' field value must be between 5 and 1000 characters")
+    .trim(), // Santise input by trimming whitespace
+  body("important")
+    .optional()
+    .isBoolean()
+    .withMessage("'important' field must be a boolean value"),
+];
 
-export const noteIdSchema = {
-  id: {
-    in: ["params"],
-    custom: {
-      options: (value) => mongoose.Types.ObjectId.isValid(value),
-      errorMessage: "Note ID 'id' parameter must be a valid ObjectId",
-    },
-  },
-};
+export const noteIdValidator = [
+  body("id")
+    .notEmpty()
+    .withMessage("'id' parameter is required")
+    .custom((value) => mongoose.Types.ObjectId.isValid(value))
+    .withMessage("'id' parameter must be a valid ID"),
+];

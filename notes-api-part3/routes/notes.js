@@ -13,7 +13,7 @@ notesRouter.get("/", async (_req, res) => {
   res.json(notes);
 });
 
-notesRouter.get("/:id", validate(noteIdSchema), async (req, res) => {
+notesRouter.get("/:id", async (req, res) => {
   const note = await Note.findById(req.params.id).exec();
 
   if (!note) {
@@ -23,8 +23,12 @@ notesRouter.get("/:id", validate(noteIdSchema), async (req, res) => {
   res.json(note);
 });
 
-notesRouter.post("/", validate(createNoteSchema), async (req, res) => {
+notesRouter.post("/", async (req, res) => {
   const body = req.body;
+
+  if (!body.content) {
+    throw new HttpError(400, "Missing content");
+  }
 
   const { content, important } = body;
 
@@ -36,7 +40,7 @@ notesRouter.post("/", validate(createNoteSchema), async (req, res) => {
   res.json(note);
 });
 
-notesRouter.delete("/:id", validate(noteIdSchema), async (req, res) => {
+notesRouter.delete("/:id", async (req, res) => {
   const result = await Note.findByIdAndDelete(req.params.id).exec();
 
   if (!result) {
