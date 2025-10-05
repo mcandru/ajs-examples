@@ -10,5 +10,8 @@ export default defineConfig([
     },
     plugins: { js },
     extends: ["js/recommended"],
+    rules: {
+      "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+    },
   },
 ]);

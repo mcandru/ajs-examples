@@ -55,7 +55,8 @@ app.delete("/api/notes/:id", async (req, res) => {
 });
 
 // Error handling middleware
-const errorHandler = async (error, _req, res, next) => {
+// eslint-disable-next-line no-unused-vars
+const errorHandler = async (error, _req, res, _next) => {
   console.error("Error:", error.message);
 
   const { status, message } = error;
@@ -65,8 +66,6 @@ const errorHandler = async (error, _req, res, next) => {
   }
 
   res.status(status).json({ error: message });
-
-  next(error);
 };
 
 // Important that this is at the end so that it only handles requests that did not match
