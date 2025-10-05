@@ -38,7 +38,7 @@ app.post("/api/notes", async (req, res) => {
 
   const note = await Note.create({
     content,
-    important,
+    important: important || false,
   });
 
   res.json(note);
@@ -75,6 +75,7 @@ const unknownEndpoint = (_req, res) => {
 };
 
 app.use(unknownEndpoint);
+// Important that this is at the end so that it handles errors from all routes
 app.use(errorHandler);
 
 app.connectDB = async () => {
