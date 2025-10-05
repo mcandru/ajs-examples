@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { validate } from "../utils/middleware.js";
-import { createNoteSchema, noteIdSchema } from "../utils/validators.js";
 import Note from "../models/note.js";
-import { HttpError, NOT_FOUND } from "../utils/HttpError.js";
+import { HttpError, NOT_FOUND, BAD_REQUEST } from "../utils/HttpError.js";
+import { validationResult } from "express-validator";
+import { createNoteValidator, noteIdValidator } from "../utils/validators.js";
 
 const SUCCESS_NO_CONTENT = 204;
 
@@ -13,7 +13,12 @@ notesRouter.get("/", async (_req, res) => {
   res.json(notes);
 });
 
-notesRouter.get("/:id", async (req, res) => {
+notesRouter.get("/:id", noteIdValidator, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new HttpError(BAD_REQUEST, errors.array()[0].msg);
+  }
+
   const note = await Note.findById(req.params.id).exec();
 
   if (!note) {
@@ -23,12 +28,13 @@ notesRouter.get("/:id", async (req, res) => {
   res.json(note);
 });
 
-notesRouter.post("/", async (req, res) => {
-  const body = req.body;
-
-  if (!body.content) {
-    throw new HttpError(400, "Missing content");
+notesRouter.post("/", createNoteValidator, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new HttpError(BAD_REQUEST, errors.array()[0].msg);
   }
+
+  const body = req.body;
 
   const { content, important } = body;
 
@@ -40,7 +46,12 @@ notesRouter.post("/", async (req, res) => {
   res.json(note);
 });
 
-notesRouter.delete("/:id", async (req, res) => {
+notesRouter.delete("/:id", noteIdValidator, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new HttpError(BAD_REQUEST, errors.array()[0].msg);
+  }
+
   const result = await Note.findByIdAndDelete(req.params.id).exec();
 
   if (!result) {

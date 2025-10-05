@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 export const createNoteValidator = [
   body("content")
@@ -17,7 +17,7 @@ export const createNoteValidator = [
 ];
 
 export const noteIdValidator = [
-  body("id")
+  param("id")
     .notEmpty()
     .withMessage("'id' parameter is required")
     .custom((value) => mongoose.Types.ObjectId.isValid(value))
