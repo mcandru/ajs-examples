@@ -1,0 +1,128 @@
+{
+  "info": {
+    "_postman_id": "eb6e4a70-4e35-46a3-8973-cfa88575d594",
+    "name": "movie-watchlist",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48627296"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "createUser",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Michael McAndrew\",\n    \"email\": \"michael@mcand.ru\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/users",
+              "host": ["{{host}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getUser",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/users/:id",
+              "host": ["{{host}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "68de8d7e5e48cfc735fe8db9"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getUsers",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Whiplash\",\n    \"year\": 2014,\n    \"watched\": true,\n    \"rating\": 9.0\n}"
+            },
+            "url": {
+              "raw": "{{host}}/users/",
+              "host": ["{{host}}"],
+              "path": ["users", ""]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Movies",
+      "item": [
+        {
+          "name": "getMovies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/users/:id/movies",
+              "host": ["{{host}}"],
+              "path": ["users", ":id", "movies"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "68de8d7e5e48cfc735fe8db9"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "createMovie",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Whiplash\",\n    \"year\": 2014,\n    \"watched\": true,\n    \"rating\": 9.0\n}\n\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/users/:id/movies",
+              "host": ["{{host}}"],
+              "path": ["users", ":id", "movies"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "68de8d7e5e48cfc735fe8db9"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
