@@ -62,7 +62,9 @@ const errorHandler = async (error, _req, res, _next) => {
   const { status, message } = error;
 
   if (!status || !message) {
-    return res.status(INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal Server Error" });
   }
 
   res.status(status).json({ error: message });
