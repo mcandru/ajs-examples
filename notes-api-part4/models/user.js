@@ -3,12 +3,6 @@ import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-      minlength: 3,
-    },
     email: {
       type: String,
       required: true,
@@ -31,6 +25,8 @@ userSchema.set("toJSON", {
     delete returnedObject._id;
     delete returnedObject.__v;
     delete returnedObject.passwordHash; // Never send password hash to client
+    delete returnedObject.createdAt;
+    delete returnedObject.updatedAt;
   },
 });
 

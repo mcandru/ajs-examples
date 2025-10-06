@@ -5,26 +5,27 @@ const router = express.Router();
 
 // User registration
 router.post("/register", async (req, res) => {
-  const { username, email, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: "Username, email, and password required" });
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password required" });
   }
 
   if (password.length < 6) {
-    return res.status(400).json({ error: "Password must be at least 6 characters" });
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 6 characters" });
   }
 
   // Check if user already exists
-  const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+  const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return res.status(400).json({ error: "Username or email already exists" });
+    return res.status(400).json({ error: "Email already exists" });
   }
 
   // Hash password and create user
   const passwordHash = await User.hashPassword(password);
   const user = await User.create({
-    username,
     email,
     passwordHash,
   });
@@ -37,14 +38,14 @@ router.post("/register", async (req, res) => {
 
 // User login
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ error: "Username and password required" });
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password required" });
   }
 
-  // Find user by username
-  const user = await User.findOne({ username });
+  // Find user by email
+  const user = await User.findOne({ email });
   if (!user) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
@@ -57,7 +58,6 @@ router.post("/login", async (req, res) => {
 
   // Set session
   req.session.userId = user._id.toString();
-  req.session.username = user.username;
 
   res.status(200).json({
     message: "Login successful",
