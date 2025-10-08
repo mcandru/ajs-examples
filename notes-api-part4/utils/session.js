@@ -8,7 +8,7 @@ export const sessionMiddleware = session({
   store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI,
     collectionName: "sessions",
-    ttl: 24 * 60 * 60, // 1 day in seconds
+    ttl: 24 * 60 * 60, // 1 day in seconds. Mongo TTL index will remove it after that
   }),
   cookie: {
     maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
