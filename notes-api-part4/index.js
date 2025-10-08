@@ -2,8 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import { errorHandler, unknownEndpoint } from "./utils/middleware.js";
 import { sessionMiddleware } from "./utils/session.js";
-import notesRouter from "./routes/notes.js";
-import authRouter from "./routes/auth.js";
+import notesRouter from "./controllers/notes.js";
+import authRouter from "./controllers/auth.js";
 
 const app = express();
 
