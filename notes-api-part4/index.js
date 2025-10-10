@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import { errorHandler, unknownEndpoint } from "./utils/middleware.js";
-import { sessionMiddleware } from "./utils/session.js";
+import { requireAuth, sessionMiddleware } from "./utils/session.js";
 import notesRouter from "./controllers/notes.js";
 import authRouter from "./controllers/auth.js";
 
@@ -19,7 +19,7 @@ app.disable("x-powered-by");
 app.use(sessionMiddleware);
 
 app.use("/api/auth", authRouter);
-app.use("/api/notes", notesRouter);
+app.use("/api/notes", requireAuth, notesRouter);
 
 // Important that this is at the end so that it only handles requests that did not match previous routes
 app.use(unknownEndpoint);

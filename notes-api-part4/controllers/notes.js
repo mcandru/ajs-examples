@@ -1,16 +1,12 @@
 import { Router } from "express";
 import { validate } from "../utils/middleware.js";
 import { createNoteSchema, noteIdSchema } from "../utils/validators.js";
-import { requireAuth } from "../utils/session.js";
 import Note from "../models/note.js";
 import { HttpError, NOT_FOUND } from "../utils/HttpError.js";
 
 const SUCCESS_NO_CONTENT = 204;
 
 const notesRouter = Router();
-
-// Protect all routes in this router
-notesRouter.use(requireAuth);
 
 notesRouter.get("/", async (req, res) => {
   // Only return notes for the logged-in user
