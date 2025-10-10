@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { validate } from "../utils/middleware.js";
-import { createNoteSchema, noteIdSchema } from "../utils/validators.js";
+import { noteSchema, noteIdSchema } from "../utils/validators.js";
 import Note from "../models/note.js";
-import User from "../models/user.js";
 import { HttpError, NOT_FOUND } from "../utils/HttpError.js";
 
 const SUCCESS_NO_CONTENT = 204;
@@ -11,16 +10,7 @@ const notesRouter = Router();
 
 notesRouter.get("/", async (req, res) => {
   // Get the user to check their role
-  const user = await User.findById(req.session.userId);
-
-  let notes;
-  if (user && user.role === "admin") {
-    // Admins can see all notes
-    notes = await Note.find({}).populate("user", "email role").exec();
-  } else {
-    // Regular users only see their own notes
-    notes = await Note.find({ user: req.session.userId }).exec();
-  }
+  const notes = await Note.find({ user: req.session.userId }).exec();
 
   res.json(notes);
 });
@@ -39,7 +29,7 @@ notesRouter.get("/:id", validate(noteIdSchema), async (req, res) => {
   res.json(note);
 });
 
-notesRouter.post("/", validate(createNoteSchema), async (req, res) => {
+notesRouter.post("/", validate(noteSchema), async (req, res) => {
   const body = req.body;
 
   const { content, important } = body;

@@ -1,11 +1,13 @@
 import express from "express";
 import User from "../models/user.js";
 import { HttpError, BAD_REQUEST, UNAUTHORIZED } from "../utils/HttpError.js";
+import { registerSchema, loginSchema } from "../utils/validators.js";
+import { validate } from "../utils/middleware.js";
 
 const router = express.Router();
 
 // User registration
-router.post("/register", async (req, res) => {
+router.post("/register", validate(registerSchema), async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -36,7 +38,7 @@ router.post("/register", async (req, res) => {
 });
 
 // User login
-router.post("/login", async (req, res) => {
+router.post("/login", validate(loginSchema), async (req, res) => {
   const { email, password } = req.body;
 
   // Find user by email

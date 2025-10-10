@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const createNoteSchema = {
+export const noteSchema = {
   content: {
     in: ["body"],
     notEmpty: {
@@ -31,6 +31,55 @@ export const noteIdSchema = {
     custom: {
       options: (value) => mongoose.Types.ObjectId.isValid(value),
       errorMessage: "Note ID 'id' parameter must be a valid ObjectId",
+    },
+  },
+};
+
+export const registerSchema = {
+  email: {
+    in: ["body"],
+    notEmpty: {
+      errorMessage: "'email' field is required",
+    },
+    isEmail: {
+      errorMessage: "'email' field must be a valid email address",
+    },
+  },
+  password: {
+    in: ["body"],
+    notEmpty: {
+      errorMessage: "'password' field is required",
+    },
+    isStrongPassword: {
+      options: {
+        minLength: 8,
+        minSymbols: 0,
+        minUpperCase: 1,
+        minNumbers: 1,
+      },
+      errorMessage:
+        "'password' field must be 8 characters long, contain at least one upper case character and one number",
+    },
+  },
+};
+
+export const loginSchema = {
+  email: {
+    in: ["body"],
+    notEmpty: {
+      errorMessage: "'email' field is required",
+    },
+    isEmail: {
+      errorMessage: "'email' field must be a valid email address",
+    },
+  },
+  password: {
+    in: ["body"],
+    notEmpty: {
+      errorMessage: "'password' field is required",
+    },
+    isString: {
+      errorMessage: "'password' field must be a valid string",
     },
   },
 };
