@@ -1,9 +1,15 @@
 import express from "express";
 import mongoose from "mongoose";
 import { errorHandler, unknownEndpoint } from "./utils/middleware.js";
-import { requireAuth, sessionMiddleware } from "./utils/session.js";
+import {
+  requireRole,
+  requireAdmin,
+  sessionMiddleware,
+} from "./utils/session.js";
 import notesRouter from "./controllers/notes.js";
 import authRouter from "./controllers/auth.js";
+import adminRouter from "./controllers/admin.js";
+import helmet from "helmet";
 
 const app = express();
 
@@ -12,14 +18,15 @@ const app = express();
 // Middleware to parse JSON from request bodies.
 app.use(express.json());
 
-// Disable the silly powered by header that gives away that you're using express
-app.disable("x-powered-by");
+// Security middleware
+app.use(helmet());
 
 // Session middleware
 app.use(sessionMiddleware);
 
 app.use("/api/auth", authRouter);
-app.use("/api/notes", requireAuth, notesRouter);
+app.use("/api/notes", requireRole("user"), notesRouter);
+app.use("/api/admin", requireAdmin, adminRouter);
 
 // Important that this is at the end so that it only handles requests that did not match previous routes
 app.use(unknownEndpoint);
