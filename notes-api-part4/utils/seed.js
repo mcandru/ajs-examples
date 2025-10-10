@@ -51,6 +51,15 @@ mongoose.connect(process.env.MONGODB_URI).then(async () => {
 
   console.log("Created user:", user2.email);
 
+  const passwordHash3 = await User.hashPassword("adminpass");
+  const adminUser = await User.create({
+    email: "admin@example.com",
+    passwordHash: passwordHash3,
+    role: "admin",
+  });
+
+  console.log("Created admin user:", adminUser.email);
+
   // Add notes for user 1
   const user1Promises = user1Notes.map((note) => {
     return Note.create({

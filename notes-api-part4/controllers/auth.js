@@ -67,7 +67,7 @@ router.post("/logout", (req, res) => {
     if (err) {
       return res.status(500).json({ error: "Could not log out" });
     }
-    res.clearCookie("connect.sid"); // Clear the session cookie
+    res.clearCookie("sessionId"); // Clear the session cookie
     res.status(200).json({ message: "Logout successful" });
   });
 });
@@ -75,7 +75,7 @@ router.post("/logout", (req, res) => {
 // Check authentication status
 router.get("/me", async (req, res) => {
   if (req.session && req.session.userId) {
-    const user = await User.findById(req.session.userId);
+    const { user } = req;
     if (user) {
       res.status(200).json({
         authenticated: true,
