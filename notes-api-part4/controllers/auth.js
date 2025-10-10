@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../models/user.js";
+import { HttpError, BAD_REQUEST, UNAUTHORIZED } from "../utils/HttpError.js";
 
 const router = express.Router();
 
@@ -8,19 +9,17 @@ router.post("/register", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password required" });
+    throw new HttpError(BAD_REQUEST, "Email and password required");
   }
 
   if (password.length < 6) {
-    return res
-      .status(400)
-      .json({ error: "Password must be at least 6 characters" });
+    throw new HttpError(BAD_REQUEST, "Password must be at least 6 characters");
   }
 
   // Check if user already exists
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return res.status(400).json({ error: "Email already exists" });
+    throw new HttpError(BAD_REQUEST, "Email already exists");
   }
 
   // Hash password and create user
@@ -43,13 +42,13 @@ router.post("/login", async (req, res) => {
   // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(401).json({ error: "Invalid credentials" });
+    throw new HttpError(UNAUTHORIZED, "Invalid credentials");
   }
 
   // Verify password
   const passwordCorrect = await user.verifyPassword(password);
   if (!passwordCorrect) {
-    return res.status(401).json({ error: "Invalid credentials" });
+    throw new HttpError(UNAUTHORIZED, "Invalid credentials");
   }
 
   // Set session
