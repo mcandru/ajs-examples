@@ -12,6 +12,9 @@ const app = express();
 // Middleware to parse JSON from request bodies.
 app.use(express.json());
 
+// Disable the silly powered by header that gives away that you're using express
+app.disable("x-powered-by");
+
 // Session middleware
 app.use(sessionMiddleware);
 

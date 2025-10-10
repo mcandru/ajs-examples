@@ -3,6 +3,7 @@ import MongoStore from "connect-mongo";
 
 export const sessionMiddleware = session({
   secret: process.env.SESSION_SECRET,
+  name: "sessionId",
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
