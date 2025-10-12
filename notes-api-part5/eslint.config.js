@@ -14,4 +14,14 @@ export default defineConfig([
       "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     },
   },
+  // Specific settings for test files to make jest globals available
+  {
+    files: ["**/*.test.js"],
+    languageOptions: {
+      globals: { ...globals.jest },
+    },
+    rules: {
+      "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+    },
+  },
 ]);

@@ -10,7 +10,7 @@
     "seed": "node --env-file=.env utils/seed.js",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules' MONGODB_URI=mongodb://localhost:27017/test-db SESSION_SECRET=test-secret jest"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +30,7 @@
     "eslint-config-prettier": "^10.1.8",
     "globals": "^16.4.0",
     "jest": "^30.2.0",
+    "mongodb-memory-server": "^10.2.3",
     "prettier": "^3.6.2",
     "supertest": "^7.1.4"
   }
