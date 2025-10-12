@@ -109,6 +109,7 @@ app.post("/auth/logout", requireAuth, async (req, res) => {
     if (err) {
       return res.status(500).json({ error: "Failed to logout" });
     }
+    res.clearCookie("connect.sid");
     res.json({ message: "Logged out successfully" });
   });
 });
