@@ -1,9 +1,16 @@
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from "../utils/HttpError.js";
 
 export const errorHandler = async (error, _req, res, _next) => {
-  console.error("Error:", error.message);
-
   const { status, message } = error;
+
+  // Only log unexpected errors (5xx) or errors without a status code
+  // Don't log expected client errors (4xx) like 401, 404, etc.
+  if (!status || status >= 500) {
+    console.error("Error:", error.message);
+    if (error.stack) {
+      console.error(error.stack);
+    }
+  }
 
   if (!status || !message) {
     return res

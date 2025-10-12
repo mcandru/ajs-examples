@@ -10,7 +10,8 @@
     "seed": "node --env-file=.env utils/seed.js",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "test": "NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules' MONGODB_URI=mongodb://localhost:27017/test-db SESSION_SECRET=test-secret jest"
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules' MONGODB_URI=mongodb://localhost:27017/test-db SESSION_SECRET=test-secret jest --runInBand",
+    "test:coverage": "npm test -- --coverage"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^16.4.0",
