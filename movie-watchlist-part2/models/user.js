@@ -35,6 +35,10 @@ userSchema.statics.hashPassword = async function (password) {
   return await bcrypt.hash(password, saltRounds);
 };
 
+userSchema.methods.verifyPassword = async function (password) {
+  return await bcrypt.compare(password, this.passwordHash);
+};
+
 const User = mongoose.model("User", userSchema);
 
 export default User;
