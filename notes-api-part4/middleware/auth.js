@@ -2,6 +2,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import User from "../models/user.js";
 import { UNAUTHORIZED, FORBIDDEN, HttpError } from "../utils/HttpError.js";
+import mongoose from "mongoose";
 
 export const sessionMiddleware = () =>
   session({
@@ -10,9 +11,7 @@ export const sessionMiddleware = () =>
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
-      collectionName: "sessions",
-      ttl: 24 * 60 * 60, // 1 day in seconds. Mongo TTL index will remove it after that
+      client: mongoose.connection.getClient(),
     }),
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds

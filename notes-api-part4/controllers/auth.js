@@ -73,7 +73,7 @@ router.post("/logout", (req, res) => {
 // Check authentication status
 router.get("/me", async (req, res) => {
   if (req.session && req.session.userId) {
-    const { user } = req;
+    const user = await User.findById(req.session.userId);
     if (user) {
       res.status(200).json({
         authenticated: true,
