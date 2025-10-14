@@ -12,6 +12,7 @@ export default defineConfig([
     extends: ["js/recommended"],
     rules: {
       "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "no-unexpected-multiline": "off", // Conflicts with prettier
     },
   },
   // Specific settings for test files to make jest globals available

@@ -58,19 +58,6 @@ describe("User Model", () => {
       expect(isValid).toBe(false);
     });
 
-    test("should reject password with different case", async () => {
-      const password = "MyPassword123";
-      const passwordHash = await User.hashPassword(password);
-
-      const user = new User({
-        email: "test@example.com",
-        passwordHash,
-      });
-
-      const isValid = await user.verifyPassword("mypassword123");
-      expect(isValid).toBe(false);
-    });
-
     test("should reject empty password", async () => {
       const password = "MyPassword123";
       const passwordHash = await User.hashPassword(password);

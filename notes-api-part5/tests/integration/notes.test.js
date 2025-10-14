@@ -153,6 +153,40 @@ describe("Notes API", () => {
     expect(getResponse.body.content).toBe("Alice's private note");
   });
 
+  test("should return 400 for invalid note ID format", async () => {
+    // Create a user
+    const { email, password } = await createUser(
+      "alice@example.com",
+      "password123"
+    );
+    const agent = await createAuthenticatedAgent(app, email, password);
+    const invalidId = "123-invalid-id";
+
+    // Attempt to get a note with invalid ID
+    const response = await agent.get(`/api/notes/${invalidId}`);
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toBe(
+      "Note ID 'id' parameter must be a valid ObjectId"
+    );
+  });
+
+  test("should return 404 for non-existent note ID", async () => {
+    // Create a user
+    const { email, password } = await createUser(
+      "alice@example.com",
+      "password123"
+    );
+    const agent = await createAuthenticatedAgent(app, email, password);
+    const nonExistentId = "507f1f77bcf86cd799439012";
+
+    // Attempt to get a note with non-existent ID
+    const response = await agent.get(`/api/notes/${nonExistentId}`);
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toBe("Could not find note");
+  });
+
   describe("Authentication requirements", () => {
     test.each([
       ["GET", "/api/notes", null],
