@@ -32,13 +32,3 @@ describe("Auth Middleware", () => {
     });
   });
 });
-
-
-jest.mock('../moduleName', () => {
-  return jest.fn(() => 42);
-});
-
-// This runs the function specified as second argument to `jest.mock`.
-const moduleName = require('../moduleName');
-moduleName(); // Will return '42';
-
