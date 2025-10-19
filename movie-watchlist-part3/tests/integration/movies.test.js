@@ -36,7 +36,7 @@ describe("Movies API", () => {
       // Hint:
       // 1. Register and login a user using request.agent(app)
       // 2. Make a GET request to /movies with the agent
-      // 3. Assert status is 200
+      // 3. Assert status is 200 with an empty array
       expect(true).toBe(true); // Placeholder assertion
     });
 
