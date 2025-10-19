@@ -5,7 +5,10 @@ export const calculateMovieStats = (movies) => {
   const unwatchedCount = totalCount - watchedCount;
 
   // Calculate average rating for watched movies
-  const ratedMovies = watchedMovies.filter((movie) => movie.rating !== null);
+  const ratedMovies = watchedMovies.filter(
+    (movie) => movie.rating !== null && movie.rating !== undefined
+  );
+  console.log(`Rated Movies: ${ratedMovies.length}`);
   const averageRating =
     ratedMovies.length > 0
       ? ratedMovies.reduce((sum, movie) => sum + movie.rating, 0) /

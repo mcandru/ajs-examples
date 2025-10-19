@@ -31,16 +31,17 @@ describe("Movie Statistics Utilities", () => {
       // Hint:
       // 1. Create mixed array: some watched with ratings, some unwatched with ratings
       // 2. Call calculateMovieStats
-      // 3. Check that averageRating only includes the watched movies (should be 9.0)
+      // 3. Check that averageRating only includes the watched movies
       expect(true).toBe(true); // Placeholder assertion
     });
 
     test("should ignore watched movies without ratings", () => {
       // TODO: Implement this test
       // Hint:
-      // 1. Create array with watched movies, some with ratings and some without
+      // 1. Create array with watched movies, some with ratings, some with `null` ratings
+      // and some without a ratings property set
       // 2. Call calculateMovieStats
-      // 3. Check that averageRating includes movies with ratings only (should be 8.0)
+      // 3. Check that averageRating includes movies with ratings only
       expect(true).toBe(true); // Placeholder assertion
     });
   });
