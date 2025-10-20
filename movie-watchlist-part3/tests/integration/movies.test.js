@@ -35,7 +35,7 @@ describe("Movies API", () => {
       // TODO: Implement this test
       // Hint:
       // 1. Register and login a user using request.agent(app)
-      // 2. POST to /movies with { title, year, watched, rating }
+      // 2. POST to /movies with valid fields
       // 3. Assert status is 201 with created movie data
       expect(true).toBe(true); // Placeholder assertion
     });
