@@ -22,6 +22,34 @@ describe("Movies API", () => {
     await Movie.deleteMany({});
   });
 
+  describe("POST /movies", () => {
+    test("should require authentication", async () => {
+      // TODO: Implement
+      // Hint:
+      // 1. Try to POST a movie without being logged in
+      // 2. Assert status is 401 with error message
+      expect(true).toBe(true); // Placeholder assertion
+    });
+
+    test("should create a movie with valid data", async () => {
+      // TODO: Implement this test
+      // Hint:
+      // 1. Register and login a user using request.agent(app)
+      // 2. POST to /movies with { title, year, watched, rating }
+      // 3. Assert status is 201 with created movie data
+      expect(true).toBe(true); // Placeholder assertion
+    });
+
+    test("should reject movie creation with missing required fields", async () => {
+      // TODO: Implement this test
+      // Hint:
+      // 1. Register and login a user
+      // 2. Try to POST a movie without title or without year
+      // 3. Assert status is 400 with error message
+      expect(true).toBe(true); // Placeholder assertion
+    });
+  });
+
   describe("GET /movies", () => {
     test("should require authentication", async () => {
       // TODO: Implement
@@ -58,34 +86,6 @@ describe("Movies API", () => {
       // 3. Have user2 create a different movie
       // 4. GET /movies as user1 - should only see user1's movie
       // 5. GET /movies as user2 - should only see user2's movie
-      expect(true).toBe(true); // Placeholder assertion
-    });
-  });
-
-  describe("POST /movies", () => {
-    test("should require authentication", async () => {
-      // TODO: Implement
-      // Hint:
-      // 1. Try to POST a movie without being logged in
-      // 2. Assert status is 401 with error message
-      expect(true).toBe(true); // Placeholder assertion
-    });
-
-    test("should create a movie with valid data", async () => {
-      // TODO: Implement this test
-      // Hint:
-      // 1. Register and login a user using request.agent(app)
-      // 2. POST to /movies with { title, year, watched, rating }
-      // 3. Assert status is 201 with created movie data
-      expect(true).toBe(true); // Placeholder assertion
-    });
-
-    test("should reject movie creation with missing required fields", async () => {
-      // TODO: Implement this test
-      // Hint:
-      // 1. Register and login a user
-      // 2. Try to POST a movie without title or without year
-      // 3. Assert status is 400 with error message
       expect(true).toBe(true); // Placeholder assertion
     });
   });
