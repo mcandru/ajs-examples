@@ -18,6 +18,7 @@ describe("Auth API", () => {
 
   afterEach(async () => {
     await User.deleteMany({});
+    await mongoose.connection.db.collection("sessions").deleteMany({});
   });
 
   describe("POST /api/auth/register", () => {

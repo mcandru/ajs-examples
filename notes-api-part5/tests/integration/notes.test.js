@@ -34,6 +34,7 @@ describe("Notes API", () => {
   afterEach(async () => {
     await Note.deleteMany({});
     await User.deleteMany({});
+    await mongoose.connection.db.collection("sessions").deleteMany({});
   });
 
   test("should create a new note with authentication", async () => {
