@@ -15,6 +15,10 @@ const createApp = () => {
 
   // Remember, middleware functions are called in the order that they're encountered
 
+  // Trust first proxy (required for Render to properly handle HTTPS)
+  // https://expressjs.com/en/guide/behind-proxies.html
+  app.set("trust proxy", 1);
+
   // Middleware to parse JSON from request bodies.
   app.use(express.json());
 
