@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "9a2413ec-4cc2-4e31-88a0-4d632106d423",
+		"name": "image-upload",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48627296"
+	},
+	"item": [
+		{
+			"name": "UploadImage",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/Users/michael/Pictures/sample-photos/mountain.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/upload",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetImage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/uploads/1761113636965.jpg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"uploads",
+						"1761113636965.jpg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetImageURL",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/file/:id",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"file",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "68f87624b1a02ba6f692138d"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
