@@ -1,0 +1,17 @@
+{
+  "name": "llm-api-example",
+  "version": "1.0.0",
+  "description": "Example Axios implementation for LLM API calls",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file=.env index.js",
+    "dev": "node --env-file=.env --watch index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "express": "^5.1.0"
+  }
+}
