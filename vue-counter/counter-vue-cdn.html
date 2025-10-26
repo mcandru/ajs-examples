@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Vanilla JS Counter</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <!-- This div will be controlled by Vue -->
+    <!-- Vue will parse this template and compile it into a render function -->
+    <div id="app">
+      <h1>Vue CDN Counter</h1>
+      <div id="count">{{ count }}</div>
+      <button @click="incrementCounter">Increment</button>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+
+      const app = createApp({
+        data() {
+          return {
+            count: 0,
+          };
+        },
+        methods: {
+          incrementCounter() {
+            // When we update this.count, Vue's reactivity system triggers
+            this.count++;
+          },
+        },
+      });
+
+      // Mount the app to the #app div
+      // What happens here:
+      // 1. Vue compiles the template (HTML inside #app) into a render function (once)
+      // 2. The render function creates a virtual DOM tree
+      // 3. Vue converts the virtual DOM into real DOM and replaces/updates #app
+      //
+      // When state changes (e.g., count++):
+      // 1. Vue re-runs the render function to create a new virtual DOM
+      // 2. Vue diffs the new virtual DOM against the old one
+      // 3. Vue calculates minimal DOM updates needed
+      // 4. Vue patches only the changed parts of the real DOM
+      app.mount("#app");
+    </script>
+  </body>
+</html>
