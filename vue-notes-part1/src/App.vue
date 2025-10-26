@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import Note from "./components/Note.vue";
 
 let id = 0;
 
@@ -54,13 +55,13 @@ const deleteNote = (noteToDelete) => {
   </form>
 
   <ul>
-    <li v-for="note in filteredNotes" :key="note.id">
-      {{ note.content }}
-      <button class="action-button" @click="deleteNote(note)">X</button>
-      <button class="action-button" @click="note.important = !note.important">
-        {{ note.important ? "Make Normal" : "Make Important" }}
-      </button>
-    </li>
+    <Note
+      v-for="note in filteredNotes"
+      :key="note.id"
+      :note="note"
+      @delete="deleteNote"
+      @toggle-important="note.important = !note.important"
+    />
   </ul>
   <button @click="hideImportant = !hideImportant">
     {{ hideImportant ? "Show All" : "Hide Important" }}
