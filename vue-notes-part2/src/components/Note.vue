@@ -13,7 +13,7 @@ const emit = defineEmits<{
 <template>
   <li>
     {{ note.content }}
-    <button class="action-button" @click="emit('delete', note)">X</button>
+    <button @click="emit('delete', note)">X</button>
     <button class="action-button" @click="emit('toggle-important')">
       {{ note.important ? "Make Normal" : "Make Important" }}
     </button>

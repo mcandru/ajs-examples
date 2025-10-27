@@ -34,7 +34,7 @@ const deleteNote = (noteToDelete: NoteType) => {
 </script>
 
 <template>
-  <h1 class="text-2xl">Notes</h1>
+  <h1>Notes</h1>
   <form @submit.prevent="addNewNote">
     <input type="text" v-model="newNote" />
     <button type="submit">Submit</button>
