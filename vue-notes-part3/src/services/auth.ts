@@ -47,3 +47,7 @@ export const getProfile = async (): Promise<UserResponse> => {
     throw error;
   }
 };
+
+export const logout = async (): Promise<void> => {
+  await axios.post("http://localhost:5173/api/auth/logout");
+};

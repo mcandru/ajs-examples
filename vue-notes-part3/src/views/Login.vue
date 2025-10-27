@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
+import { authStore } from "@/stores/auth";
+
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
@@ -18,35 +22,24 @@ const handleSubmit = async () => {
     });
 
     isLoggedIn.value = true;
+    router.push("/");
   } catch (error) {
     console.error("Login failed:", error);
   }
 };
 
-onMounted(() => {
-  // Check if user is already logged in
-  const checkLogin = async () => {
-    isLoading.value = true;
-    try {
-      const response = await axios.get("/api/auth/me");
-      isLoggedIn.value = response.data.authenticated;
-    } catch (error) {
-      console.error("Error checking login status:", error);
-    } finally {
-      isLoading.value = false;
-    }
-  };
-  checkLogin();
+onMounted(async () => {
+  await authStore.checkAuth();
 });
 </script>
 
 <template>
   <h1>Login</h1>
 
-  <div v-if="isLoggedIn">
+  <div v-if="authStore.state.isLoggedIn">
     <p>You are logged in!</p>
   </div>
-  <div v-else-if="isLoading">
+  <div v-else-if="authStore.state.isLoading">
     <p>Loading...</p>
   </div>
   <div v-else>
