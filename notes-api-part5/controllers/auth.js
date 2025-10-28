@@ -28,6 +28,9 @@ router.post("/register", validate(registerSchema), async (req, res) => {
     passwordHash,
   });
 
+  // Set session
+  req.session.userId = user._id.toString();
+
   res.status(201).json({
     message: "User created successfully",
     user,

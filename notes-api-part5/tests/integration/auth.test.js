@@ -105,6 +105,16 @@ describe("Auth API", () => {
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty("error");
     });
+
+    test("should set session cookie upon successful registration", async () => {
+      const response = await request(app).post("/api/auth/register").send({
+        email: "sessiontest@example.com",
+        password: "TestPass123",
+      });
+
+      expect(response.status).toBe(201);
+      expect(response.headers["set-cookie"]).toBeDefined();
+    });
   });
 
   describe("POST /api/auth/login", () => {
