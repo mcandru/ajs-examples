@@ -9,20 +9,25 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1>Notes</h1>
+  <div v-if="authStore.state.isLoading">
+    <p>Loading...</p>
+  </div>
+  <div v-else>
+    <h1>Notes</h1>
 
-  <nav class="mb-5">
-    <RouterLink class="m-1" to="/">Notes</RouterLink>
-    <RouterLink v-if="!authStore.state.isLoggedIn" class="m-1" to="/login"
-      >Login</RouterLink
-    >
-    <RouterLink v-if="!authStore.state.isLoggedIn" class="m-1" to="/register"
-      >Register</RouterLink
-    >
-    <RouterLink v-if="authStore.state.isLoggedIn" class="m-1" to="/profile"
-      >Profile</RouterLink
-    >
-  </nav>
+    <nav class="mb-5">
+      <RouterLink class="m-1" to="/">Notes</RouterLink>
+      <RouterLink v-if="!authStore.state.isLoggedIn" class="m-1" to="/login"
+        >Login</RouterLink
+      >
+      <RouterLink v-if="!authStore.state.isLoggedIn" class="m-1" to="/register"
+        >Register</RouterLink
+      >
+      <RouterLink v-if="authStore.state.isLoggedIn" class="m-1" to="/profile"
+        >Profile</RouterLink
+      >
+    </nav>
 
-  <RouterView />
+    <RouterView />
+  </div>
 </template>

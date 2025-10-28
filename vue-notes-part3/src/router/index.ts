@@ -18,7 +18,11 @@ export const router = createRouter({
 });
 
 router.beforeEach((to, _from, next) => {
-  if (to.meta.requiresAuth && !authStore.state.isLoggedIn) {
+  if (
+    to.meta.requiresAuth &&
+    !authStore.state.isLoading &&
+    !authStore.state.isLoggedIn
+  ) {
     next({ path: "/login" });
   } else {
     next();
