@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { authStore } from "@/stores/auth";
@@ -8,7 +8,6 @@ const router = useRouter();
 
 const email = ref("");
 const password = ref("");
-const isLoading = ref(false);
 const isLoggedIn = ref(false);
 
 const handleSubmit = async () => {
@@ -16,21 +15,13 @@ const handleSubmit = async () => {
   console.log("Logging in with", email.value, password.value);
 
   try {
-    await axios.post("http://localhost:5173/api/auth/login", {
-      email: email.value,
-      password: password.value,
-    });
-
+    await authStore.login(email.value, password.value);
     isLoggedIn.value = true;
     router.push("/");
   } catch (error) {
     console.error("Login failed:", error);
   }
 };
-
-onMounted(async () => {
-  await authStore.checkAuth();
-});
 </script>
 
 <template>

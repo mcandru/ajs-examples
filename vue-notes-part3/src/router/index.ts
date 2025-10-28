@@ -3,17 +3,26 @@ import NotesView from "@/views/Notes.vue";
 import LoginView from "@/views/Login.vue";
 import RegisterView from "@/views/Register.vue";
 import ProfileView from "@/views/Profile.vue";
+import { authStore } from "@/stores/auth";
 
 const routes = [
-  { path: "/", component: NotesView },
+  { path: "/", component: NotesView, meta: { requiresAuth: true } },
   { path: "/login", component: LoginView },
   { path: "/register", component: RegisterView },
-  { path: "/profile", component: ProfileView },
+  { path: "/profile", component: ProfileView, meta: { requiresAuth: true } },
 ];
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, _from, next) => {
+  if (to.meta.requiresAuth && !authStore.state.isLoggedIn) {
+    next({ path: "/login" });
+  } else {
+    next();
+  }
 });
 
 export default router;

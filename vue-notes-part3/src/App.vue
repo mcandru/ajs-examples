@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 import { authStore } from "@/stores/auth";
-import axios from "axios";
-
-const isLoggedIn = ref(false);
+import { onMounted } from "vue";
 
 onMounted(async () => {
   await authStore.checkAuth();
