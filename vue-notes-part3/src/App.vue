@@ -9,12 +9,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="authStore.state.isLoading">
-    <p>Loading...</p>
-  </div>
-  <div v-else>
-    <h1>Notes</h1>
+  <h1>Notes</h1>
 
+  <div v-if="authStore.state.isLoading">Loading...</div>
+  <div v-else>
     <nav class="mb-5">
       <RouterLink class="m-1" to="/">Notes</RouterLink>
       <RouterLink v-if="!authStore.state.isLoggedIn" class="m-1" to="/login"
