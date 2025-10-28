@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import axios from "axios";
 import { useRouter } from "vue-router";
 import { authStore } from "@/stores/auth";
 
@@ -8,19 +7,10 @@ const router = useRouter();
 
 const email = ref("");
 const password = ref("");
-const isLoggedIn = ref(false);
 
 const handleSubmit = async () => {
-  // Handle login logic here
-  console.log("Logging in with", email.value, password.value);
-
-  try {
-    await authStore.login(email.value, password.value);
-    isLoggedIn.value = true;
-    router.push("/");
-  } catch (error) {
-    console.error("Login failed:", error);
-  }
+  await authStore.login(email.value, password.value);
+  router.push("/");
 };
 </script>
 

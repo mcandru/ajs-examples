@@ -13,15 +13,15 @@ onMounted(async () => {
 
   <div v-if="authStore.state.isLoading">Loading...</div>
   <div v-else>
-    <nav class="mb-5">
-      <RouterLink class="m-1" to="/">Notes</RouterLink>
-      <RouterLink v-if="!authStore.state.isLoggedIn" class="m-1" to="/login"
+    <nav>
+      <RouterLink to="/">Notes</RouterLink>
+      <RouterLink v-if="!authStore.state.isLoggedIn" to="/login"
         >Login</RouterLink
       >
-      <RouterLink v-if="!authStore.state.isLoggedIn" class="m-1" to="/register"
+      <RouterLink v-if="!authStore.state.isLoggedIn" to="/register"
         >Register</RouterLink
       >
-      <RouterLink v-if="authStore.state.isLoggedIn" class="m-1" to="/profile"
+      <RouterLink v-if="authStore.state.isLoggedIn" to="/profile"
         >Profile</RouterLink
       >
     </nav>
@@ -29,3 +29,12 @@ onMounted(async () => {
     <RouterView />
   </div>
 </template>
+
+<style scoped>
+nav {
+  margin-bottom: 20px;
+}
+nav a {
+  margin-right: 10px;
+}
+</style>
