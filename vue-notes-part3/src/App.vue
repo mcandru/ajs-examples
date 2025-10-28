@@ -2,9 +2,15 @@
 import { RouterLink, RouterView } from "vue-router";
 import { authStore } from "@/stores/auth";
 import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 onMounted(async () => {
   await authStore.checkAuth();
+  if (!authStore.state.isLoggedIn) {
+    router.push("/login");
+  }
 });
 </script>
 

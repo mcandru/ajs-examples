@@ -31,7 +31,6 @@ export const authStore = {
     } catch (error) {
       this.state.isLoggedIn = false;
       this.state.user = null;
-      console.error("Error checking auth status:", error);
     } finally {
       this.state.isLoading = false;
     }
