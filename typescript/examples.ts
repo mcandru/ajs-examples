@@ -1,6 +1,15 @@
 let test: number = 0;
 let implicitTest = 0;
+
+// test = "5"; // Error: Type 'string' is not assignable to type 'number'.
+// implicitTest = "5"; // No error, implicitTest is of type 'any'.
+
 let list: number[] = [1, 2, 3];
+let implicitList = [1, 2, 3];
+let implicitComplexList = [1, "2", 3]; // inferred as (string | number)[]
+
+// list.push("4"); // Error: Argument of type 'string' is not assignable to parameter of type 'number'
+// list = ["4"]; // Error: Type 'string' is not assignable to type 'number[]'.
 
 interface Car {
   year: number;
