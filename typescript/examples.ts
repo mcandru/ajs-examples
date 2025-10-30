@@ -182,3 +182,18 @@ let employeeReadOnly: {
 } = { id: 3, name: "Doe" };
 
 // employeeReadOnly.id = 4; // Error: Cannot assign to 'id' because it is a read-only property.
+
+// Adding function types to objects
+let printEmployee: {
+  readonly id: number;
+  name: string;
+  printDetails: (input: string) => void;
+} = {
+  id: 4,
+  name: "John",
+  printDetails(input: string) {
+    console.log(`${input}: ${this.id} - ${this.name}`);
+  },
+};
+
+printEmployee.printDetails("Employee Info");
