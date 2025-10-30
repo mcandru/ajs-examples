@@ -1,4 +1,6 @@
-//// 1. THE BASICS OF TYPESCRIPT ////
+// ============================================
+// 1. THE BASICS OF TYPESCRIPT
+// ============================================
 
 let test: number = 0;
 let implicitTest = 0;
@@ -14,7 +16,9 @@ let implicitComplexList = [1, "2", 3]; // inferred as (string | number)[]
 
 // list = ["4"]; // Error: Type 'string' is not assignable to type 'number[]'.
 
-//// 2. TYPESCRIPT FUNDAMENTALS ////
+// ============================================
+// 2. TYPESCRIPT FUNDAMENTALS
+// ============================================
 
 // 2.1 The Any Type
 
@@ -197,3 +201,182 @@ let printEmployee: {
 };
 
 printEmployee.printDetails("Employee Info");
+
+// ============================================
+// 3. ADVANCED TYPESCRIPT
+// ============================================
+
+// Type Aliases
+
+// If you have complex types that are reused, you can define type aliases
+type Employee = {
+  readonly id: number;
+  name: string;
+  fax?: string;
+  printDetails: (input: string) => void;
+};
+
+let emp1: Employee = {
+  id: 5,
+  name: "Alice",
+  printDetails(input: string) {
+    console.log(`${input}: ${this.id} - ${this.name}`);
+  },
+};
+
+// Interfaces
+
+// Interfaces are similar to type aliases, and in many cases can be used interchangeably
+// The main difference is that interfaces can be extended whereas type aliases cannot
+interface IEmployee {
+  readonly id: number;
+  name: string;
+  fax?: string;
+  printDetails(input: string): void;
+}
+
+let emp2: IEmployee = {
+  id: 6,
+  name: "Bob",
+  printDetails(input: string) {
+    console.log(`${input}: ${this.id} - ${this.name}`);
+  },
+};
+
+// Extending interfaces
+interface IManager extends IEmployee {
+  department: string;
+}
+
+let manager: IManager = {
+  id: 7,
+  name: "Charlie",
+  department: "Sales",
+  printDetails(input: string) {
+    console.log(
+      `${input}: ${this.id} - ${this.name}, Department: ${this.department}`
+    );
+  },
+};
+
+// Unions and Intersections
+
+type Identifier = string | number;
+
+// A union type allows a variable to hold more than one type
+function formatId(id: Identifier): string {
+  // Type narrowing with typeof
+  if (typeof id === "string") {
+    return id.toUpperCase();
+  } else {
+    return `ID-${id.toString()}`;
+  }
+}
+
+console.log(formatId("ID-123"));
+console.log(formatId(123));
+
+// An intersection type combines multiple types into one
+
+let weight: string & number; // Technically valid but not practically possible
+
+type Draggable = {
+  drag: () => void;
+};
+
+type Resizable = {
+  resize: () => void;
+};
+
+// Intersection type combining Draggable and Resizable
+type UIWidget = Draggable & Resizable;
+
+let textBox: UIWidget = {
+  drag() {
+    console.log("Dragging");
+  },
+  resize() {
+    console.log("Resizing");
+  },
+};
+
+textBox.drag();
+textBox.resize();
+
+type Animal = {
+  name: string;
+};
+
+type Bear = Animal & {
+  honey: boolean;
+};
+
+const bear: Bear = {
+  name: "Winnie",
+  honey: true,
+};
+
+// Type Literals
+
+let pie = "apple";
+// Variables can be reassigned to any other string
+pie = "banana";
+
+// Constants are inferred as literal types because they cannot be reassigned
+const pi = 3.14;
+
+// You can also explicitly type constants as literal types but it is not necessary
+const e: 2.71 = 2.71;
+
+// Literals are most useful in union types and function parameters
+type CardinalDirection = "North" | "East" | "South" | "West";
+
+function move(direction: CardinalDirection) {
+  console.log(`Moving ${direction}`);
+}
+
+// Nullable types
+
+function greet(name: string) {
+  console.log(`Hello, ${name.toUpperCase()}!`);
+}
+
+// greet(null); // Error: Argument of type 'null' is not assignable to parameter of type 'string'.
+
+function greetNullable(name: string | null) {
+  if (name) {
+    console.log(`Hello, ${name.toUpperCase()}!`);
+  } else {
+    console.log("Hello, Guest!");
+  }
+}
+
+greetNullable(null);
+
+// Optional Chaining
+
+interface Customer {
+  birthday?: Date;
+}
+
+function getCustomer(id: number): Customer | null {
+  if (id === 0) {
+    return null;
+  }
+
+  return {
+    birthday: new Date("1985-10-26"),
+  };
+}
+
+let customer = getCustomer(123);
+
+// console.log(customer.birthday); // Error if customer is null
+
+// Safe access with null check
+if (customer !== null) {
+  console.log(customer.birthday);
+}
+
+console.log(customer?.birthday); // Safe access with optional chaining
+console.log(customer?.birthday?.getFullYear()); // Safe access with optional chaining
