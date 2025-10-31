@@ -5,7 +5,11 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test:part1": "vitest run activities-part1.test.ts",
+    "test:part2": "vitest run activities-part2.test.ts",
+    "check:part1": "tsc --noEmit --project tsconfig.part1.json",
+    "check:part2": "tsc --noEmit --project tsconfig.part2.json"
   },
   "keywords": [],
   "author": "",

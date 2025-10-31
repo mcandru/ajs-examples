@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["activities-part1.test.ts"]
+}

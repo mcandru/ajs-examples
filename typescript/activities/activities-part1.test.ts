@@ -5,11 +5,11 @@ import { expect, test } from "vitest";
 // ============================================
 //
 // Instructions:
-// 1. Run `npm test` - MOST tests should pass (one will fail until you define the enum)
-// 2. Run `npm run type-check` - you should see TypeScript ERRORS
+// 1. Run `npm run test:part1` - MOST tests should pass (one will fail until you define the enum)
+// 2. Run `npm run check:part1` - you should see TypeScript ERRORS
 // 3. Fix the type annotations to make TypeScript happy
 // 4. DO NOT change the test code or the logic - only fix the types!
-// 5. When you're done, both `npm test` and `npm run type-check` should succeed
+// 5. When you're done, both `npm run test:part1` and `npm run check:part1` should succeed
 // ============================================
 
 // ============================================
