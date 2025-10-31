@@ -8,8 +8,10 @@
     "type-check": "tsc --noEmit",
     "test:part1": "vitest run activities-part1.test.ts",
     "test:part2": "vitest run activities-part2.test.ts",
+    "test:part3": "vitest run activities-part3.test.ts",
     "check:part1": "tsc --noEmit --project tsconfig.part1.json",
-    "check:part2": "tsc --noEmit --project tsconfig.part2.json"
+    "check:part2": "tsc --noEmit --project tsconfig.part2.json",
+    "check:part3": "tsc --noEmit --project tsconfig.part3.json"
   },
   "keywords": [],
   "author": "",
