@@ -206,7 +206,7 @@ printEmployee.printDetails("Employee Info");
 // 3. ADVANCED TYPESCRIPT
 // ============================================
 
-// Type Aliases
+// 3.1 Type Aliases
 
 // If you have complex types that are reused, you can define type aliases
 type Employee = {
@@ -224,7 +224,7 @@ let emp1: Employee = {
   },
 };
 
-// Interfaces
+// 3.2 Interfaces
 
 // Interfaces are similar to type aliases, and in many cases can be used interchangeably
 // The main difference is that interfaces can be extended whereas type aliases cannot
@@ -259,7 +259,7 @@ let manager: IManager = {
   },
 };
 
-// Unions and Intersections
+// 3.3 Unions and Intersections
 
 type Identifier = string | number;
 
@@ -316,7 +316,7 @@ const bear: Bear = {
   honey: true,
 };
 
-// Type Literals
+// 3.4 Type Literals
 
 let pie = "apple";
 // Variables can be reassigned to any other string
@@ -335,7 +335,7 @@ function move(direction: CardinalDirection) {
   console.log(`Moving ${direction}`);
 }
 
-// Nullable types
+// 3.5 Nullable types
 
 function greet(name: string) {
   console.log(`Hello, ${name.toUpperCase()}!`);
@@ -353,7 +353,7 @@ function greetNullable(name: string | null) {
 
 greetNullable(null);
 
-// Optional Chaining
+// 3.6 Optional Chaining
 
 interface Customer {
   birthday?: Date;
@@ -380,3 +380,43 @@ if (customer !== null) {
 
 console.log(customer?.birthday); // Safe access with optional chaining
 console.log(customer?.birthday?.getFullYear()); // Safe access with optional chaining
+
+// 3.6 Type Assertions
+
+// By default, TypeScript infers the type of DOM elements as HTMLElement | null
+// You can use type assertions to specify a more specific type
+const myDiv = document.getElementById("myDiv");
+// const myDiv: HTMLDivElement = document.getElementById("myDiv"); // Type error because you can't narrow HTMLElement to HTMLDivElement directly
+
+const myTypedDiv = document.getElementById("myDiv") as HTMLDivElement;
+
+// 3.7 Functions which return promises
+
+// By default TypeScript infers the return type of async functions as Promise<any>
+// You can explicitly type the return value for better type safety
+// const getTodos = async () => {
+//   const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+//   return await response.json();
+// };
+
+interface Todo {
+  userId: number;
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+const getTodos = async (): Promise<Todo> => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+  return await response.json();
+};
+
+// Note that this is a compile-time check only - at runtime JavaScript does not enforce types
+// We don't actually know what the API will return, so we're having to tell it
+
+// You can also type the variable that holds the result in an async function
+const getTodosTwo = async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+  const data: Todo = await response.json();
+  return data;
+};
