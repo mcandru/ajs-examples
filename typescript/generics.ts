@@ -1,4 +1,6 @@
-// 1. Generics Basics
+// ============================================
+// 1. Generic Basics
+// ============================================
 
 // Let's define a simple function that returns the first element of an array
 function getFirstElement(array: number[]) {
@@ -8,7 +10,7 @@ function getFirstElement(array: number[]) {
 const numbers = [1, 2, 3];
 let firstNum = getFirstElement(numbers);
 
-// If we trty to use it with a string array, TypeScript will complain
+// If we try to use it with a string array, TypeScript will complain
 const strings = ["elem1", "elem2", "elem3"];
 // const firstString = getFirstElement(strings); // Type error: Argument of type 'string[]' is not assignable to parameter of type 'number[]'.
 
@@ -39,7 +41,9 @@ let firstString = getFirstElementGeneric<string>(strings);
 firstNum = getFirstElementGeneric(numbers);
 firstString = getFirstElementGeneric(strings);
 
+// ============================================
 // 2. Using Generics in Built-in Types
+// ============================================
 
 // Generics are everywhere in TypeScript. For example, when selecting DOM elements:
 const input = document.querySelector<HTMLInputElement>(".input");
@@ -73,7 +77,10 @@ console.log(numArray);
 const strArray: string[] = ["a", "b", "c"];
 console.log(strArray);
 
+// ============================================
 // 3. Custom generic types
+// ============================================
+
 interface ApiResponse<DataType> {
   data: DataType;
   isError: boolean;
@@ -92,7 +99,9 @@ const blogResponse: BlogTitleResponse = {
   isError: false,
 };
 
+// ============================================
 // 4. Multiple Generic Type Parameters
+// ============================================
 
 // You can also have multiple generic type parameters
 // For example, if we want to create a Pair type that holds two values of different types
@@ -118,12 +127,105 @@ const userAges: Record<string, number> = {
 userAges["Charlie"] = 35;
 // userAges["David"] = "Thirty"; // Type Error: Type 'string' is not assignable to type 'number'.
 
-// Compile -time vs Run-time
+// ============================================
+// 5. Generic Constraints
+// ============================================
 
-// Compile-time: TypeScript checks types during development
-// Run-time: Types are checked when the code is executed
+// Sometimes you want to limit the types that can be used with a generic
+// You can do this by using the 'extends' keyword to add a constraint
 
-const result = getFirstElementGeneric([1, 2, 3]);
-console.log(result);
+const printLength = <T extends { length: number }>(val: T) => {
+  console.log(val.length);
+};
+
+// Now this function works with strings, arrays, or any object with a length property
+printLength("Hello");
+printLength([1, 2, 3, 4]);
+// printLength(123); // Type Error: Argument of type 'number' is not assignable to parameter of type 'HasLength'.
+
+// ============================================
+// 6. Type Narrowing Techniques
+// ============================================
+
+// Type narrowing is the process of refining a union type to a more specific type
+// TypeScript provides several ways to narrow types
+
+// 6.1 typeof type guards
+function processValue(value: string | number) {
+  if (typeof value === "string") {
+    // Inside this block, TypeScript knows value is a string
+    return value.toUpperCase();
+  } else {
+    // Inside this block, TypeScript knows value is a number
+    return value.toFixed(2);
+  }
+}
+
+console.log(processValue("hello"));
+console.log(processValue(42.12345));
+
+// 6.2 instanceof type guards
+class Dog {
+  bark() {
+    console.log("Woof!");
+  }
+}
+
+class Cat {
+  meow() {
+    console.log("Meow!");
+  }
+}
+
+function makeSound(animal: Dog | Cat) {
+  if (animal instanceof Dog) {
+    // TypeScript knows animal is a Dog here
+    animal.bark();
+  } else {
+    // TypeScript knows animal is a Cat here
+    animal.meow();
+  }
+}
+
+makeSound(new Dog());
+makeSound(new Cat());
+
+// ============================================
+// 7. Unknown and Never Types
+// ============================================
+
+// 7.1 The unknown type
+// 'unknown' is a type-safe alternative to 'any'
+// Unlike 'any', you cannot use an unknown value without first narrowing its type
+
+let value: unknown;
+
+value = "Hello";
+value = 42;
+value = true;
+value = { name: "test" };
+
+// But you can't use it directly without narrowing
+// console.log(value.toUpperCase()); // Type Error: Object is of type 'unknown'.
+
+// You must narrow the type first
+if (typeof value === "string") {
+  console.log(value.toUpperCase()); // Now it's safe
+}
+
+// This makes unknown much safer than any for handling values of uncertain type
+function processUnknown(input: unknown) {
+  if (typeof input === "string") {
+    return input.toUpperCase();
+  } else if (typeof input === "number") {
+    return input.toFixed(2);
+  } else {
+    return "Unknown type";
+  }
+}
+
+console.log(processUnknown("hello"));
+console.log(processUnknown(42.12345));
+console.log(processUnknown(true));
 
 export {};
