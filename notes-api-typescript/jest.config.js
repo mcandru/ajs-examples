@@ -4,40 +4,22 @@
  */
 
 /** @type {import('jest').Config} */
-const config = {
-  // Use ts-jest preset for TypeScript support
-  preset: "ts-jest/presets/default-esm",
+export default {
+  preset: "ts-jest",
+  testEnvironment: "node",
 
-  // Treat .ts files as ESM
-  extensionsToTreatAsEsm: [".ts"],
-
-  // Module name mapper to handle .js imports pointing to .ts files
-  moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1",
+  // Tell ts-jest to use CommonJS tsconfig
+  transform: {
+    "^.+\\.ts$": ["ts-jest", {
+      tsconfig: "tsconfig.jest.json"
+    }]
   },
 
-  // Transform TypeScript files with ts-jest
-  transform: {
-    "^.+\\.ts$": [
-      "ts-jest",
-      {
-        useESM: true,
-        isolatedModules: true,
-      },
-    ],
+  // Map .js imports to their .ts source files
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
   },
 
   // Ignore compiled files in dist folder
-  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
-
-  // Test environment
-  testEnvironment: "node",
-
-  // Automatically clear mock calls before every test
-  clearMocks: true,
-
-  // Coverage settings
-  coverageProvider: "v8",
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"]
 };
-
-export default config;
