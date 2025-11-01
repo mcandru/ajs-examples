@@ -1,5 +1,12 @@
 import mongoose from "mongoose";
 
+export interface SerialisedNote {
+  id: string;
+  content: string;
+  important: boolean;
+  user: mongoose.Types.ObjectId;
+}
+
 const noteSchema = new mongoose.Schema(
   {
     content: {
@@ -20,13 +27,16 @@ const noteSchema = new mongoose.Schema(
 );
 
 noteSchema.set("toJSON", {
-  transform: (_document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-    delete returnedObject.createdAt;
-    delete returnedObject.updatedAt;
+  transform: (_document, returnedObject): SerialisedNote => {
+    return {
+      id: returnedObject._id.toString(),
+      content: returnedObject.content,
+      important: returnedObject.important || false,
+      user: returnedObject.user,
+    };
   },
 });
 
-export default mongoose.model("Note", noteSchema);
+type NoteType = mongoose.InferSchemaType<typeof noteSchema>;
+
+export const Note = mongoose.model<NoteType>("Note", noteSchema);

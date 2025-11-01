@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import Note from "../models/note.js";
-import User from "../models/user.js";
+import { Note } from "../models/note.js";
+import { User } from "../models/user.js";
 
 let user1Notes = [
   {

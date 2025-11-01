@@ -1,28 +1,37 @@
 import createApp from "../../app.js";
 import request from "supertest";
-import User from "../../models/user.js";
-import Note from "../../models/note.js";
+import { User, UserDocument } from "../../models/user.js";
+import { Note, SerialisedNote } from "../../models/note.js";
 import mongoose from "mongoose";
+import type { Express } from "express";
 
 // Helper function to create a user and return credentials
-const createUser = async (email, password, role = "user") => {
+const createUser = async (
+  email: string,
+  password: string,
+  role: string = "user"
+): Promise<{ user: UserDocument; email: string; password: string }> => {
   const passwordHash = await User.hashPassword(password);
   const user = await User.create({ email, passwordHash, role });
   return { user, email, password };
 };
 
 // Helper function to create an authenticated agent (with session)
-const createAuthenticatedAgent = async (app, email, password) => {
+const createAuthenticatedAgent = async (
+  app: Express,
+  email: string,
+  password: string
+) => {
   const agent = request.agent(app);
   await agent.post("/api/auth/login").send({ email, password });
   return agent;
 };
 
 describe("Notes API", () => {
-  let app;
+  let app: Express;
 
   beforeAll(async () => {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI || "");
     app = createApp();
   });
 
@@ -34,7 +43,9 @@ describe("Notes API", () => {
   afterEach(async () => {
     await Note.deleteMany({});
     await User.deleteMany({});
-    await mongoose.connection.db.collection("sessions").deleteMany({});
+    if (mongoose.connection.db) {
+      await mongoose.connection.db.collection("sessions").deleteMany({});
+    }
   });
 
   test("should create a new note with authentication", async () => {
@@ -91,7 +102,9 @@ describe("Notes API", () => {
     expect(user1Response.status).toBe(200);
     expect(user1Response.body).toHaveLength(2);
     expect(
-      user1Response.body.every((note) => note.content.startsWith("Alice"))
+      user1Response.body.every((note: SerialisedNote) =>
+        note.content.startsWith("Alice")
+      )
     ).toBe(true);
 
     // Verify user 2 only sees their own notes
@@ -197,7 +210,8 @@ describe("Notes API", () => {
     ])(
       "should require authentication for %s %s",
       async (method, path, body) => {
-        const response = await request(app)
+        const agent = request(app);
+        const response = await (agent as any)
           [method.toLowerCase()](path)
           .send(body || {});
 

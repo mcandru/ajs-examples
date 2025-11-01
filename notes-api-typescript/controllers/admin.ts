@@ -1,6 +1,6 @@
 import { Router } from "express";
-import User from "../models/user.js";
-import Note from "../models/note.js";
+import { User } from "../models/user.js";
+import { Note } from "../models/note.js";
 import type { Request, Response } from "express";
 
 const adminRouter = Router();

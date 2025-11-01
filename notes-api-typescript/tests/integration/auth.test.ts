@@ -1,13 +1,14 @@
 import createApp from "../../app.js";
 import request from "supertest";
-import User from "../../models/user.js";
+import { User } from "../../models/user.js";
 import mongoose from "mongoose";
+import type { Express } from "express";
 
 describe("Auth API", () => {
-  let app;
+  let app: Express;
 
   beforeAll(async () => {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI || "");
     app = createApp();
   });
 
@@ -18,7 +19,9 @@ describe("Auth API", () => {
 
   afterEach(async () => {
     await User.deleteMany({});
-    await mongoose.connection.db.collection("sessions").deleteMany({});
+    if (mongoose.connection.db) {
+      await mongoose.connection.db.collection("sessions").deleteMany({});
+    }
   });
 
   describe("POST /api/auth/register", () => {

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validate } from "../middleware/validateRequest.js";
 import { noteSchema, noteIdSchema } from "../utils/validators.js";
-import Note from "../models/note.js";
+import { Note } from "../models/note.js";
 import { HttpError, NOT_FOUND } from "../utils/HttpError.js";
 import type { Request, Response } from "express";
 

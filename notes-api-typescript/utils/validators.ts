@@ -29,7 +29,8 @@ export const noteIdSchema = {
   id: {
     in: ["params"],
     custom: {
-      options: (value) => mongoose.Types.ObjectId.isValid(value),
+      options: (value: unknown) =>
+        typeof value === "string" && mongoose.Types.ObjectId.isValid(value),
       errorMessage: "Note ID 'id' parameter must be a valid ObjectId",
     },
   },

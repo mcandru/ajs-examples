@@ -1,14 +1,18 @@
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import User from "../models/user.js";
+import { User } from "../models/user.js";
 import { UNAUTHORIZED, FORBIDDEN, HttpError } from "../utils/HttpError.js";
 import mongoose from "mongoose";
 import type { Request, Response, NextFunction } from "express";
 
 type Roles = "admin" | "user";
 
-export const sessionMiddleware = () =>
-  session({
+export const sessionMiddleware = () => {
+  if (!process.env.SESSION_SECRET) {
+    throw Error("SESSION_SECRET is not defined in environment variables");
+  }
+
+  return session({
     secret: process.env.SESSION_SECRET,
     name: "sessionId",
     resave: false,
@@ -23,6 +27,7 @@ export const sessionMiddleware = () =>
       sameSite: "strict",
     },
   });
+};
 
 // Middleware to check if user is authenticated
 export const requireAuth = async (
