@@ -3,7 +3,7 @@
 // ============================================
 
 // Let's define a simple function that returns the first element of an array
-function getFirstElement(array: number[]) {
+function getFirstElement(array: number[]): number {
   return array[0];
 }
 
@@ -27,7 +27,9 @@ const strings = ["elem1", "elem2", "elem3"];
 
 // Instead we can use generics to create a function that works with any type
 // You can do this by defining a type parameter in the function signature
-function getFirstElementGeneric<ElementType>(array: ElementType[]) {
+function getFirstElementGeneric<ElementType>(
+  array: ElementType[]
+): ElementType {
   return array[0];
 }
 
@@ -42,7 +44,47 @@ firstNum = getFirstElementGeneric(numbers);
 firstString = getFirstElementGeneric(strings);
 
 // ============================================
-// 2. Using Generics in Built-in Types
+// 2. Generic types
+// ============================================
+
+// You can also use generics with types and interfaces
+// Here's an example of a generic interface for an API response
+interface ApiResponse<DataType> {
+  data: DataType;
+  isError: boolean;
+}
+
+// The same thing can be done with type aliases
+type ApiResponseType<DataType> = {
+  data: DataType;
+  isError: boolean;
+};
+
+// Now you can create specific types by providing the generic type parameter
+const stringApiResponse: ApiResponse<string> = {
+  data: "Hello, World!",
+  isError: false,
+};
+console.log(stringApiResponse);
+
+// Or with an object type
+const response: ApiResponse<{ id: number; name: string }> = {
+  data: { id: 1, name: "Test" },
+  isError: false,
+};
+console.log(response);
+
+// You can also create a type alias for a generic type to make it easier to use
+type BlogTitleResponse = ApiResponse<{ title: string }>;
+
+const blogResponse: BlogTitleResponse = {
+  data: { title: "My First Blog" },
+  isError: false,
+};
+console.log(blogResponse);
+
+// ============================================
+// 3. Using Generics in Built-in Types
 // ============================================
 
 // Generics are everywhere in TypeScript. For example, when selecting DOM elements:
@@ -78,28 +120,6 @@ const strArray: string[] = ["a", "b", "c"];
 console.log(strArray);
 
 // ============================================
-// 3. Custom generic types
-// ============================================
-
-interface ApiResponse<DataType> {
-  data: DataType;
-  isError: boolean;
-}
-
-const response: ApiResponse<{ id: number; name: string }> = {
-  data: { id: 1, name: "Test" },
-  isError: false,
-};
-
-// You can also create a type alias for a generic type to make it easier to use
-type BlogTitleResponse = ApiResponse<{ title: string }>;
-
-const blogResponse: BlogTitleResponse = {
-  data: { title: "My First Blog" },
-  isError: false,
-};
-
-// ============================================
 // 4. Multiple Generic Type Parameters
 // ============================================
 
@@ -114,6 +134,7 @@ const pair: Pair<number, string> = {
   first: 1,
   second: "One",
 };
+
 console.log(pair);
 
 // One example of a built-in type that uses multiple generics is Record
@@ -138,7 +159,6 @@ const printLength = <T extends { length: number }>(val: T) => {
   console.log(val.length);
 };
 
-// Now this function works with strings, arrays, or any object with a length property
 printLength("Hello");
 printLength([1, 2, 3, 4]);
 // printLength(123); // Type Error: Argument of type 'number' is not assignable to parameter of type 'HasLength'.
