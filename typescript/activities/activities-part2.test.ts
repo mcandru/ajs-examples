@@ -165,9 +165,9 @@ test("Should safely access nested properties", () => {
 // In a catch block, errors are of type 'unknown' and need to be
 // asserted to the correct type before accessing properties.
 
-export const handleApiError = () => {
+export const handleApiError = (error: unknown) => {
   try {
-    throw Error("Network timeout");
+    throw error;
   } catch (e) {
     // Type assertion needed here to access error properties
     const err = e;
@@ -206,7 +206,7 @@ export const getNote = async (noteId) => {
 };
 
 test("Should fetch user data asynchronously", async () => {
-  const note = await getNote("1");
+  const note = await getNote(1);
   expect(note.id).toEqual(1);
   expect(note.userId).toEqual(1);
   expect(note.content).toEqual("This is my first note");
