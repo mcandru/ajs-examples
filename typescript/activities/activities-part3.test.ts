@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, test, expectTypeOf } from "vitest";
 
 // ============================================
 // TYPESCRIPT FUNDAMENTALS - PRACTICE ACTIVITIES PART 3
@@ -41,9 +41,11 @@ export const wrapInObject = (value) => {
 test("Should wrap values in an object", () => {
   const wrappedNumber = wrapInObject(42);
   expect(wrappedNumber.value).toEqual(42);
+  expectTypeOf(wrappedNumber).toEqualTypeOf<{ value: number }>;
 
   const wrappedString = wrapInObject("hello");
   expect(wrappedString.value).toEqual("hello");
+  expectTypeOf(wrappedString).toEqualTypeOf<{ value: string }>;
 });
 
 // ============================================
@@ -62,10 +64,12 @@ test("Should create boxes with different item types", () => {
   const numberBox = createBox(123, "Number Box");
   expect(numberBox.item).toEqual(123);
   expect(numberBox.label).toEqual("Number Box");
+  expectTypeOf(numberBox).toEqualTypeOf<{ item: number; label: string }>;
 
   const stringBox = createBox("gift", "Gift Box");
   expect(stringBox.item).toEqual("gift");
   expect(stringBox.label).toEqual("Gift Box");
+  expectTypeOf(stringBox).toEqualTypeOf<{ item: string; label: string }>;
 });
 
 // ============================================
@@ -85,13 +89,23 @@ export const createFailureResult = () => {
 };
 
 test("Should create success and failure results", () => {
+  interface SuccessData {
+    id: number;
+    name: string;
+  }
+
   const successResult = createSuccessResult({ id: 1, name: "Test" });
   expect(successResult.success).toBe(true);
   expect(successResult.data).toEqual({ id: 1, name: "Test" });
+  expectTypeOf(successResult).toEqualTypeOf<{
+    success: boolean;
+    data: SuccessData;
+  }>;
 
   const failureResult = createFailureResult();
   expect(failureResult.success).toBe(false);
   expect(failureResult.data).toBeNull();
+  expectTypeOf(failureResult).toEqualTypeOf<{ success: boolean; data: null }>;
 });
 
 // ============================================
@@ -108,10 +122,12 @@ test("Should filter arrays with type-safe predicates", () => {
   const numbers = [1, 2, 3, 4, 5];
   const evenNumbers = filterArray(numbers, (num) => num % 2 === 0);
   expect(evenNumbers).toEqual([2, 4]);
+  expectTypeOf(evenNumbers).toEqualTypeOf<number[]>;
 
   const words = ["apple", "banana", "apricot", "cherry"];
   const aWords = filterArray(words, (word) => word.startsWith("a"));
   expect(aWords).toEqual(["apple", "apricot"]);
+  expectTypeOf(aWords).toEqualTypeOf<string[]>;
 });
 
 // ============================================
@@ -128,18 +144,21 @@ test("Should transform arrays from one type to another", () => {
   const numbers = [1, 2, 3];
   const strings = transformArray(numbers, (num) => `Number: ${num}`);
   expect(strings).toEqual(["Number: 1", "Number: 2", "Number: 3"]);
+  expectTypeOf(strings).toEqualTypeOf<string[]>;
 
   const words = ["hi", "bye", "hello"];
   const lengths = transformArray(words, (word) => word.length);
   expect(lengths).toEqual([2, 3, 5]);
+  expectTypeOf(lengths).toEqualTypeOf<number[]>;
 });
 
 // ============================================
-// EXERCISE 7: Generic Record Type
+// EXERCISE 7: Generic Record Type (BONUS)
 // ============================================
 // Use the Record generic type to create a function that builds a lookup map.
 // The function should take an array of items and a key extractor function,
 // and return an object where keys are extracted from items.
+// Note: this is a particularly tough challenge!
 
 export const createLookupMap = (items, getKey) => {
   const map = {};
@@ -160,6 +179,9 @@ test("Should create a lookup map from an array", () => {
   expect(userMap["1"]).toEqual({ id: "1", name: "Alice" });
   expect(userMap["2"]).toEqual({ id: "2", name: "Bob" });
   expect(userMap["3"]).toEqual({ id: "3", name: "Charlie" });
+  expectTypeOf(userMap).toEqualTypeOf<
+    Record<string, { id: string; name: string }>
+  >;
 });
 
 // ============================================
@@ -203,10 +225,12 @@ test("Should work with generic containers", () => {
   const numberContainer = { items: [1, 2, 3, 4, 5] };
   expect(getTotalItems(numberContainer)).toEqual(5);
   expect(getFirstItem(numberContainer)).toEqual(1);
+  expectTypeOf(numberContainer).toEqualTypeOf<{ items: number[] }>;
 
   const stringContainer = { items: ["a", "b", "c"] };
   expect(getTotalItems(stringContainer)).toEqual(3);
   expect(getFirstItem(stringContainer)).toEqual("a");
+  expectTypeOf(stringContainer).toEqualTypeOf<{ items: string[] }>;
 });
 
 // ============================================
@@ -220,6 +244,12 @@ export const findById = (items, id) => {
 };
 
 test("Should find items by id with proper constraints", () => {
+  interface Product {
+    id: number;
+    name: string;
+    price: number;
+  }
+
   const products = [
     { id: 1, name: "Laptop", price: 999 },
     { id: 2, name: "Mouse", price: 29 },
@@ -228,6 +258,7 @@ test("Should find items by id with proper constraints", () => {
 
   const found = findById(products, 2);
   expect(found).toEqual({ id: 2, name: "Mouse", price: 29 });
+  expectTypeOf(found).toEqualTypeOf<Product | undefined>;
 
   const notFound = findById(products, 99);
   expect(notFound).toBeUndefined();
