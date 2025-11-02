@@ -33,9 +33,10 @@ test("Should add all numbers in the array", () => {
 // The coordinate system works at runtime, but TypeScript wants proper tuple types.
 // Fix the type annotations to use tuples instead of arrays!
 
-type Point = readonly [number, number];
-
-export const getDistance = (pointA: Point, pointB: Point) => {
+export const getDistance = (
+  pointA: [number, number],
+  pointB: [number, number]
+) => {
   const dx = pointB[0] - pointA[0];
   const dy = pointB[1] - pointA[1];
   return Math.sqrt(dx * dx + dy * dy);
@@ -56,6 +57,7 @@ export enum OrderStatus {
   Pending = "PENDING",
   Processing = "PROCESSING",
   Shipped = "SHIPPED",
+  Delivered = "DELIVERED",
 }
 
 export const getNextStatus = (currentStatus: OrderStatus) => {

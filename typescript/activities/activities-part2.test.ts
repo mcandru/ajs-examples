@@ -18,13 +18,17 @@ import { expect, test } from "vitest";
 // Create type aliases to make the function signatures cleaner.
 // The UserID should be a string, and Email should be a string.
 
-// TODO: Define type aliases here
+type Email = string; // A bit pointless to do here
+type User = {
+  id: string;
+  email: Email;
+};
 
-export const createUser = (user) => {
+export const createUser = (user: User) => {
   return { id: user.id, email: user.email };
 };
 
-export const validateEmail = (email) => {
+export const validateEmail = (email: Email) => {
   return email.includes("@");
 };
 
@@ -41,9 +45,13 @@ test("Should create user with proper types", () => {
 // Define an interface for a Person with firstName, lastName, and an optional age.
 // Then use it in the function below.
 
-// TODO: Define the Person interface here
+interface Person {
+  age?: number;
+  firstName: string;
+  lastName: string;
+}
 
-export const getPersonInfo = (person) => {
+export const getPersonInfo = (person: Person) => {
   if (person.age !== undefined) {
     return `${person.firstName} ${person.lastName} is ${person.age} years old`;
   }
@@ -65,7 +73,7 @@ test("Should format person info with and without age", () => {
 // The function accepts different types of input.
 // Create a union type for the status parameter.
 
-export const formatStatus = (status) => {
+export const formatStatus = (status: number | string) => {
   if (typeof status === "number") {
     return `Code: ${status}`;
   }
@@ -84,16 +92,21 @@ test("Should format status as number or string", () => {
 // Combine two types using intersection types.
 // Employee should have all properties from both Person and Job.
 
-// TODO: Define the types
-// type Person = { name: string; age: number }
-// type Job = { title: string; salary: number }
-// type Employee = ...
+type PersonType = { name: string; age: number };
+type Job = { title: string; salary: number };
 
-export const createEmployee = (name, age, title, salary) => {
+type Employee = PersonType & Job;
+
+export const createEmployee = (
+  name: string,
+  age: number,
+  title: string,
+  salary: number
+): Employee => {
   return { name, age, title, salary };
 };
 
-export const getEmployeeSummary = (employee) => {
+export const getEmployeeSummary = (employee: Employee): string => {
   return `${employee.name}, ${employee.age}, works as ${employee.title} earning $${employee.salary}`;
 };
 
@@ -110,7 +123,9 @@ test("Should create employee with intersection type", () => {
 // Use string literal types to constrain the direction parameter.
 // It should only accept "north", "south", "east", or "west".
 
-export const move = (direction) => {
+type Direction = "north" | "south" | "east" | "west";
+
+export const move = (direction: Direction): number[] => {
   const directions = {
     north: [0, 1],
     south: [0, -1],
@@ -141,7 +156,7 @@ type Address = {
 
 type Customer = {
   name: string;
-  address: Address;
+  address?: Address;
 };
 
 export const getZipCode = (customer: Customer) => {
@@ -165,12 +180,12 @@ test("Should safely access nested properties", () => {
 // In a catch block, errors are of type 'unknown' and need to be
 // asserted to the correct type before accessing properties.
 
-export const handleApiError = () => {
+export const handleApiError = (error: unknown) => {
   try {
-    throw Error("Network timeout");
+    throw error;
   } catch (e) {
     // Type assertion needed here to access error properties
-    const err = e;
+    const err = e as Error;
     if (err.message) {
       return `Error: ${err.message}`;
     }
@@ -190,9 +205,15 @@ test("Should handle errors with type assertion in catch block", () => {
 // EXERCISE 8: Async Functions and Promises
 // ============================================
 // Add proper return type annotations for the async functions.
-// They should return Promise<T> where T is the resolved value type.
 
-export const fetchUserData = async (noteId) => {
+interface Note {
+  id: number;
+  userId: number;
+  content: string;
+  important: boolean;
+}
+
+export const fetchUserData = async (noteId: number): Promise<Note> => {
   const response = await fetch(
     `https://ajs-notes-json-server.vercel.app/notes/${noteId}`
   );
@@ -200,13 +221,13 @@ export const fetchUserData = async (noteId) => {
   return data;
 };
 
-export const getNote = async (noteId) => {
+export const getNote = async (noteId: number) => {
   const note = await fetchUserData(noteId);
   return note;
 };
 
 test("Should fetch user data asynchronously", async () => {
-  const note = await getNote("1");
+  const note = await getNote(1);
   expect(note.id).toEqual(1);
   expect(note.userId).toEqual(1);
   expect(note.content).toEqual("This is my first note");
