@@ -167,11 +167,11 @@ printLength([1, 2, 3, 4]);
 // 6. Type Narrowing Techniques
 // ============================================
 
-// Type narrowing is the process of refining a union type to a more specific type
+// Type narrowing is the process of refining a variable's type from a broader type to a more specific one
 // TypeScript provides several ways to narrow types
 
 // 6.1 typeof type guards
-function processValue(value: string | number) {
+function processValue(value: string | number): string {
   if (typeof value === "string") {
     // Inside this block, TypeScript knows value is a string
     return value.toUpperCase();
@@ -197,13 +197,15 @@ class Cat {
   }
 }
 
-function makeSound(animal: Dog | Cat) {
+function makeSound(animal: Dog | Cat): void {
   if (animal instanceof Dog) {
     // TypeScript knows animal is a Dog here
     animal.bark();
-  } else {
+  } else if ("meow" in animal) {
     // TypeScript knows animal is a Cat here
     animal.meow();
+  } else {
+    console.log("Unknown animal");
   }
 }
 
@@ -247,5 +249,32 @@ function processUnknown(input: unknown) {
 console.log(processUnknown("hello"));
 console.log(processUnknown(42.12345));
 console.log(processUnknown(true));
+
+// ============================================
+// 7. Interface Merging
+// ============================================
+
+// In TypeScript, interfaces with the same name will automatically merge
+// This allows you to extend existing interfaces without modifying their original definition
+// This is particularly useful when working with third-party libraries if
+// you want to add additional properties to an existing interface
+
+interface User {
+  id: number;
+  name: string;
+}
+
+interface User {
+  email: string;
+}
+
+// The User interface is now merged to include all properties
+const user: User = {
+  id: 1,
+  name: "Alice",
+  email: "alice@example.com",
+};
+
+console.log(user);
 
 export {};
