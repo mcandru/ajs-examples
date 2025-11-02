@@ -18,7 +18,7 @@ import { expect, test } from "vitest";
 // The tests pass, but TypeScript is unhappy about the array types.
 // Fix the type annotations!
 
-export const addNumbers = (numbers) => {
+export const addNumbers = (numbers: number[]) => {
   return numbers.reduce((acc, num) => acc + num, 0);
 };
 
@@ -33,7 +33,9 @@ test("Should add all numbers in the array", () => {
 // The coordinate system works at runtime, but TypeScript wants proper tuple types.
 // Fix the type annotations to use tuples instead of arrays!
 
-export const getDistance = (pointA, pointB) => {
+type Point = readonly [number, number];
+
+export const getDistance = (pointA: Point, pointB: Point) => {
   const dx = pointB[0] - pointA[0];
   const dy = pointB[1] - pointA[1];
   return Math.sqrt(dx * dx + dy * dy);
@@ -50,12 +52,11 @@ test("Should calculate distance between two points", () => {
 // Define the OrderStatus enum below.
 // The tests expect specific string values!
 
-export enum OrderStatus {}
-// TODO: Add enum values here
-// Pending should equal "PENDING"
-// Processing should equal "PROCESSING"
-// Shipped should equal "SHIPPED"
-// Delivered should equal "DELIVERED"
+export enum OrderStatus {
+  Pending = "PENDING",
+  Processing = "PROCESSING",
+  Shipped = "SHIPPED",
+}
 
 export const getNextStatus = (currentStatus: OrderStatus) => {
   if (currentStatus === OrderStatus.Pending) return OrderStatus.Processing;
@@ -76,7 +77,7 @@ test("Should transition order status correctly", () => {
 // ============================================
 // The function works, but TypeScript complains about the parameter types.
 
-export const calculateTax = (income, taxYear) => {
+export const calculateTax = (income: number, taxYear?: number) => {
   if (taxYear && taxYear < 2020) {
     return income * 0.15;
   }
@@ -94,7 +95,7 @@ test("Should calculate tax with and without tax year", () => {
 // ============================================
 // The getName function works at runtime, but TypeScript sees a type error.
 
-export const getName = (params: { first: string; last: string }) => {
+export const getName = (params: { first: string; last?: string }) => {
   if (params.last) {
     return `${params.first} ${params.last}`;
   }
@@ -112,11 +113,11 @@ test("Should get name with or without last name", () => {
 // The tests pass, but we want to prevent ORIGIN from being modified.
 // Add the 'readonly' modifier to the tuple types
 
-export const ORIGIN: [number, number] = [0, 0];
+export const ORIGIN: readonly [number, number] = [0, 0];
 
 export const translatePoint = (
-  point: [number, number],
-  offset: [number, number]
+  point: readonly [number, number],
+  offset: readonly [number, number]
 ) => {
   return [point[0] + offset[0], point[1] + offset[1]];
 };
@@ -144,7 +145,8 @@ test("Should translate point from origin", () => {
 export type Product = {
   id: string;
   name: string;
-  // TODO: Add the missing properties
+  price: number;
+  calculateDiscount: (discountPercent: number) => number;
 };
 
 export const createProduct = (
