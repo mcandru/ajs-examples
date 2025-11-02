@@ -206,7 +206,7 @@ test("Should create a lookup map from an array", () => {
 });
 
 // ============================================
-// EXERCISE 8: Generic Promise Return Type
+// EXERCISE 8: Generic Promise Return Type (BONUS)
 // ============================================
 // Create an async function with a proper generic Promise return type.
 // The function should simulate fetching data and return a typed response.
