@@ -227,6 +227,8 @@ value = 42;
 value = true;
 value = { name: "test" };
 
+// value.toUpperCase(); // Type Error: Object is of type 'unknown'.
+
 // But you can't use it directly without narrowing
 // console.log(value.toUpperCase()); // Type Error: Object is of type 'unknown'.
 
