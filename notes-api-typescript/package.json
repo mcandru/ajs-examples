@@ -1,0 +1,51 @@
+{
+  "name": "notes-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "tsx --env-file=.env --watch index.ts",
+    "seed": "tsx --env-file=.env utils/seed.ts",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "cross-env NODE_ENV=test MONGODB_URI=mongodb://localhost:27017/test-db SESSION_SECRET=test-secret jest --runInBand",
+    "test:coverage": "npm test -- --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-mongo": "^5.1.0",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
+    "mongoose": "^8.18.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
+    "@eslint/js": "^9.36.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.5",
+    "@types/express-session": "^1.18.2",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.9.2",
+    "@types/supertest": "^6.0.3",
+    "babel-jest": "^30.2.0",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.4.0",
+    "jest": "^30.2.0",
+    "prettier": "^3.6.2",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.5",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

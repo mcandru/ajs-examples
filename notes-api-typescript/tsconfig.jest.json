@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    // ts-test compiles on the fly. Enabling isolatedModules for faster compilation because
+    // it skips full type-checking.
+    "isolatedModules": true
+  }
+}
