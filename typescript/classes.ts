@@ -320,13 +320,9 @@ abstract class Shape2 {
   }
 }
 
-abstract class Test {
-  abstract calculatePerimeter(): number;
-}
-
 // const shape = new Shape2("red"); // Error: Cannot create an instance of an abstract class
 
-class Circle2 extends Shape2, Test {
+class Circle2 extends Shape2 {
   constructor(color: string, public radius: number) {
     super(color);
   }
