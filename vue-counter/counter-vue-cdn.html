@@ -33,6 +33,14 @@
       // Mount the app to the #app div
       // What happens here:
       // 1. Vue compiles the template (HTML inside #app) into a render function (once)
+      // The render function looks roughly like:
+      // function render() {
+      //   return h('div', { id: 'app' }, [
+      //     h('h1', 'Vue CDN Counter'),
+      //     h('div', { id: 'count' }, this.count),
+      //     h('button', { onClick: this.incrementCounter }, 'Increment')
+      //   ])
+      // }
       // 2. The render function creates a virtual DOM tree
       // 3. Vue converts the virtual DOM into real DOM and replaces/updates #app
       //
