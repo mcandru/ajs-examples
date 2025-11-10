@@ -1,18 +1,18 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue";
 
 // ============================================
 // AVAILABLE PRODUCTS
 // ============================================
 // This array contains the products available in the store
 const products = [
-  { id: 1, name: 'Laptop', price: 999.99 },
-  { id: 2, name: 'Wireless Mouse', price: 29.99 },
-  { id: 3, name: 'Keyboard', price: 79.99 },
-  { id: 4, name: 'Monitor', price: 299.99 },
-  { id: 5, name: 'USB-C Cable', price: 12.99 },
-  { id: 6, name: 'Headphones', price: 149.99 },
-]
+  { id: 1, name: "Laptop", price: 999.99 },
+  { id: 2, name: "Wireless Mouse", price: 29.99 },
+  { id: 3, name: "Keyboard", price: 79.99 },
+  { id: 4, name: "Monitor", price: 299.99 },
+  { id: 5, name: "USB-C Cable", price: 12.99 },
+  { id: 6, name: "Headphones", price: 149.99 },
+];
 
 // ============================================
 // TODO 1: REACTIVE STATE
@@ -24,7 +24,6 @@ const products = [
 
 // TODO: Define your reactive state here
 // Hint: Use ref() for primitive values, reactive() or ref() for objects/arrays
-
 
 // ============================================
 // TODO 2: COMPUTED PROPERTIES
@@ -43,7 +42,6 @@ const products = [
 //   // Your calculation here
 // })
 
-
 // ============================================
 // TODO 3: METHODS
 // ============================================
@@ -58,8 +56,6 @@ const products = [
 // const addToCart = (product) => {
 //   // Your logic here
 // }
-
-
 </script>
 
 <template>
@@ -86,7 +82,6 @@ const products = [
         </div>
 
         <!-- TODO: Replace above div with v-for loop -->
-
       </div>
 
       <!-- ============================================ -->
@@ -140,12 +135,7 @@ const products = [
           <div class="summary-row">
             <span>Discount (%):</span>
             <!-- TODO: Use v-model to bind discountPercent -->
-            <input
-              type="number"
-              min="0"
-              max="100"
-              placeholder="0"
-            />
+            <input type="number" min="0" max="100" placeholder="0" />
           </div>
 
           <div class="summary-row">
