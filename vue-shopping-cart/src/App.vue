@@ -18,12 +18,26 @@ const cart = ref([]);
 const discountPercent = ref(0);
 
 const addToCart = ({ id, name, price }) => {
-  cart.value.push({
-    id,
-    name,
-    price,
-    quantity: 1,
-  });
+  const existingItem = cart.value.find((item) => item.id === id);
+
+  if (existingItem) {
+    existingItem.quantity++;
+  } else {
+    cart.value.push({
+      id,
+      name,
+      price,
+      quantity: 1,
+    });
+  }
+};
+
+const decrementQuantity = (item) => {
+  if (item.quantity > 1) {
+    item.quantity--;
+  } else {
+    removeFromCart(item);
+  }
 };
 
 const removeFromCart = (itemToRemove) => {
@@ -60,10 +74,10 @@ const total = computed(() => subtotal.value - discountAmount.value + tax.value);
       <div class="card">
         <h2>Products</h2>
 
-        <div v-for="product in products" class="product-item">
+        <div v-for="product in products" class="product-item" :key="product.id">
           <div>
             <strong>{{ product.name }}</strong>
-            <div>{{ (product.price / 100).toFixed(2) }}</div>
+            <div>${{ (product.price / 100).toFixed(2) }}</div>
           </div>
           <button @click="addToCart(product)">Add to Cart</button>
         </div>
@@ -82,13 +96,15 @@ const total = computed(() => subtotal.value - discountAmount.value + tax.value);
         </div>
 
         <div v-else>
-          <div v-for="item in cart" class="cart-item">
+          <div v-for="item in cart" class="cart-item" :key="item.id">
             <div>
               <strong>{{ item.name }}</strong>
               <div>${{ (item.price / 100).toFixed(2) }} each</div>
             </div>
             <div class="quantity-controls">
-              <button @click="item.quantity--" class="quantity-btn">-</button>
+              <button @click="decrementQuantity(item)" class="quantity-btn">
+                -
+              </button>
               <span>{{ item.quantity }}</span>
               <button @click="item.quantity++" class="quantity-btn">+</button>
               <button @click="removeFromCart(item)">Remove</button>
@@ -136,7 +152,14 @@ const total = computed(() => subtotal.value - discountAmount.value + tax.value);
           </div>
 
           <div class="controls">
-            <button @click="cart = []">Clear Cart</button>
+            <button
+              @click="
+                cart = [];
+                discountPercent = 0;
+              "
+            >
+              Clear Cart
+            </button>
           </div>
         </div>
       </div>
