@@ -51,8 +51,8 @@ const products = [
         <div>
           <div class="cart-item">
             <div>
-              <strong>{{ item.name }}</strong>
-              <div>${{ (item.price / 100).toFixed(2) }} each</div>
+              <strong>{{ "Item" }}</strong>
+              <div>${{ 0 }} each</div>
             </div>
             <div class="quantity-controls">
               <button class="quantity-btn">-</button>
