@@ -1,5 +1,8 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
+import ProductCard from "./components/ProductCard.vue";
+import CartItem from "./components/CartItem.vue";
+import CartSummary from "./components/CartSummary.vue";
 
 // ============================================
 // AVAILABLE PRODUCTS
@@ -32,6 +35,10 @@ const addToCart = ({ id, name, price }) => {
   }
 };
 
+const incrementQuantity = (item) => {
+  item.quantity++;
+};
+
 const decrementQuantity = (item) => {
   if (item.quantity > 1) {
     item.quantity--;
@@ -44,22 +51,10 @@ const removeFromCart = (itemToRemove) => {
   cart.value = cart.value.filter((item) => item !== itemToRemove);
 };
 
-const subtotal = computed(() => {
-  return cart.value.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
-});
-
-const discountAmount = computed(() => {
-  return subtotal.value * (discountPercent.value / 100);
-});
-
-const tax = computed(() => {
-  return (subtotal.value - discountAmount.value) * 0.1;
-});
-
-const total = computed(() => subtotal.value - discountAmount.value + tax.value);
+const clearCart = () => {
+  cart.value = [];
+  discountPercent.value = 0;
+};
 </script>
 
 <template>
@@ -70,24 +65,19 @@ const total = computed(() => subtotal.value - discountAmount.value + tax.value);
       <!-- ============================================ -->
       <!-- PRODUCTS SECTION -->
       <!-- ============================================ -->
-      <!-- TODO 1: Implement displaying products -->
       <div class="card">
         <h2>Products</h2>
-
-        <div v-for="product in products" class="product-item" :key="product.id">
-          <div>
-            <strong>{{ product.name }}</strong>
-            <div>${{ (product.price / 100).toFixed(2) }}</div>
-          </div>
-          <button @click="addToCart(product)">Add to Cart</button>
-        </div>
+        <ProductCard
+          v-for="product in products"
+          :key="product.id"
+          :product="product"
+          @add-to-cart="addToCart"
+        />
       </div>
 
       <!-- ============================================ -->
       <!-- CART SECTION -->
       <!-- ============================================ -->
-      <!-- TODO 2: Implement displaying shopping cart, -->
-      <!-- incrementing and decrementing quantity and removing from cart -->
       <div class="card">
         <h2>Shopping Cart</h2>
 
@@ -96,72 +86,24 @@ const total = computed(() => subtotal.value - discountAmount.value + tax.value);
         </div>
 
         <div v-else>
-          <div v-for="item in cart" class="cart-item" :key="item.id">
-            <div>
-              <strong>{{ item.name }}</strong>
-              <div>${{ (item.price / 100).toFixed(2) }} each</div>
-            </div>
-            <div class="quantity-controls">
-              <button @click="decrementQuantity(item)" class="quantity-btn">
-                -
-              </button>
-              <span>{{ item.quantity }}</span>
-              <button @click="item.quantity++" class="quantity-btn">+</button>
-              <button @click="removeFromCart(item)">Remove</button>
-            </div>
-          </div>
+          <CartItem
+            v-for="item in cart"
+            :key="item.id"
+            :item="item"
+            @increment="incrementQuantity"
+            @decrement="decrementQuantity"
+            @remove="removeFromCart"
+          />
         </div>
 
         <!-- ============================================ -->
         <!-- CART SUMMARY -->
         <!-- ============================================ -->
-        <!-- TODO 3: Calculate and display subtotal, track discount amount, -->
-        <!-- calculate discount, tax, and calculate the total. Implement the cart clearing  -->
-
-        <div class="summary">
-          <div class="summary-row">
-            <span>Subtotal:</span>
-            <span>${{ (subtotal / 100).toFixed(2) }}</span>
-          </div>
-
-          <div class="summary-row">
-            <span>Discount (%):</span>
-            <!-- Hint: Use v-model to bind -->
-            <input
-              type="number"
-              min="0"
-              max="100"
-              placeholder="0"
-              v-model="discountPercent"
-            />
-          </div>
-
-          <div class="summary-row">
-            <span>Discount Amount:</span>
-            <span>-${{ (discountAmount / 100).toFixed(2) }}</span>
-          </div>
-
-          <div class="summary-row">
-            <span>Tax (10%):</span>
-            <span>${{ (tax / 100).toFixed(2) }}</span>
-          </div>
-
-          <div class="summary-row total">
-            <span>Total:</span>
-            <span>${{ (total / 100).toFixed(2) }}</span>
-          </div>
-
-          <div class="controls">
-            <button
-              @click="
-                cart = [];
-                discountPercent = 0;
-              "
-            >
-              Clear Cart
-            </button>
-          </div>
-        </div>
+        <CartSummary
+          :cart="cart"
+          v-model:discount-percent="discountPercent"
+          @clear-cart="clearCart"
+        />
       </div>
     </div>
   </div>
