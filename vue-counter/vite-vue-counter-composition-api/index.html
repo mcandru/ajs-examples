@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite Vue Counter</title>
+  </head>
+  <body>
+    <!-- Empty div where Vue will mount the app -->
+    <div id="app"></div>
+
+    <!-- type="module" tells the browser to load this as an ES module -->
+    <!-- ES modules support import/export syntax and are loaded asynchronously -->
+    <!-- The browser makes a request to Vite dev server for /src/main.js -->
+    <!-- Vite intercepts this request and transforms the file on-the-fly: -->
+    <!--   - Resolves bare imports like "vue" to actual file paths -->
+    <!--   - Transforms .vue files into JavaScript -->
+    <!--   - Adds hot module replacement (HMR) code in dev mode -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
