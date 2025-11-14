@@ -3,7 +3,6 @@ import { ref, computed, onMounted } from "vue";
 import type { Note as NoteType } from "@/types";
 import Note from "@/components/Note.vue";
 import { createNote, removeNote } from "@/services/notes.ts";
-import authStore from "@/stores/auth.ts";
 import { getAllNotes } from "@/services/notes.ts";
 
 const hideImportant = ref(false);
@@ -12,9 +11,11 @@ const notes = ref<NoteType[]>([]);
 const filteredNotes = computed(() => {
   return notes.value.filter((note) => !note.important || !hideImportant.value);
 });
+const isLoading = ref(true);
 
 onMounted(async () => {
   notes.value = await getAllNotes();
+  isLoading.value = false;
 });
 
 const addNewNote = async () => {
@@ -29,7 +30,8 @@ const deleteNote = async (noteToDelete: NoteType) => {
 </script>
 
 <template>
-  <div v-if="authStore.isLoggedIn">
+  <div v-if="isLoading">Loading...</div>
+  <div v-else>
     <form @submit.prevent="addNewNote">
       <input type="text" v-model="newNote" />
       <button type="submit">Submit</button>
@@ -47,8 +49,5 @@ const deleteNote = async (noteToDelete: NoteType) => {
     <button @click="hideImportant = !hideImportant">
       {{ hideImportant ? "Show All" : "Hide Important" }}
     </button>
-  </div>
-  <div v-else>
-    <p>Please log in to view and manage your notes.</p>
   </div>
 </template>

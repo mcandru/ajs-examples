@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { ref } from "vue";
 import {
   login as loginService,
   register as registerService,
@@ -7,68 +7,59 @@ import {
 } from "@/services/auth";
 import type { User } from "@/types";
 
-interface AuthState {
-  isLoggedIn: boolean;
-  user: User | null;
-  isLoading: boolean;
-  checkAuth: () => void;
-  login: (email: string, password: string) => void;
-  register: (email: string, password: string) => void;
-  logout: () => void;
-}
+export const isLoggedIn = ref(false);
+export const user = ref<User | null>(null);
+export const isLoading = ref(false);
 
-export default reactive<AuthState>({
-  isLoggedIn: false,
-  user: null,
-  isLoading: false,
+export const checkAuth = async (): Promise<void> => {
+  isLoading.value = true;
+  try {
+    const response = await getProfile();
+    isLoggedIn.value = response.authenticated;
+    user.value = response.user || null;
+  } catch (error) {
+    isLoggedIn.value = false;
+    user.value = null;
+  } finally {
+    isLoading.value = false;
+  }
+};
 
-  async checkAuth() {
-    this.isLoading = true;
-    try {
-      const response = await getProfile();
-      this.isLoggedIn = response.authenticated;
-      this.user = response.user || null;
-    } catch (error) {
-      this.isLoggedIn = false;
-      this.user = null;
-    } finally {
-      this.isLoading = false;
-    }
-  },
+export const login = async (email: string, password: string): Promise<void> => {
+  isLoading.value = true;
+  try {
+    const response = await loginService(email, password);
+    isLoggedIn.value = true;
+    user.value = response.user;
+  } catch (error) {
+    isLoggedIn.value = false;
+    user.value = null;
+    throw error;
+  } finally {
+    isLoading.value = false;
+  }
+};
 
-  async login(email: string, password: string) {
-    this.isLoading = true;
-    try {
-      const response = await loginService(email, password);
-      this.isLoggedIn = true;
-      this.user = response.user;
-    } catch (error) {
-      this.isLoggedIn = false;
-      this.user = null;
-      throw error;
-    } finally {
-      this.isLoading = false;
-    }
-  },
+export const register = async (
+  email: string,
+  password: string
+): Promise<void> => {
+  isLoading.value = true;
+  try {
+    const response = await registerService(email, password);
+    isLoggedIn.value = true;
+    user.value = response.user;
+  } catch (error) {
+    isLoggedIn.value = false;
+    user.value = null;
+    throw error;
+  } finally {
+    isLoading.value = false;
+  }
+};
 
-  async register(email: string, password: string) {
-    this.isLoading = true;
-    try {
-      const response = await registerService(email, password);
-      this.isLoggedIn = true;
-      this.user = response.user;
-    } catch (error) {
-      this.isLoggedIn = false;
-      this.user = null;
-      throw error;
-    } finally {
-      this.isLoading = false;
-    }
-  },
-
-  async logout() {
-    await logoutService();
-    this.isLoggedIn = false;
-    this.user = null;
-  },
-});
+export const logout = async (): Promise<void> => {
+  await logoutService();
+  isLoggedIn.value = false;
+  user.value = null;
+};

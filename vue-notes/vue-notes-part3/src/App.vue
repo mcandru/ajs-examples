@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import authStore from "@/stores/auth";
+import { isLoggedIn, isLoading, checkAuth } from "@/stores/auth";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-
 onMounted(async () => {
-  await authStore.checkAuth();
-  if (!authStore.isLoggedIn) {
+  await checkAuth();
+  if (!isLoggedIn.value) {
     router.push("/login");
   }
 });
@@ -17,15 +16,13 @@ onMounted(async () => {
 <template>
   <h1>Notes</h1>
 
-  <div v-if="authStore.isLoading">Loading...</div>
+  <div v-if="isLoading">Loading...</div>
   <div v-else>
     <nav>
       <RouterLink to="/">Notes</RouterLink>
-      <RouterLink v-if="!authStore.isLoggedIn" to="/login">Login</RouterLink>
-      <RouterLink v-if="!authStore.isLoggedIn" to="/register"
-        >Register</RouterLink
-      >
-      <RouterLink v-if="authStore.isLoggedIn" to="/profile">Profile</RouterLink>
+      <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
+      <RouterLink v-if="!isLoggedIn" to="/register">Register</RouterLink>
+      <RouterLink v-if="isLoggedIn" to="/profile">Profile</RouterLink>
     </nav>
 
     <RouterView />

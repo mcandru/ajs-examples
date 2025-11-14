@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import authStore from "@/stores/auth";
+import { login, isLoggedIn, isLoading } from "@/stores/auth";
 
 const router = useRouter();
 
@@ -9,7 +9,7 @@ const email = ref("");
 const password = ref("");
 
 const handleSubmit = async () => {
-  await authStore.login(email.value, password.value);
+  await login(email.value, password.value);
   router.push("/");
 };
 </script>
@@ -17,10 +17,10 @@ const handleSubmit = async () => {
 <template>
   <h1>Login</h1>
 
-  <div v-if="authStore.isLoggedIn">
+  <div v-if="isLoggedIn">
     <p>You are logged in!</p>
   </div>
-  <div v-else-if="authStore.isLoading">
+  <div v-else-if="isLoading">
     <p>Loading...</p>
   </div>
   <div v-else>

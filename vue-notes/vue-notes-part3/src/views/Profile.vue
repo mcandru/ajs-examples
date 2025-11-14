@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import authStore from "@/stores/auth";
-
-const { isLoggedIn, user, isLoading } = authStore;
+import { isLoggedIn, user, isLoading, logout } from "@/stores/auth";
 
 const router = useRouter();
 
-const logout = async () => {
-  await authStore.logout();
+const handleLogout = async () => {
+  await logout();
   router.push("/login");
 };
 </script>
@@ -16,7 +14,7 @@ const logout = async () => {
   <div v-if="isLoggedIn && user">
     <h1>{{ user.email }}'s Profile</h1>
     <p><strong>Email:</strong> {{ user.email }}</p>
-    <button @click="logout">Logout</button>
+    <button @click="handleLogout">Logout</button>
   </div>
   <div v-else-if="isLoading">
     <p>Loading...</p>
