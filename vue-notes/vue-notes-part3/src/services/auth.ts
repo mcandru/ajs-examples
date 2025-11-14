@@ -14,11 +14,13 @@ interface LoginResponse {
   user: User;
 }
 
+const BASE_URL = "/api/auth";
+
 export const login = async (
   email: string,
   password: string
 ): Promise<LoginResponse> => {
-  const response = await axios.post("http://localhost:5173/api/auth/login", {
+  const response = await axios.post(`${BASE_URL}/login`, {
     email,
     password,
   });
@@ -29,7 +31,7 @@ export const register = async (
   email: string,
   password: string
 ): Promise<LoginResponse> => {
-  const response = await axios.post("http://localhost:5173/api/auth/register", {
+  const response = await axios.post(`${BASE_URL}/register`, {
     email,
     password,
   });
@@ -38,7 +40,7 @@ export const register = async (
 
 export const getProfile = async (): Promise<UserResponse> => {
   try {
-    const response = await axios.get("http://localhost:5173/api/auth/me");
+    const response = await axios.get(`${BASE_URL}/me`);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
@@ -49,5 +51,5 @@ export const getProfile = async (): Promise<UserResponse> => {
 };
 
 export const logout = async (): Promise<void> => {
-  await axios.post("http://localhost:5173/api/auth/logout");
+  await axios.post(`${BASE_URL}/logout`);
 };

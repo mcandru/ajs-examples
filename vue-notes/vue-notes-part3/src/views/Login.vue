@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { authStore } from "@/stores/auth";
+import authStore from "@/stores/auth";
 
 const router = useRouter();
 
@@ -17,10 +17,10 @@ const handleSubmit = async () => {
 <template>
   <h1>Login</h1>
 
-  <div v-if="authStore.state.isLoggedIn">
+  <div v-if="authStore.isLoggedIn">
     <p>You are logged in!</p>
   </div>
-  <div v-else-if="authStore.state.isLoading">
+  <div v-else-if="authStore.isLoading">
     <p>Loading...</p>
   </div>
   <div v-else>

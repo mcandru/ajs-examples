@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import type { Note as NoteType } from "@/types";
 import Note from "@/components/Note.vue";
 import { createNote, removeNote } from "@/services/notes.ts";
-import { authStore } from "@/stores/auth.ts";
+import authStore from "@/stores/auth.ts";
 import { getAllNotes } from "@/services/notes.ts";
 
 const hideImportant = ref(false);
@@ -29,7 +29,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
 </script>
 
 <template>
-  <div v-if="authStore.state.isLoggedIn">
+  <div v-if="authStore.isLoggedIn">
     <form @submit.prevent="addNewNote">
       <input type="text" v-model="newNote" />
       <button type="submit">Submit</button>

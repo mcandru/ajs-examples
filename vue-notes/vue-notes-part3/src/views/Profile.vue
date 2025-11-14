@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { authStore } from "@/stores/auth";
+import authStore from "@/stores/auth";
 
-const { isLoggedIn, user } = authStore.state;
+const { isLoggedIn, user, isLoading } = authStore;
 
 const router = useRouter();
 
@@ -18,7 +18,7 @@ const logout = async () => {
     <p><strong>Email:</strong> {{ user.email }}</p>
     <button @click="logout">Logout</button>
   </div>
-  <div v-else-if="authStore.state.isLoading">
+  <div v-else-if="isLoading">
     <p>Loading...</p>
   </div>
   <div v-else>
