@@ -7,7 +7,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 onMounted(async () => {
   await checkAuth();
-  if (!isLoggedIn.value) {
+  if (!isLoggedIn.value && !isLoading.value) {
     router.push("/login");
   }
 });
@@ -35,5 +35,9 @@ nav {
 }
 nav a {
   margin-right: 10px;
+}
+
+.router-link-exact-active {
+  font-weight: bold;
 }
 </style>
