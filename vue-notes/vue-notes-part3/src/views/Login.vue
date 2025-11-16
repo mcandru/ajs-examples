@@ -7,9 +7,12 @@ const router = useRouter();
 
 const email = ref("");
 const password = ref("");
+const isSubmitting = ref(false);
 
 const handleSubmit = async () => {
+  isSubmitting.value = true;
   await login(email.value, password.value);
+  isSubmitting.value = false;
   router.push("/");
 };
 </script>
@@ -25,9 +28,9 @@ const handleSubmit = async () => {
   </div>
   <div v-else>
     <form @submit.prevent="handleSubmit">
-      <input type="text" placeholder="you@example.com" v-model="email" />
+      <input type="email" placeholder="you@example.com" v-model="email" />
       <input type="password" placeholder="Password" v-model="password" />
-      <button type="submit">Login</button>
+      <button type="submit" :disabled="isSubmitting">Login</button>
     </form>
   </div>
 </template>

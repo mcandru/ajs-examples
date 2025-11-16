@@ -9,7 +9,7 @@ import type { User } from "@/types";
 
 export const isLoggedIn = ref(false);
 export const user = ref<User | null>(null);
-export const isLoading = ref(false);
+export const isLoading = ref(true); // Start as true to prevent race condition
 
 export const checkAuth = async (): Promise<void> => {
   isLoading.value = true;

@@ -19,8 +19,15 @@ onMounted(async () => {
 });
 
 const addNewNote = async () => {
+  if (newNote.value.trim() === "") return;
+
   const response = await createNote(newNote.value);
   notes.value.push(response);
+  newNote.value = "";
+};
+
+const toggleImportant = (note: NoteType) => {
+  note.important = !note.important;
 };
 
 const deleteNote = async (noteToDelete: NoteType) => {
@@ -37,17 +44,18 @@ const deleteNote = async (noteToDelete: NoteType) => {
       <button type="submit">Submit</button>
     </form>
 
+    <button @click="hideImportant = !hideImportant">
+      {{ hideImportant ? "Show All" : "Hide Important" }}
+    </button>
+
     <ul>
       <Note
         v-for="note in filteredNotes"
         :key="note.id"
         :note="note"
         @delete="deleteNote"
-        @toggle-important="note.important = !note.important"
+        @toggle-important="toggleImportant(note)"
       />
     </ul>
-    <button @click="hideImportant = !hideImportant">
-      {{ hideImportant ? "Show All" : "Hide Important" }}
-    </button>
   </div>
 </template>
