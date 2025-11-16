@@ -32,7 +32,7 @@ const deleteNote = async () => {
 <template>
   <!-- Display a back button that goes back to notes. Could also use router.back() if
    you want to preserve the full history-->
-  <button @click="router.push('/')">Back to Notes</button>
+  <RouterLink to="/">Back to Notes</RouterLink>
 
   <div v-if="isLoading">Loading...</div>
   <div v-if="note">
