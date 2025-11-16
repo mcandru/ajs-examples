@@ -29,6 +29,21 @@ notesRouter.get("/:id", validate(noteIdSchema), async (req, res) => {
   res.json(note);
 });
 
+notesRouter.put("/:id", validate(noteSchema), async (req, res) => {
+  const { content, important } = req.body;
+
+  const note = await Note.findById(req.params.id);
+  if (!note) {
+    throw new HttpError(NOT_FOUND, "Could not find note");
+  }
+
+  note.content = content;
+  note.important = important;
+
+  const updatedNote = await note.save();
+  res.json(updatedNote);
+});
+
 notesRouter.post("/", validate(noteSchema), async (req, res) => {
   const body = req.body;
 
