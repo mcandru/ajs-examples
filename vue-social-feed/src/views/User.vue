@@ -66,9 +66,9 @@ onMounted(async () => {
           <p class="post-body">
             {{ post.body }}
           </p>
-          <button class="btn-view" @click="router.push(`/posts/${post.id}`)">
+          <RouterLink :to="`/posts/${post.id}`" class="btn-view">
             Read More
-          </button>
+          </RouterLink>
         </article>
       </div>
     </div>

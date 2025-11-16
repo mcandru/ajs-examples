@@ -219,6 +219,8 @@ body {
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
 }
 
 /* Responsive */
