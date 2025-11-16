@@ -6,108 +6,46 @@
  * All functions are async and return promises.
  */
 
-const BASE_URL = 'https://jsonplaceholder.typicode.com'
+import type { User, Post, Comment } from "@/types/api";
 
-// Type definitions for JSONPlaceholder API responses
-export interface User {
-  id: number
-  name: string
-  username: string
-  email: string
-  address: {
-    street: string
-    suite: string
-    city: string
-    zipcode: string
-    geo: {
-      lat: string
-      lng: string
-    }
-  }
-  phone: string
-  website: string
-  company: {
-    name: string
-    catchPhrase: string
-    bs: string
-  }
-}
+const BASE_URL = "https://jsonplaceholder.typicode.com";
 
-export interface Post {
-  userId: number
-  id: number
-  title: string
-  body: string
-}
+const getUsers = async (): Promise<User[]> => {
+  const response = await fetch(`${BASE_URL}/users`);
+  return response.json();
+};
 
-export interface Comment {
-  postId: number
-  id: number
-  name: string
-  email: string
-  body: string
-}
+const getUser = async (userId: number | string): Promise<User> => {
+  const response = await fetch(`${BASE_URL}/users/${userId}`);
+  return response.json();
+};
 
-/**
- * Fetch all users
- * @returns Promise with array of user objects
- * Endpoint: GET /users
- */
-export async function getUsers(): Promise<User[]> {
-  // TODO: Implement this function
-  // Fetch from `${BASE_URL}/users`
-  // Return the parsed JSON response
-  throw new Error('Not implemented')
-}
+const getPosts = async (): Promise<Post[]> => {
+  const response = await fetch(`${BASE_URL}/posts`);
+  const posts = (await response.json()) as Post[];
+  return posts.sort(() => Math.random() - 0.5).slice(0, 10);
+};
 
-/**
- * Fetch a single user by ID
- * @param userId - The user ID
- * @returns Promise with user object
- * Endpoint: GET /users/:id
- */
-export async function getUser(userId: number | string): Promise<User> {
-  // TODO: Implement this function
-  // Fetch from `${BASE_URL}/users/${userId}`
-  // Return the parsed JSON response
-  throw new Error('Not implemented')
-}
+const getUserPosts = async (userId: number | string): Promise<Post[]> => {
+  const response = await fetch(`${BASE_URL}/users/${userId}/posts`);
+  return response.json();
+};
 
-/**
- * Fetch all posts by a specific user
- * @param userId - The user ID
- * @returns Promise with array of post objects
- * Endpoint: GET /users/:id/posts
- */
-export async function getUserPosts(userId: number | string): Promise<Post[]> {
-  // TODO: Implement this function
-  // Fetch from `${BASE_URL}/users/${userId}/posts`
-  // Return the parsed JSON response
-  throw new Error('Not implemented')
-}
+const getPost = async (postId: number | string): Promise<Post> => {
+  const response = await fetch(`${BASE_URL}/posts/${postId}`);
+  return response.json();
+};
 
-/**
- * Fetch a single post by ID
- * @param postId - The post ID
- * @returns Promise with post object
- * Endpoint: GET /posts/:id
- */
-export async function getPost(postId: number | string): Promise<Post> {
-  // TODO: Implement this function
-  // Fetch from `${BASE_URL}/posts/${postId}`
-  // Return the parsed JSON response
-  throw new Error('Not implemented')
-}
+const getPostComments = async (postId: number | string): Promise<Comment[]> => {
+  const response = await fetch(`${BASE_URL}/posts/${postId}/comments`);
+  return response.json();
+};
 
-/**
- * Fetch all comments for a specific post
- * @param postId - The post ID
- * @returns Promise with array of comment objects
- * Endpoint: GET /posts/:id/comments
- */
-export async function getPostComments(postId: number | string): Promise<Comment[]> {
-  // TODO: Implement this function
-  // Fetch from `${BASE_URL}/posts/${postId}/comments`
-  // Return the parsed JSON response
-  throw new Error('Not implemented')
-}
+export default {
+  getUsers,
+  getUser,
+  getPosts,
+  getUserPosts,
+  getPost,
+  getPostComments,
+};

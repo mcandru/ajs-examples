@@ -6,11 +6,13 @@ A hands-on activity to practice Vue Router and API integration by building a soc
 
 In this activity, you'll build a social media-style application with three main views:
 
-1. **Home** - Grid of user cards
+1. **Home** - Recent posts feed (like Twitter/Reddit)
 2. **User Profile** - User details and their posts
 3. **Post Detail** - Full post with comments
 
 All data comes from [JSONPlaceholder](https://jsonplaceholder.typicode.com/), a free fake REST API for testing.
+
+The home page displays a feed of recent posts showing the author name (clickable) and post content. Clicking a post takes you to the full post with comments. Clicking an author name takes you to their profile page.
 
 ## Setup
 
@@ -31,12 +33,13 @@ All data comes from [JSONPlaceholder](https://jsonplaceholder.typicode.com/), a 
 - Configuring Vue Router with dynamic routes
 - Using route parameters (`:id`)
 - Navigating between routes programmatically
-- Fetching data from a REST API
 - Using `useRoute()` and `useRouter()` composables
+- Fetching data from a REST API based on route params
 - Working with TypeScript in Vue 3
-- Type-safe API interfaces and function signatures
+- Type-safe API calls with interfaces
 - Handling loading states
 - Creating breadcrumb navigation
+- Building a realistic social feed application
 
 ## Your Tasks
 
@@ -62,55 +65,63 @@ Once configured, uncomment the `<router-view />` in `App.vue`.
 
 ---
 
-### TODO 2: Implement API Calls
+### Understanding the API Service
 
 **File:** `src/services/api.ts`
 
-Implement five API functions using the `fetch` API. Type definitions for `User`, `Post`, and `Comment` are already provided in the file.
+The API service is already implemented for you! It provides six functions to fetch data from JSONPlaceholder:
 
 - `getUsers()` - Fetch all users
 - `getUser(userId)` - Fetch a single user
+- `getPosts()` - Fetch all posts
 - `getUserPosts(userId)` - Fetch posts by a user
 - `getPost(postId)` - Fetch a single post
 - `getPostComments(postId)` - Fetch comments on a post
 
-**Example implementation:**
+All functions are async and return typed promises. Import the API service like this:
+
 ```typescript
-export async function getUsers(): Promise<User[]> {
-  const response = await fetch(`${BASE_URL}/users`)
-  return response.json()
-}
+import api, { type Post } from '../services/api'
+
+// Then use it with namespacing:
+const posts = await api.getPosts()
+const user = await api.getUser(userId)
 ```
 
-**API Endpoints:**
+**Available API Endpoints:**
 - GET `/users` - All users
 - GET `/users/:id` - Single user
+- GET `/posts` - All posts
 - GET `/users/:id/posts` - User's posts
 - GET `/posts/:id` - Single post
 - GET `/posts/:id/comments` - Post comments
 
 ---
 
-### TODO 3: Connect Views to Routes and Data
+### TODO 2: Connect Views to Routes and Data
 
 #### Home.vue
 
-1. Import `getUsers` and the `User` type from the API service, and `useRouter` from vue-router
-2. Create reactive state for `users` (typed as `User[]`) and `loading`
-3. Fetch users when the component mounts using `onMounted()`
-4. Replace the static user cards with a `v-for` loop over the `users` array
-5. Display the user's name, email, and company
-6. Add a `viewProfile(userId)` function that navigates to `/users/${userId}`
-7. Wire up the "View Profile" button to call `viewProfile`
-8. Show/hide loading state based on the `loading` variable
+1. Import `api` and the `Post` type from the API service, and `useRouter` from vue-router
+2. Create a custom interface `PostWithAuthor` that extends `Post` with an optional `authorName` property
+3. Create reactive state for `posts` (typed as `PostWithAuthor[]`) and `loading`
+4. Fetch posts when the component mounts using `onMounted()`
+5. For each post, also fetch the author's name using `api.getUser(post.userId)`
+6. Limit to the first 20 posts for better performance
+7. Replace the static post card with a `v-for` loop over the `posts` array
+8. Display the post title, body (excerpt), and author name
+9. Make the author name clickable to navigate to `/users/${userId}`
+10. Add a "Read More" button that navigates to `/posts/${postId}`
+11. Show/hide loading state based on the `loading` variable
 
 **Hints:**
-- Use the first letter of the user's name for the avatar initial
+- Use `Promise.all()` with `.map()` to fetch all author names concurrently
+- The author name should be clickable with a hover effect (already styled)
 - Use `router.push()` for programmatic navigation
 
 #### UserProfile.vue
 
-1. Import `getUser`, `getUserPosts` from the API service
+1. Import `api` and types from the API service
 2. Import `useRoute` and `useRouter` from vue-router
 3. Get the user ID from route params: `route.params.id`
 4. Create reactive state for `user`, `posts`, and `loading`
@@ -146,10 +157,12 @@ export async function getUsers(): Promise<User[]> {
 
 Your app is complete when:
 
-- ✅ You can see a grid of users on the home page
-- ✅ Clicking a user card navigates to their profile
+- ✅ You can see a feed of recent posts on the home page
+- ✅ Each post shows the author name and post content
+- ✅ Clicking an author name navigates to their profile
+- ✅ Clicking "Read More" on a post navigates to the post detail page
 - ✅ The user profile shows their info and a list of their posts
-- ✅ Clicking a post navigates to the post detail page
+- ✅ Clicking a post on the profile navigates to the post detail page
 - ✅ The post detail shows the full post and all comments
 - ✅ All breadcrumbs work and link to the correct pages
 - ✅ Loading states appear while data is being fetched
@@ -162,16 +175,17 @@ Once you've completed the main tasks, try these extensions:
 1. **Error Handling**: Add error states if API calls fail
 2. **Back Button**: Add a "Back" button on detail pages using `router.back()`
 3. **Route Transitions**: Add CSS transitions between route changes
-4. **Empty States**: Show a message when a user has no posts
-5. **Search**: Add a search bar to filter users on the home page
-6. **Albums**: Add a fourth view for viewing user albums (JSONPlaceholder has `/users/:id/albums`)
+4. **Empty States**: Show a message when a user has no posts or a post has no comments
+5. **Search/Filter**: Add a search bar to filter posts on the home page by title
+6. **Pagination**: Implement pagination for the posts feed (10 posts per page)
+7. **Albums**: Add a fourth view for viewing user albums (JSONPlaceholder has `/users/:id/albums`)
 
 ## Project Structure
 
 ```
 src/
 ├── views/
-│   ├── Home.vue          # User grid (home page)
+│   ├── Home.vue          # Recent posts feed
 │   ├── UserProfile.vue   # User details + posts list
 │   └── PostDetail.vue    # Post + comments
 ├── services/
