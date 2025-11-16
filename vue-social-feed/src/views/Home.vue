@@ -2,7 +2,6 @@
 import { ref, onMounted } from "vue";
 import type { Post, User } from "@/types/api";
 import apiService from "@/services/api";
-import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
 
 interface PostAndUser extends Post {
@@ -37,15 +36,12 @@ onMounted(async () => {
 
     <div class="posts-feed">
       <!-- TODO 2: Implement displaying posts ordered by most recent -->
-      <article v-for="post in postsWithUsers" class="post-card">
+      <article v-for="post in postsWithUsers" class="post-card" :key="post.id">
         <div class="post-header">
           <!-- TODO 3: Add link to user profile -->
-          <RouterLink
-            :to="`/users/${post.user.id}`"
-            class="post-author"
-            role="button"
-            >{{ post.user.name }}</RouterLink
-          >
+          <RouterLink :to="`/users/${post.user.id}`" class="post-author">{{
+            post.user.name
+          }}</RouterLink>
         </div>
         <h2 class="post-title">
           {{ post.title }}

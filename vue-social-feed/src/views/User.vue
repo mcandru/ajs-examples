@@ -26,7 +26,7 @@ onMounted(async () => {
 <template>
   <div class="user-profile">
     <nav class="breadcrumb">
-      <router-link to="/">Home</router-link>
+      <RouterLink to="/">Home</RouterLink>
       <span class="separator">›</span>
       <span>User</span>
     </nav>
