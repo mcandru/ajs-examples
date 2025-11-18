@@ -1,0 +1,33 @@
+import { createRouter, createWebHistory } from "vue-router";
+import NotesView from "@/views/Notes.vue";
+import LoginView from "@/views/Login.vue";
+import NoteView from "@/views/Note.vue";
+import RegisterView from "@/views/Register.vue";
+import ProfileView from "@/views/Profile.vue";
+import { isLoading, isLoggedIn } from "@/stores/auth";
+
+const routes = [
+  { path: "/", component: NotesView, meta: { requiresAuth: true } },
+  { path: "/login", component: LoginView },
+  { path: "/register", component: RegisterView },
+  { path: "/profile", component: ProfileView, meta: { requiresAuth: true } },
+  {
+    path: "/notes/:id",
+    component: NoteView,
+    meta: { requiresAuth: true },
+    props: true, // Takes any route parameters into the view component as props
+  },
+];
+
+export const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+router.beforeEach(async (to) => {
+  if (to.meta.requiresAuth && !isLoggedIn.value && !isLoading.value) {
+    return "/login";
+  }
+});
+
+export default router;
