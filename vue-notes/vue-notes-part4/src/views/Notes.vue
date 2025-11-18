@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import type { Note as NoteType } from "@/types";
 import Note from "@/components/Note.vue";
 import noteService from "@/services/notes.ts";
-import { noteSchema } from "@/schemas/note";
 import { useToast } from "vue-toastification";
-import { ZodError } from "zod";
+import { noteSchema } from "@/schemas/note.ts";
+import axios from "axios";
 
 const toast = useToast();
 
@@ -17,6 +17,21 @@ const filteredNotes = computed(() => {
 });
 const isLoading = ref(true);
 const noteError = ref<string>("");
+
+// Real-time validation
+watch(newNote, (value) => {
+  if (value.trim() === "") {
+    noteError.value = "";
+    return;
+  }
+
+  const result = noteSchema.safeParse(value);
+  if (!result.success) {
+    noteError.value = result.error.issues[0]?.message || "Invalid note content";
+  } else {
+    noteError.value = "";
+  }
+});
 
 onMounted(async () => {
   try {
@@ -32,14 +47,10 @@ const addNewNote = async () => {
   // Clear previous error
   noteError.value = "";
 
-  // Validate input with Zod
-  try {
-    noteSchema.parse({ content: newNote.value });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      noteError.value = error.errors[0].message;
-      return;
-    }
+  const result = noteSchema.safeParse(newNote.value);
+  if (!result.success) {
+    noteError.value = result.error.issues[0]?.message || "Invalid note content";
+    return;
   }
 
   // Submit to API
@@ -47,7 +58,6 @@ const addNewNote = async () => {
     const response = await noteService.createNote(newNote.value);
     notes.value.push(response);
     newNote.value = "";
-    toast.success("Note created successfully!");
   } catch (error: any) {
     toast.error(error.response?.data?.message || "Failed to create note");
   }
@@ -61,9 +71,12 @@ const toggleImportant = async (note: NoteType) => {
       !note.important
     );
     note.important = result.important;
-    toast.success(`Note marked as ${result.important ? "important" : "not important"}`);
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to update note");
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error.response?.data?.message || "Failed to update note");
+    } else {
+      toast.error("Failed to update note");
+    }
   }
 };
 
@@ -71,9 +84,12 @@ const deleteNote = async (noteToDelete: NoteType) => {
   try {
     await noteService.deleteNote(noteToDelete.id);
     notes.value = notes.value.filter((note) => note !== noteToDelete);
-    toast.success("Note deleted successfully!");
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to delete note");
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error.response?.data?.message || "Failed to delete note");
+    } else {
+      toast.error("Failed to delete note");
+    }
   }
 };
 </script>
@@ -83,8 +99,13 @@ const deleteNote = async (noteToDelete: NoteType) => {
   <div v-else>
     <form @submit.prevent="addNewNote">
       <div>
-        <input type="text" v-model="newNote" placeholder="Enter a new note" />
-        <span v-if="noteError" class="text-red-500 text-sm">{{ noteError }}</span>
+        <input
+          type="text"
+          v-model="newNote"
+          placeholder="Enter a new note"
+          :class="{ 'input-error': noteError }"
+        />
+        <div v-if="noteError" class="error-message">{{ noteError }}</div>
       </div>
       <button type="submit">Submit</button>
     </form>
@@ -104,3 +125,20 @@ const deleteNote = async (noteToDelete: NoteType) => {
     </ul>
   </div>
 </template>
+
+<style scoped>
+.error-message {
+  color: red;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  font-size: 0.8em;
+}
+
+.input-error {
+  border-color: red;
+}
+
+.input-error:focus {
+  outline-color: red;
+}
+</style>
