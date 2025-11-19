@@ -16,9 +16,12 @@ export const checkAuth = async () => {
   }
 };
 
-const login = async () => {
+export const login = async (email: string, password: string): Promise<void> => {
   try {
-    const response = await axios.post("/api/auth/login");
+    const response = await axios.post("/api/auth/login", {
+      email,
+      password,
+    });
     isLoggedIn.value = true;
     user.value = response.data.user;
   } catch (error) {

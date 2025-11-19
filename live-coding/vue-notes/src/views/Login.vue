@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import axios from "axios";
+import { login } from "@/stores/auth";
 
 const email = ref("");
 const password = ref("");
 
 const handleSubmit = async () => {
-  await axios.post("/api/auth/login", {
-    email: email.value,
-    password: password.value,
-  });
+  await login(email.value, password.value);
   email.value = "";
   password.value = "";
 };
