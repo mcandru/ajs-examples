@@ -136,6 +136,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
 
 .input-error {
   border-color: red;
+  outline-color: red;
 }
 
 .input-error:focus {

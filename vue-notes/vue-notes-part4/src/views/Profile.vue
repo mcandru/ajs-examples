@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { isLoggedIn, user, isLoading, logout } from "@/stores/auth";
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
+const toast = useToast();
 
 const handleLogout = async () => {
   await logout();
+  toast.success("Successfully logged out!");
   router.push("/login");
 };
 </script>
