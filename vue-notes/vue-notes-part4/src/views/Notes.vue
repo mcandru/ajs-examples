@@ -17,6 +17,7 @@ const filteredNotes = computed(() => {
 });
 const isLoading = ref(true);
 const noteError = ref<string>("");
+const apiError = ref<string>("");
 
 // Real-time validation
 watch(newNote, (value) => {
@@ -73,9 +74,14 @@ const toggleImportant = async (note: NoteType) => {
     note.important = result.important;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      toast.error(error.response?.data?.message || "Failed to update note");
+      const errorMessage =
+        error.response?.data?.message || "Failed to update note";
+      apiError.value = errorMessage;
+      toast.error(errorMessage);
     } else {
-      toast.error("Failed to update note");
+      const errorMessage = "Failed to update note";
+      apiError.value = errorMessage;
+      toast.error(errorMessage);
     }
   }
 };
@@ -86,9 +92,14 @@ const deleteNote = async (noteToDelete: NoteType) => {
     notes.value = notes.value.filter((note) => note !== noteToDelete);
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      toast.error(error.response?.data?.message || "Failed to delete note");
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete note";
+      apiError.value = errorMessage;
+      toast.error(errorMessage);
     } else {
-      toast.error("Failed to delete note");
+      const errorMessage = "Failed to delete note";
+      apiError.value = errorMessage;
+      toast.error(errorMessage);
     }
   }
 };
@@ -96,6 +107,9 @@ const deleteNote = async (noteToDelete: NoteType) => {
 
 <template>
   <div v-if="isLoading">Loading...</div>
+  <div v-else-if="apiError">
+    <div class="error-message">{{ apiError }}</div>
+  </div>
   <div v-else>
     <form @submit.prevent="addNewNote">
       <div>

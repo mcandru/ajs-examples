@@ -5,11 +5,12 @@ import type { User } from "@/types";
 export const isLoggedIn = ref(false);
 export const user = ref<User | null>(null);
 export const isLoading = ref(true); // Start as true to prevent race condition
+export const hasCheckedAuth = ref(false);
 
 export const checkAuth = async (): Promise<boolean> => {
   // If already logged in, no need to check again
-  if (isLoggedIn.value) {
-    return true;
+  if (hasCheckedAuth.value) {
+    return isLoggedIn.value;
   }
 
   isLoading.value = true;
@@ -24,6 +25,7 @@ export const checkAuth = async (): Promise<boolean> => {
     return false;
   } finally {
     isLoading.value = false;
+    hasCheckedAuth.value = true;
   }
 };
 
