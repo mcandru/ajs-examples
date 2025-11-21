@@ -5,6 +5,9 @@ import NoteView from "@/views/Note.vue";
 import RegisterView from "@/views/Register.vue";
 import ProfileView from "@/views/Profile.vue";
 import { checkAuth, hasCheckedAuth } from "@/stores/auth";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const routes = [
   { path: "/", component: NotesView, meta: { requiresAuth: true } },
@@ -26,7 +29,12 @@ export const router = createRouter({
 
 router.beforeEach(async (to) => {
   if (!hasCheckedAuth.value) {
-    await checkAuth();
+    try {
+      await checkAuth();
+    } catch (error) {
+      // Handle error if needed
+      toast.error("Error checking authentication status.");
+    }
   }
 
   if (to.meta.requiresAuth) {

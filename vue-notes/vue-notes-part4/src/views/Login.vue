@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { login, isLoggedIn, isLoading } from "@/stores/auth";
+import { login, isLoggedIn } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
+import axios from "axios";
 
 const router = useRouter();
 const toast = useToast();
@@ -34,11 +35,19 @@ const handleSubmit = async () => {
     await login(email.value, password.value);
     toast.success("Successfully logged in!");
     router.push("/");
-  } catch (error: any) {
-    toast.error(
-      error.response?.data?.message ||
-        "Failed to login. Please check your credentials."
-    );
+  } catch (error: unknown) {
+    if (error instanceof axios.AxiosError) {
+      if (error.response && error.response.status === 401) {
+        inputError.value = "Invalid email or password.";
+        console.log("Input error:", inputError.value);
+      } else if (error.response && error.response.status === 500) {
+        toast.error(
+          "Had an issue contacting the server. Please contact support if the issue persists."
+        );
+      } else {
+        toast.error("An unexpected error occurred. Please try again later.");
+      }
+    }
   } finally {
     isSubmitting.value = false;
   }
@@ -51,20 +60,32 @@ const handleSubmit = async () => {
   <div v-if="isLoggedIn">
     <p>You are logged in!</p>
   </div>
-  <div v-else-if="isLoading">
+  <!-- <div v-else-if="isLoading && !isSubmitting">
     <p>Loading...</p>
-  </div>
+  </div> -->
   <div v-else>
     <form @submit.prevent="handleSubmit">
       <div>
-        <input type="email" placeholder="you@example.com" v-model="email" />
+        <input
+          type="email"
+          placeholder="you@example.com"
+          v-model="email"
+          :disabled="isSubmitting"
+        />
       </div>
       <div>
-        <input type="password" placeholder="Password" v-model="password" />
+        <input
+          type="password"
+          placeholder="Password"
+          v-model="password"
+          :disabled="isSubmitting"
+        />
       </div>
-      <button type="submit" :disabled="isSubmitting">Login</button>
-      <div v-if="inputError" class="error-message">{{ inputError }}</div>
+      <button type="submit" :disabled="isSubmitting">
+        {{ isSubmitting ? "Loading..." : "Login" }}
+      </button>
     </form>
+    <div v-if="inputError" class="error-message">{{ inputError }}</div>
   </div>
 </template>
 
