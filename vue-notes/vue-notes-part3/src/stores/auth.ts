@@ -4,26 +4,21 @@ import type { User } from "@/types";
 
 export const isLoggedIn = ref(false);
 export const user = ref<User | null>(null);
-export const isLoading = ref(true); // Start as true to prevent race condition
+export const isLoading = ref(true);
+export const hasCheckedAuth = ref(false);
 
-export const checkAuth = async (): Promise<boolean> => {
-  // If already logged in, no need to check again
-  if (isLoggedIn.value) {
-    return true;
-  }
-
+export const checkAuth = async (): Promise<void> => {
   isLoading.value = true;
   try {
     const response = await authService.getProfile();
     isLoggedIn.value = response.authenticated;
     user.value = response.user || null;
-    return isLoggedIn.value;
   } catch (error) {
     isLoggedIn.value = false;
     user.value = null;
-    return false;
   } finally {
     isLoading.value = false;
+    hasCheckedAuth.value = true;
   }
 };
 

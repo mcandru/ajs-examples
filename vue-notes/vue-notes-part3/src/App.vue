@@ -13,17 +13,14 @@ onMounted(async () => {
 <template>
   <h1>Notes</h1>
 
-  <div v-if="isLoading">Loading...</div>
-  <div v-else>
-    <nav>
-      <RouterLink to="/">Notes</RouterLink>
-      <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
-      <RouterLink v-if="!isLoggedIn" to="/register">Register</RouterLink>
-      <RouterLink v-if="isLoggedIn" to="/profile">Profile</RouterLink>
-    </nav>
+  <nav v-if="!isLoading">
+    <RouterLink to="/">Notes</RouterLink>
+    <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
+    <RouterLink v-if="!isLoggedIn" to="/register">Register</RouterLink>
+    <RouterLink v-if="isLoggedIn" to="/profile">Profile</RouterLink>
+  </nav>
 
-    <RouterView />
-  </div>
+  <RouterView />
 </template>
 
 <style scoped>

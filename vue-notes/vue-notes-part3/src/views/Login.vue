@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { login, isLoggedIn, isLoading } from "@/stores/auth";
+import { login } from "@/stores/auth";
 
 const router = useRouter();
 
@@ -20,13 +20,7 @@ const handleSubmit = async () => {
 <template>
   <h1>Login</h1>
 
-  <div v-if="isLoggedIn">
-    <p>You are logged in!</p>
-  </div>
-  <div v-else-if="isLoading">
-    <p>Loading...</p>
-  </div>
-  <div v-else>
+  <div>
     <form @submit.prevent="handleSubmit">
       <input type="email" placeholder="you@example.com" v-model="email" />
       <input type="password" placeholder="Password" v-model="password" />
