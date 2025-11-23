@@ -36,6 +36,7 @@ router.beforeEach(async (to) => {
       toast.error("Error checking authentication status.");
     }
   }
+
   if (to.meta.requiresAuth) {
     const authenticated = await checkAuth();
     if (!authenticated) {

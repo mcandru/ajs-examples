@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { login, isLoggedIn, isLoading } from "@/stores/auth";
+import { login, isLoggedIn } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
 import axios from "axios";
@@ -58,9 +58,6 @@ const handleSubmit = async () => {
 
   <div v-if="isLoggedIn">
     <p>You are logged in!</p>
-  </div>
-  <div v-else-if="isLoading">
-    <p>Loading...</p>
   </div>
   <div v-else>
     <form @submit.prevent="handleSubmit">
