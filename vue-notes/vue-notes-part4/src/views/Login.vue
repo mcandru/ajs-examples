@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { login, isLoggedIn } from "@/stores/auth";
+import { login, isLoggedIn, isLoading } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
 import axios from "axios";
@@ -39,7 +39,6 @@ const handleSubmit = async () => {
     if (error instanceof axios.AxiosError) {
       if (error.response && error.response.status === 401) {
         inputError.value = "Invalid email or password.";
-        console.log("Input error:", inputError.value);
       } else if (error.response && error.response.status === 500) {
         toast.error(
           "Had an issue contacting the server. Please contact support if the issue persists."
@@ -60,30 +59,18 @@ const handleSubmit = async () => {
   <div v-if="isLoggedIn">
     <p>You are logged in!</p>
   </div>
-  <!-- <div v-else-if="isLoading && !isSubmitting">
+  <div v-else-if="isLoading">
     <p>Loading...</p>
-  </div> -->
+  </div>
   <div v-else>
     <form @submit.prevent="handleSubmit">
       <div>
-        <input
-          type="email"
-          placeholder="you@example.com"
-          v-model="email"
-          :disabled="isSubmitting"
-        />
+        <input type="email" placeholder="you@example.com" v-model="email" />
       </div>
       <div>
-        <input
-          type="password"
-          placeholder="Password"
-          v-model="password"
-          :disabled="isSubmitting"
-        />
+        <input type="password" placeholder="Password" v-model="password" />
       </div>
-      <button type="submit" :disabled="isSubmitting">
-        {{ isSubmitting ? "Loading..." : "Login" }}
-      </button>
+      <button type="submit" :disabled="isSubmitting">Login</button>
     </form>
     <div v-if="inputError" class="error-message">{{ inputError }}</div>
   </div>
