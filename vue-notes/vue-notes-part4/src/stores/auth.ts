@@ -9,11 +9,6 @@ export const isLoading = ref(true); // Start as true to prevent race condition
 export const hasCheckedAuth = ref(false);
 
 export const checkAuth = async (): Promise<boolean> => {
-  // If already logged in, no need to check again
-  if (hasCheckedAuth.value) {
-    return isLoggedIn.value;
-  }
-
   isLoading.value = true;
   try {
     const response = await authService.getProfile();

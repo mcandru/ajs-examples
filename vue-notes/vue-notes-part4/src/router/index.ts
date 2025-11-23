@@ -4,7 +4,7 @@ import LoginView from "@/views/Login.vue";
 import NoteView from "@/views/Note.vue";
 import RegisterView from "@/views/Register.vue";
 import ProfileView from "@/views/Profile.vue";
-import { checkAuth, hasCheckedAuth } from "@/stores/auth";
+import { checkAuth, hasCheckedAuth, isLoggedIn } from "@/stores/auth";
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
@@ -28,20 +28,18 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
+  // Check auth once per session on first navigation
   if (!hasCheckedAuth.value) {
     try {
       await checkAuth();
     } catch (error) {
-      // Handle error if needed
       toast.error("Error checking authentication status.");
     }
   }
 
-  if (to.meta.requiresAuth) {
-    const authenticated = await checkAuth();
-    if (!authenticated) {
-      return "/login";
-    }
+  // Redirect to login if trying to access protected route while not authenticated
+  if (to.meta.requiresAuth && !isLoggedIn.value) {
+    return "/login";
   }
 });
 
