@@ -8,13 +8,12 @@ export const user = ref<User | null>(null);
 export const isLoading = ref(true); // Start as true to prevent race condition
 export const hasCheckedAuth = ref(false);
 
-export const checkAuth = async (): Promise<boolean> => {
+export const checkAuth = async (): Promise<void> => {
   isLoading.value = true;
   try {
     const response = await authService.getProfile();
     isLoggedIn.value = response.authenticated;
     user.value = response.user || null;
-    return isLoggedIn.value;
   } catch (error) {
     if (
       error instanceof axios.AxiosError &&
@@ -27,7 +26,6 @@ export const checkAuth = async (): Promise<boolean> => {
     } else {
       throw error;
     }
-    return false;
   } finally {
     isLoading.value = false;
     hasCheckedAuth.value = true;
