@@ -40,3 +40,9 @@ export const logout = async (): Promise<void> => {
   isLoggedIn.value = false;
   user.value = null;
 };
+
+export const register = async (email: string, password: string) => {
+  const response = await authService.register(email, password);
+  user.value = response.user;
+  isLoggedIn.value = true;
+};
