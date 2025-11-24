@@ -28,3 +28,9 @@ export const login = async (email: string, password: string): Promise<void> => {
     isLoggedIn.value = false;
   }
 };
+
+export const logout = async (): Promise<void> => {
+  await axios.post("/api/auth/logout");
+  isLoggedIn.value = false;
+  user.value = null;
+};

@@ -2,7 +2,9 @@
 import { ref } from "vue";
 import axios from "axios";
 import { login } from "@/stores/auth";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const email = ref("");
 const password = ref("");
 
@@ -10,6 +12,7 @@ const handleSubmit = async () => {
   await login(email.value, password.value);
   email.value = "";
   password.value = "";
+  router.push("/");
 };
 </script>
 
