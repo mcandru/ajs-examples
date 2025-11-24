@@ -4,7 +4,7 @@ import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Note from "@/views/Note.vue";
 import Profile from "@/views/Profile.vue";
-import { isLoggedIn, checkAuth } from "@/stores/auth";
+import { isLoggedIn, checkAuth, hasCheckedAuth } from "@/stores/auth";
 
 const routes = [
   { path: "/", component: Home, meta: { requiresAuth: true } },
@@ -25,7 +25,9 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-  await checkAuth();
+  if (!hasCheckedAuth.value) {
+    await checkAuth();
+  }
 
   if (to.meta.requiresAuth && !isLoggedIn.value) {
     return "/login";

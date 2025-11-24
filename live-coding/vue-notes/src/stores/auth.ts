@@ -4,6 +4,7 @@ import authService from "@/services/auth";
 
 export const isLoggedIn = ref(false);
 export const user = ref<User | null>(null);
+export const hasCheckedAuth = ref(false);
 
 export const checkAuth = async () => {
   try {
@@ -13,6 +14,8 @@ export const checkAuth = async () => {
   } catch (error) {
     isLoggedIn.value = false;
     user.value = null;
+  } finally {
+    hasCheckedAuth.value = true;
   }
 };
 
