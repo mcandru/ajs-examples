@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import { isLoggedIn, isLoading, checkAuth } from "@/stores/auth";
-import { onMounted } from "vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-onMounted(async () => {
-  await checkAuth();
-});
+import { isLoggedIn, isLoading } from "@/stores/auth";
 </script>
 
 <template>
