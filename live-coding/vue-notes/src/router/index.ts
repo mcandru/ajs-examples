@@ -1,25 +1,25 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "@/views/Home.vue";
-import Login from "@/views/Login.vue";
-import Register from "@/views/Register.vue";
-import Note from "@/views/Note.vue";
-import Profile from "@/views/Profile.vue";
-import { isLoggedIn, checkAuth, hasCheckedAuth } from "@/stores/auth";
+import NotesView from "@/views/Notes.vue";
+import LoginView from "@/views/Login.vue";
+import NoteView from "@/views/Note.vue";
+import RegisterView from "@/views/Register.vue";
+import ProfileView from "@/views/Profile.vue";
+import { checkAuth, hasCheckedAuth, isLoggedIn } from "@/stores/auth";
 
 const routes = [
-  { path: "/", component: Home, meta: { requiresAuth: true } },
-  { path: "/login", component: Login },
-  { path: "/register", component: Register },
-  { path: "/profile", component: Profile, meta: { requiresAuth: true } },
+  { path: "/", component: NotesView, meta: { requiresAuth: true } },
+  { path: "/login", component: LoginView },
+  { path: "/register", component: RegisterView },
+  { path: "/profile", component: ProfileView, meta: { requiresAuth: true } },
   {
     path: "/notes/:id",
-    component: Note,
-    props: true,
+    component: NoteView,
     meta: { requiresAuth: true },
+    props: true, // Takes any route parameters into the view component as props
   },
 ];
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(),
   routes,
 });

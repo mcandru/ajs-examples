@@ -1,14 +1,17 @@
 import axios from "axios";
 import type { User } from "@/types";
 
-interface LoginResponse {
-  message: string;
-  user: User;
-}
-
+// TypeScript is just for checking at compile time. If the server returns
+// different data, you'll get a runtime error when you try to use it.
+// You can use runtime validation libraries like Zod for that.
 interface UserResponse {
   authenticated: boolean;
   user?: User;
+}
+
+interface LoginResponse {
+  message: string;
+  user: User;
 }
 
 const BASE_URL = "/api/auth";
@@ -21,11 +24,13 @@ const login = async (
     email,
     password,
   });
-
   return response.data;
 };
 
-const register = async (email: string, password: string) => {
+const register = async (
+  email: string,
+  password: string
+): Promise<LoginResponse> => {
   const response = await axios.post(`${BASE_URL}/register`, {
     email,
     password,
@@ -37,7 +42,7 @@ const getProfile = async (): Promise<UserResponse> => {
   try {
     const response = await axios.get(`${BASE_URL}/me`);
     return response.data;
-  } catch (error: unknown) {
+  } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
       return error.response.data;
     }
@@ -45,7 +50,7 @@ const getProfile = async (): Promise<UserResponse> => {
   }
 };
 
-const logout = async () => {
+const logout = async (): Promise<void> => {
   await axios.post(`${BASE_URL}/logout`);
 };
 

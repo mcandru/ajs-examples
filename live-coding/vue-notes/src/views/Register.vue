@@ -20,8 +20,8 @@ const handleSubmit = async () => {
   <h1>Register</h1>
 
   <form @submit.prevent="handleSubmit">
-    <input type="email" placeholder="john@example.com" v-model="email" />
-    <input type="password" placeholder="password" v-model="password" />
+    <input type="email" placeholder="you@example.com" v-model="email" />
+    <input type="password" placeholder="Password" v-model="password" />
     <button type="submit" :disabled="isSubmitting">Register</button>
   </form>
 </template>

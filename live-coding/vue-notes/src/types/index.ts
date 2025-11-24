@@ -1,11 +1,14 @@
+// Note types
 export interface Note {
-  id: number;
+  id: string;
   content: string;
   important: boolean;
 }
 
+type UserRole = "user" | "admin";
+
 export interface User {
   id: string;
   email: string;
-  role: "user" | "admin";
+  role: UserRole;
 }

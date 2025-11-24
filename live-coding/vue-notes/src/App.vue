@@ -1,26 +1,30 @@
 <script setup lang="ts">
+import { RouterLink, RouterView } from "vue-router";
 import { isLoggedIn, isLoading } from "@/stores/auth";
 </script>
 
 <template>
   <h1>Notes</h1>
+
   <nav v-if="!isLoading">
-    <RouterLink to="/" class="nav-link">Notes</RouterLink>
-    <RouterLink to="/login" class="nav-link" v-if="!isLoggedIn"
-      >Login</RouterLink
-    >
-    <RouterLink to="/register" class="nav-link" v-if="!isLoggedIn"
-      >Register</RouterLink
-    >
-    <RouterLink to="/profile" class="nav-link" v-if="isLoggedIn"
-      >Profile</RouterLink
-    >
+    <RouterLink to="/">Notes</RouterLink>
+    <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
+    <RouterLink v-if="!isLoggedIn" to="/register">Register</RouterLink>
+    <RouterLink v-if="isLoggedIn" to="/profile">Profile</RouterLink>
   </nav>
+
   <RouterView />
 </template>
 
 <style scoped>
-.nav-link {
+nav {
+  margin-bottom: 20px;
+}
+nav a {
   margin-right: 10px;
+}
+
+.router-link-exact-active {
+  font-weight: bold;
 }
 </style>

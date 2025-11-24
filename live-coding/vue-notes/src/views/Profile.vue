@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { logout, user } from "@/stores/auth";
 import { useRouter } from "vue-router";
+import { isLoggedIn, user, isLoading, logout } from "@/stores/auth";
 
 const router = useRouter();
 
@@ -11,9 +11,15 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <div v-if="user">
-    <h1>{{ user.email }}'s account</h1>
-    <p>{{ user.email }}</p>
+  <div v-if="isLoggedIn && user">
+    <h1>{{ user.email }}'s Profile</h1>
+    <p><strong>Email:</strong> {{ user.email }}</p>
     <button @click="handleLogout">Logout</button>
+  </div>
+  <div v-else-if="isLoading">
+    <p>Loading...</p>
+  </div>
+  <div v-else>
+    <p>Not logged in</p>
   </div>
 </template>
