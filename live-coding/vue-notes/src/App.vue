@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { isLoggedIn } from "@/stores/auth";
+import { isLoggedIn, isLoading } from "@/stores/auth";
 </script>
 
 <template>
   <h1>Notes</h1>
-  <nav>
+  <nav v-if="!isLoading">
     <RouterLink to="/" class="nav-link">Notes</RouterLink>
     <RouterLink to="/login" class="nav-link" v-if="!isLoggedIn"
       >Login</RouterLink
