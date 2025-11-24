@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import axios from "axios";
-import { isLoggedIn, checkAuth } from "@/stores/auth";
-
-onMounted(async () => {
-  await checkAuth();
-});
+import { isLoggedIn } from "@/stores/auth";
 </script>
 
 <template>
