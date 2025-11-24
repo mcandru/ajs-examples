@@ -7,7 +7,7 @@ import { isLoggedIn, isLoading } from "@/stores/auth";
   <h1>Notes</h1>
 
   <nav v-if="!isLoading">
-    <RouterLink to="/">Notes</RouterLink>
+    <RouterLink to="/" v-if="isLoggedIn">Notes</RouterLink>
     <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
     <RouterLink v-if="!isLoggedIn" to="/register">Register</RouterLink>
     <RouterLink v-if="isLoggedIn" to="/profile">Profile</RouterLink>
