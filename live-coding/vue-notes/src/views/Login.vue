@@ -13,22 +13,25 @@ const isSubmitting = ref(false);
 const inputError = ref("");
 
 const handleSubmit = async () => {
+  inputError.value = "";
   try {
     const result = loginSchema.parse({
       email: email.value,
       password: password.value,
     });
+
+    isSubmitting.value = true;
+    await login(result.email, result.password);
+    isSubmitting.value = false;
+
+    router.push("/");
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       console.log("Zod error:", error.issues);
       inputError.value = error.issues[0]?.message || "Invalid login details.";
+      return;
     }
   }
-
-  isSubmitting.value = true;
-  await login(email.value, password.value);
-  isSubmitting.value = false;
-  router.push("/");
 };
 </script>
 
