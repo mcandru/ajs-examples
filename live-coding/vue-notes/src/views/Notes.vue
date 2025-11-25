@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import type { Note as NoteType } from "@/types";
 import Note from "@/components/Note.vue";
 import noteService from "@/services/notes.ts";
+import { noteSchema } from "@/schemas/notes";
 
 const hideImportant = ref(false);
 const newNote = ref("");
@@ -11,10 +12,27 @@ const filteredNotes = computed(() => {
   return notes.value.filter((note) => !note.important || !hideImportant.value);
 });
 const isLoading = ref(true);
+const inputError = ref("");
 
 onMounted(async () => {
   notes.value = await noteService.getAllNotes();
   isLoading.value = false;
+});
+
+watch(newNote, (value) => {
+  if (value.trim() === "") {
+    inputError.value = "";
+    return;
+  }
+
+  const result = noteSchema.safeParse(value);
+
+  if (!result.success) {
+    inputError.value =
+      result.error.issues[0]?.message || "Invalid note content";
+  } else {
+    inputError.value = "";
+  }
 });
 
 const addNewNote = async () => {
@@ -47,6 +65,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
       <input type="text" v-model="newNote" />
       <button type="submit">Submit</button>
     </form>
+    <div>{{ inputError }}</div>
 
     <button @click="hideImportant = !hideImportant">
       {{ hideImportant ? "Show All" : "Hide Important" }}
