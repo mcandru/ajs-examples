@@ -18,21 +18,21 @@ const handleSubmit = async () => {
   // Clear previous errors
   inputError.value = null;
 
-  const loginData = loginSchema.safeParse({
+  const result = loginSchema.safeParse({
     email: email.value,
     password: password.value,
   });
 
-  if (!loginData.success) {
+  if (!result.success) {
     inputError.value =
-      loginData.error.issues[0]?.message || "Invalid login details.";
+      result.error.issues[0]?.message || "Invalid login details.";
     return;
   }
 
   // Submit to API
   isSubmitting.value = true;
   try {
-    await login(email.value, password.value);
+    await login(result.data.email, result.data.password);
     toast.success("Successfully logged in!");
     router.push("/");
   } catch (error: unknown) {

@@ -12,34 +12,32 @@ const toast = useToast();
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
-const inputError = ref<string | null>(null);
+const inputError = ref("");
 const isSubmitting = ref(false);
 
 const handleSubmit = async () => {
   isSubmitting.value = true;
 
-  const validatedData = registerSchema.safeParse({
+  const result = registerSchema.safeParse({
     email: email.value,
     password: password.value,
     confirmPassword: confirmPassword.value,
   });
 
-  if (!validatedData.success) {
-    inputError.value =
-      validatedData.error.issues[0]?.message || "Invalid input.";
+  if (!result.success) {
+    inputError.value = result.error.issues[0]?.message || "Invalid input.";
     isSubmitting.value = false;
     return;
   }
 
-  inputError.value = null;
+  inputError.value = "";
 
   try {
-    await register(email.value, password.value);
+    await register(result.data.email, result.data.password);
     toast.success("Account created successfully!");
     router.push("/");
   } catch (error: unknown) {
     if (error instanceof axios.AxiosError && error.response) {
-      console.log(error.response.data);
       toast.error(
         error.response.data?.message ||
           "Failed to create account. Please try again."
@@ -71,7 +69,7 @@ const handleSubmit = async () => {
       />
     </div>
     <button type="submit" :disabled="isSubmitting">Register</button>
-    <div v-if="inputError" class="error-message">{{ inputError }}</div>
+    <div class="error-message">{{ inputError }}</div>
   </form>
 </template>
 

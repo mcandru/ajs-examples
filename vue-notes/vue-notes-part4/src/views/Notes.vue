@@ -16,20 +16,21 @@ const filteredNotes = computed(() => {
   return notes.value.filter((note) => !note.important || !hideImportant.value);
 });
 const isLoading = ref(true);
-const noteError = ref<string>("");
+const inputError = ref("");
 
 // Real-time validation
 watch(newNote, (value) => {
   if (value.trim() === "") {
-    noteError.value = "";
+    inputError.value = "";
     return;
   }
 
   const result = noteSchema.safeParse(value);
   if (!result.success) {
-    noteError.value = result.error.issues[0]?.message || "Invalid note content";
+    inputError.value =
+      result.error.issues[0]?.message || "Invalid note content";
   } else {
-    noteError.value = "";
+    inputError.value = "";
   }
 });
 
@@ -44,22 +45,29 @@ onMounted(async () => {
 });
 
 const addNewNote = async () => {
-  // Clear previous error
-  noteError.value = "";
-
   const result = noteSchema.safeParse(newNote.value);
   if (!result.success) {
-    noteError.value = result.error.issues[0]?.message || "Invalid note content";
+    inputError.value =
+      result.error.issues[0]?.message || "Invalid note content";
     return;
   }
 
+  // Clear previous error
+  inputError.value = "";
+
   // Submit to API
   try {
-    const response = await noteService.createNote(newNote.value);
+    const response = await noteService.createNote(result.data);
     notes.value.push(response);
     newNote.value = "";
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to create note");
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to create note";
+      toast.error(errorMessage);
+    } else {
+      toast.error("Failed to create note");
+    }
   }
 };
 
@@ -109,9 +117,9 @@ const deleteNote = async (noteToDelete: NoteType) => {
           type="text"
           v-model="newNote"
           placeholder="Enter a new note"
-          :class="{ 'input-error': noteError }"
+          :class="{ 'input-error': inputError }"
         />
-        <div v-if="noteError" class="error-message">{{ noteError }}</div>
+        <div class="error-message">{{ inputError }}</div>
       </div>
       <button type="submit">Submit</button>
     </form>
