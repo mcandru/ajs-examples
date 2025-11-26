@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { isLoggedIn, user, isLoading, logout } from "@/stores/auth";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const router = useRouter();
 
 const handleLogout = async () => {
-  await logout();
+  try {
+    await logout();
+    toast.success("Successfully logged out!");
+  } catch (error: unknown) {
+    toast.error("An error occurred while logging out. Please try again");
+  }
   router.push("/login");
 };
 </script>

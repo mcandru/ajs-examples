@@ -3,7 +3,10 @@ import { ref } from "vue";
 import { register } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import { registerSchema } from "@/schemas/auth";
+import { useToast } from "vue-toastification";
+import axios from "axios";
 
+const toast = useToast();
 const router = useRouter();
 const email = ref("");
 const password = ref("");
@@ -23,9 +26,17 @@ const handleSubmit = async () => {
     return;
   }
 
-  isSubmitting.value = true;
-  await register(email.value, password.value);
-  isSubmitting.value = false;
+  try {
+    isSubmitting.value = true;
+    await register(email.value, password.value);
+    isSubmitting.value = false;
+    toast.success("Account created successfully!");
+  } catch (error: unknown) {
+    if (error instanceof axios.AxiosError && error.response) {
+      toast.error(error.response.data?.message || "Failed to create account.");
+    }
+    toast.error("An unexpected error occurred!");
+  }
   router.push("/");
 };
 </script>
