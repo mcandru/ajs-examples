@@ -1,11 +1,9 @@
 import { z } from "zod";
 
-const VALID_PROMO_CODES = ["EARLY2024", "STUDENT50"];
-
 export const formSchema = z
   .object({
-    email: z.email("Must be a valid email address"),
-    emailConfirmation: z.email("Must be a valid email address"),
+    email: z.string().email("Must be a valid email address"),
+    emailConfirmation: z.string().email("Must be a valid email address"),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
