@@ -2,7 +2,6 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useForm, Field } from "vee-validate";
 import { formSchema } from "@/schemas";
-import { toTypedSchema } from "@vee-validate/zod";
 
 const DRAFT_KEY = "event_registration_draft";
 
