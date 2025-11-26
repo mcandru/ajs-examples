@@ -1,19 +1,14 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { register } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import { registerSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
 import axios from "axios";
-import { useForm, Field, ErrorMessage } from "vee-validate";
+import { useForm, Field } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 
 const router = useRouter();
 const toast = useToast();
-
-const email = ref("");
-const password = ref("");
-const confirmPassword = ref("");
 
 const validationSchema = toTypedSchema(registerSchema);
 
@@ -49,21 +44,11 @@ const onSubmit = handleSubmit(async (values) => {
 
   <form @submit="onSubmit">
     <div>
-      <Field
-        name="email"
-        type="email"
-        placeholder="you@example.com"
-        v-model="email"
-      />
+      <Field name="email" type="email" placeholder="you@example.com" />
       <span class="error-message">{{ errors.email }}</span>
     </div>
     <div>
-      <Field
-        name="password"
-        type="password"
-        placeholder="Password"
-        v-model="password"
-      />
+      <Field name="password" type="password" placeholder="Password" />
       <span class="error-message">{{ errors.password }}</span>
     </div>
     <div>
@@ -71,7 +56,6 @@ const onSubmit = handleSubmit(async (values) => {
         name="confirmPassword"
         type="password"
         placeholder="Confirm Password"
-        v-model="confirmPassword"
       />
       <span class="error-message">{{ errors.confirmPassword }}</span>
     </div>

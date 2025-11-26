@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted } from "vue";
 import type { Note as NoteType } from "@/types";
 import Note from "@/components/Note.vue";
 import noteService from "@/services/notes";
 import { useToast } from "vue-toastification";
 import { noteSchema } from "@/schemas/note";
 import axios from "axios";
-import { useForm, Field, ErrorMessage } from "vee-validate";
+import { useForm, Field } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 
 const toast = useToast();
 
 const hideImportant = ref(false);
-const newNote = ref("");
 const notes = ref<NoteType[]>([]);
 const filteredNotes = computed(() => {
   return notes.value.filter((note) => !note.important || !hideImportant.value);
@@ -21,7 +20,7 @@ const isLoading = ref(true);
 
 const validationSchema = toTypedSchema(noteSchema);
 
-const { handleSubmit, isSubmitting, values, errors } = useForm({
+const { handleSubmit, isSubmitting, errors, resetForm } = useForm({
   initialValues: {
     newNote: "",
   },
@@ -41,7 +40,7 @@ const addNewNote = handleSubmit(async (values) => {
   try {
     const response = await noteService.createNote(values.newNote);
     notes.value.push(response);
-    newNote.value = "";
+    resetForm();
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const errorMessage =
@@ -99,10 +98,9 @@ const deleteNote = async (noteToDelete: NoteType) => {
           name="newNote"
           :rules="validationSchema"
           type="text"
-          v-model="newNote"
           placeholder="Enter a new note"
         />
-        <span name="newNote">{{ errors.newNote }}</span>
+        <span class="error-message">{{ errors.newNote }}</span>
       </div>
       <button type="submit" :disabled="isSubmitting">Submit</button>
     </form>
