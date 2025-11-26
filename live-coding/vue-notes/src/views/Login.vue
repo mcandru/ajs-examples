@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { login } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
-import { z } from "zod";
+import axios from "axios";
 
 const router = useRouter();
 
@@ -26,9 +26,18 @@ const handleSubmit = async () => {
     return;
   }
 
-  isSubmitting.value = true;
-  await login(result.data.email, result.data.password);
-  isSubmitting.value = false;
+  try {
+    isSubmitting.value = true;
+    await login(result.data.email, result.data.password);
+  } catch (error: unknown) {
+    if (error instanceof axios.AxiosError) {
+      if (error.response && error.response.status === 401) {
+        inputError.value = "Invalid email or password.";
+      }
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
 
   router.push("/");
 };
