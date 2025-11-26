@@ -5,32 +5,31 @@ import { login } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
 import axios from "axios";
 import { useToast } from "vue-toastification";
+import { useForm, Field } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
 
 const router = useRouter();
 const toast = useToast();
 
-const email = ref("");
-const password = ref("");
 const isSubmitting = ref(false);
 const inputError = ref("");
 
-const handleSubmit = async () => {
+const validationSchema = toTypedSchema(loginSchema);
+
+const { handleSubmit, errors } = useForm({
+  validationSchema,
+  initialValues: {
+    email: "",
+    password: "",
+  },
+});
+
+const onSubmit = handleSubmit(async (values) => {
   inputError.value = "";
-
-  const result = loginSchema.safeParse({
-    email: email.value,
-    password: password.value,
-  });
-
-  if (!result.success) {
-    inputError.value =
-      result.error.issues[0]?.message || "Invalid login details.";
-    return;
-  }
 
   try {
     isSubmitting.value = true;
-    await login(result.data.email, result.data.password);
+    await login(values.email, values.password);
     toast.success("Successfully logged in!");
   } catch (error: unknown) {
     if (error instanceof axios.AxiosError) {
@@ -49,16 +48,22 @@ const handleSubmit = async () => {
   }
 
   router.push("/");
-};
+});
 </script>
 
 <template>
   <h1>Login</h1>
 
   <div>
-    <form @submit.prevent="handleSubmit">
-      <input placeholder="you@example.com" v-model="email" />
-      <input type="password" placeholder="Password" v-model="password" />
+    <form @submit="onSubmit">
+      <div>
+        <Field type="email" name="email" placeholder="you@example.com" />
+        <span class="input-error">{{ errors.email }}</span>
+      </div>
+      <div>
+        <Field type="password" name="password" placeholder="Password" />
+        <span class="input-error">{{ errors.password }}</span>
+      </div>
       <button type="submit" :disabled="isSubmitting">Login</button>
     </form>
     <div class="input-error">{{ inputError }}</div>
