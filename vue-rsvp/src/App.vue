@@ -5,7 +5,6 @@ import { formSchema } from "@/schemas";
 import { toTypedSchema } from "@vee-validate/zod";
 
 const DRAFT_KEY = "event_registration_draft";
-const VALID_PROMO_CODES = ["EARLY2024", "STUDENT50"];
 
 const TICKET_PRICES: Record<string, number> = {
   general: 100,
