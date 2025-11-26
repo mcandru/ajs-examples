@@ -6,6 +6,8 @@ import noteService from "@/services/notes";
 import { useToast } from "vue-toastification";
 import { noteSchema } from "@/schemas/note";
 import axios from "axios";
+import { useForm, Field, ErrorMessage } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
 
 const toast = useToast();
 
@@ -16,22 +18,13 @@ const filteredNotes = computed(() => {
   return notes.value.filter((note) => !note.important || !hideImportant.value);
 });
 const isLoading = ref(true);
-const inputError = ref("");
 
-// Real-time validation
-watch(newNote, (value) => {
-  if (value.trim() === "") {
-    inputError.value = "";
-    return;
-  }
+const validationSchema = toTypedSchema(noteSchema);
 
-  const result = noteSchema.safeParse(value);
-  if (!result.success) {
-    inputError.value =
-      result.error.issues[0]?.message || "Invalid note content";
-  } else {
-    inputError.value = "";
-  }
+const { handleSubmit, isSubmitting, values, errors } = useForm({
+  initialValues: {
+    newNote: "",
+  },
 });
 
 onMounted(async () => {
@@ -44,20 +37,9 @@ onMounted(async () => {
   }
 });
 
-const addNewNote = async () => {
-  const result = noteSchema.safeParse(newNote.value);
-  if (!result.success) {
-    inputError.value =
-      result.error.issues[0]?.message || "Invalid note content";
-    return;
-  }
-
-  // Clear previous error
-  inputError.value = "";
-
-  // Submit to API
+const addNewNote = handleSubmit(async (values) => {
   try {
-    const response = await noteService.createNote(result.data);
+    const response = await noteService.createNote(values.newNote);
     notes.value.push(response);
     newNote.value = "";
   } catch (error: unknown) {
@@ -69,7 +51,7 @@ const addNewNote = async () => {
       toast.error("Failed to create note");
     }
   }
-};
+});
 
 const toggleImportant = async (note: NoteType) => {
   try {
@@ -111,17 +93,18 @@ const deleteNote = async (noteToDelete: NoteType) => {
 <template>
   <div v-if="isLoading">Loading...</div>
   <div v-else>
-    <form @submit.prevent="addNewNote">
+    <form @submit="addNewNote">
       <div>
-        <input
+        <Field
+          name="newNote"
+          :rules="validationSchema"
           type="text"
           v-model="newNote"
           placeholder="Enter a new note"
-          :class="{ 'input-error': inputError }"
         />
-        <div class="error-message">{{ inputError }}</div>
+        <span name="newNote">{{ errors.newNote }}</span>
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit" :disabled="isSubmitting">Submit</button>
     </form>
 
     <button @click="hideImportant = !hideImportant">

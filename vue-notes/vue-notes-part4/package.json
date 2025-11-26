@@ -14,11 +14,13 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.16",
+    "@vee-validate/zod": "^4.15.1",
     "axios": "^1.13.0",
+    "vee-validate": "^4.15.1",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3",
     "vue-toastification": "^2.0.0-rc.5",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",

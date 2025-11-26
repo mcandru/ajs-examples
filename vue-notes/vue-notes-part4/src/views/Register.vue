@@ -5,6 +5,8 @@ import { useRouter } from "vue-router";
 import { registerSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
 import axios from "axios";
+import { useForm, Field, ErrorMessage } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
 
 const router = useRouter();
 const toast = useToast();
@@ -12,28 +14,21 @@ const toast = useToast();
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
-const inputError = ref("");
-const isSubmitting = ref(false);
 
-const handleSubmit = async () => {
-  isSubmitting.value = true;
+const validationSchema = toTypedSchema(registerSchema);
 
-  const result = registerSchema.safeParse({
-    email: email.value,
-    password: password.value,
-    confirmPassword: confirmPassword.value,
-  });
+const { handleSubmit, isSubmitting, errors } = useForm({
+  validationSchema,
+  initialValues: {
+    email: "",
+    password: "",
+    confirmPassword: "",
+  },
+});
 
-  if (!result.success) {
-    inputError.value = result.error.issues[0]?.message || "Invalid input.";
-    isSubmitting.value = false;
-    return;
-  }
-
-  inputError.value = "";
-
+const onSubmit = handleSubmit(async (values) => {
   try {
-    await register(result.data.email, result.data.password);
+    await register(values.email, values.password);
     toast.success("Account created successfully!");
     router.push("/");
   } catch (error: unknown) {
@@ -45,31 +40,42 @@ const handleSubmit = async () => {
     } else {
       toast.error("An unexpected error occurred. Please try again later.");
     }
-  } finally {
-    isSubmitting.value = false;
   }
-};
+});
 </script>
 
 <template>
   <h1>Register</h1>
 
-  <form @submit.prevent="handleSubmit">
+  <form @submit="onSubmit">
     <div>
-      <input type="email" placeholder="you@example.com" v-model="email" />
+      <Field
+        name="email"
+        type="email"
+        placeholder="you@example.com"
+        v-model="email"
+      />
+      <span class="error-message">{{ errors.email }}</span>
     </div>
     <div>
-      <input type="password" placeholder="Password" v-model="password" />
+      <Field
+        name="password"
+        type="password"
+        placeholder="Password"
+        v-model="password"
+      />
+      <span class="error-message">{{ errors.password }}</span>
     </div>
     <div>
-      <input
+      <Field
+        name="confirmPassword"
         type="password"
         placeholder="Confirm Password"
         v-model="confirmPassword"
       />
+      <span class="error-message">{{ errors.confirmPassword }}</span>
     </div>
     <button type="submit" :disabled="isSubmitting">Register</button>
-    <div class="error-message">{{ inputError }}</div>
   </form>
 </template>
 
