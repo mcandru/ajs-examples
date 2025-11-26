@@ -11,12 +11,11 @@ import { toTypedSchema } from "@vee-validate/zod";
 const router = useRouter();
 const toast = useToast();
 
-const isSubmitting = ref(false);
 const inputError = ref("");
 
 const validationSchema = toTypedSchema(loginSchema);
 
-const { handleSubmit, errors } = useForm({
+const { handleSubmit, errors, isSubmitting } = useForm({
   validationSchema,
   initialValues: {
     email: "",
@@ -28,7 +27,6 @@ const onSubmit = handleSubmit(async (values) => {
   inputError.value = "";
 
   try {
-    isSubmitting.value = true;
     await login(values.email, values.password);
     toast.success("Successfully logged in!");
   } catch (error: unknown) {
@@ -43,8 +41,6 @@ const onSubmit = handleSubmit(async (values) => {
         toast.error("An unexpected error occurred. Please try again later");
       }
     }
-  } finally {
-    isSubmitting.value = false;
   }
 
   router.push("/");
