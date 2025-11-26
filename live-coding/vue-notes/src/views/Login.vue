@@ -4,8 +4,10 @@ import { useRouter } from "vue-router";
 import { login } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
 import axios from "axios";
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
+const toast = useToast();
 
 const email = ref("");
 const password = ref("");
@@ -29,10 +31,17 @@ const handleSubmit = async () => {
   try {
     isSubmitting.value = true;
     await login(result.data.email, result.data.password);
+    toast.success("Successfully logged in!");
   } catch (error: unknown) {
     if (error instanceof axios.AxiosError) {
       if (error.response && error.response.status === 401) {
         inputError.value = "Invalid email or password.";
+      } else if (error.response && error.response.status === 500) {
+        toast.error(
+          "Had an issue contacting the server. Please contact support if the issue persists"
+        );
+      } else {
+        toast.error("An unexpected error occurred. Please try again later");
       }
     }
   } finally {
