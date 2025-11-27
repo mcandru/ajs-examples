@@ -18,7 +18,7 @@ const emit = defineEmits<{
 <template>
   <li>
     <Card>
-      <CardContent class="p-2">
+      <CardContent>
         <div class="flex items-center justify-between">
           <div>
             <RouterLink :to="`notes/${note.id}`">{{ note.content }}</RouterLink>
