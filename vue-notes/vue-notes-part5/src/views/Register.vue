@@ -6,6 +6,16 @@ import { useToast } from "vue-toastification";
 import axios from "axios";
 import { useForm, Field } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
+import {
+  Card,
+  CardDescription,
+  CardTitle,
+  CardFooter,
+  CardContent,
+  CardHeader,
+} from "@/components/ui/card";
+import FormField from "@/components/FormField.vue";
+import { Button } from "@/components/ui/button";
 
 const router = useRouter();
 const toast = useToast();
@@ -40,27 +50,50 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <h1>Register</h1>
-
-  <form @submit="onSubmit">
-    <div>
-      <Field name="email" type="email" placeholder="you@example.com" />
-      <span class="error-message">{{ errors.email }}</span>
-    </div>
-    <div>
-      <Field name="password" type="password" placeholder="Password" />
-      <span class="error-message">{{ errors.password }}</span>
-    </div>
-    <div>
-      <Field
-        name="confirmPassword"
-        type="password"
-        placeholder="Confirm Password"
-      />
-      <span class="error-message">{{ errors.confirmPassword }}</span>
-    </div>
-    <button type="submit" :disabled="isSubmitting">Register</button>
-  </form>
+  <div class="flex items-center justify-center p-4">
+    <Card class="w-full max-w-md">
+      <CardHeader>
+        <CardTitle>Register</CardTitle>
+        <CardDescription>Create a new account</CardDescription>
+      </CardHeader>
+      <form @submit="onSubmit">
+        <CardContent>
+          <FormField
+            name="email"
+            label="Email"
+            type="email"
+            placeholder="you@example.com"
+            :error="errors.email"
+          />
+          <FormField
+            name="password"
+            label="Password"
+            type="password"
+            placeholder="password"
+            :error="errors.password"
+          />
+          <FormField
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            placeholder="password"
+            :error="errors.confirmPassword"
+          />
+        </CardContent>
+        <CardFooter class="flex flex-col gap-2">
+          <Button type="submit" class="w-full" :disabled="isSubmitting"
+            >Register</Button
+          >
+          <p class="text-center text-muted-foreground">
+            Already have an account?
+            <RouterLink to="/login" class="text-primary hover:underline"
+              >Login</RouterLink
+            >
+          </p>
+        </CardFooter>
+      </form>
+    </Card>
+  </div>
 </template>
 
 <style scoped>

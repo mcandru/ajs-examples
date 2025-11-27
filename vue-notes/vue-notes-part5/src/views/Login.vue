@@ -66,8 +66,8 @@ const onSubmit = handleSubmit(async (values) => {
           You are already logged in!
         </p>
       </CardContent>
-      <CardContent v-else>
-        <form @submit="onSubmit">
+      <form v-else @submit="onSubmit">
+        <CardContent>
           <FormField
             name="email"
             label="Email"
@@ -82,20 +82,20 @@ const onSubmit = handleSubmit(async (values) => {
             placeholder="password"
             :error="errors.password"
           />
-          <CardFooter class="flex flex-col gap-2 px-0">
-            <Button type="submit" class="w-full" :disabled="isSubmitting"
-              >Login</Button
+        </CardContent>
+        <CardFooter class="flex flex-col gap-2">
+          <Button type="submit" class="w-full" :disabled="isSubmitting"
+            >Login</Button
+          >
+          <p class="text-center text-muted-foreground">
+            Don't have an account?
+            <RouterLink to="/register" class="text-primary hover:underline"
+              >Register</RouterLink
             >
-            <p class="text-center text-muted-foreground">
-              Don't have an account?
-              <RouterLink to="/register" class="text-primary hover:underline"
-                >Register</RouterLink
-              >
-            </p>
-          </CardFooter>
-        </form>
+          </p>
+        </CardFooter>
         <div v-if="inputError" class="error-message">{{ inputError }}</div>
-      </CardContent>
+      </form>
     </Card>
   </div>
 </template>
