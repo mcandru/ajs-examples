@@ -94,7 +94,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
 </script>
 
 <template>
-  <div class="container m-auto max-w-2xl">
+  <div class="container m-auto max-w-2xl p-4">
     <div v-if="isLoading"><Spinner class="size-8" /></div>
     <div v-else>
       <Card>

@@ -7,7 +7,7 @@ import NavButton from "@/components/NavButton.vue";
 
 <template>
   <header class="border-b">
-    <div class="container flex items-center justify-between h-16 px-4">
+    <div class="container flex items-center justify-between h-16 px-4 m-auto">
       <div class="flex items-center gap-2">
         <StickyNote />
         <h1 class="text-2xl font-bold">Notes</h1>

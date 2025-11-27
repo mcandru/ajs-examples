@@ -5,9 +5,18 @@ import { login, isLoggedIn } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
 import axios from "axios";
-import { useForm, Field } from "vee-validate";
+import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
-import Button from "@/components/ui/button/Button.vue";
+import { Button } from "@/components/ui/button";
+import FormField from "@/components/FormField.vue";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 
 const router = useRouter();
 const toast = useToast();
@@ -16,7 +25,7 @@ const inputError = ref("");
 
 const validationSchema = toTypedSchema(loginSchema);
 
-const { handleSubmit, isSubmitting, values, errors } = useForm({
+const { handleSubmit, isSubmitting, errors } = useForm({
   validationSchema,
   initialValues: {
     email: "",
@@ -46,32 +55,47 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <h1>Login</h1>
-
-  <div v-if="isLoggedIn">
-    <p>You are logged in!</p>
-  </div>
-  <div v-else>
-    <form @submit="onSubmit">
-      <div>
-        <Field name="email" type="email" placeholder="you@example.com" />
-        <span class="error-message">{{ errors.email }}</span>
-      </div>
-      <div>
-        <Field name="password" type="password" placeholder="Password" />
-        <span class="error-message">{{ errors.password }}</span>
-      </div>
-      <Button type="submit" :disabled="isSubmitting">Login</Button>
-    </form>
-    <div v-if="inputError" class="error-message">{{ inputError }}</div>
+  <div class="flex items-center justify-center p-4">
+    <Card class="w-full max-w-md">
+      <CardHeader>
+        <CardTitle class="text-2xl">Login</CardTitle>
+        <CardDescription>Welcome back!</CardDescription>
+      </CardHeader>
+      <CardContent v-if="isLoggedIn">
+        <p class="text-center text-muted-foreground">
+          You are already logged in!
+        </p>
+      </CardContent>
+      <CardContent v-else>
+        <form @submit="onSubmit">
+          <FormField
+            name="email"
+            label="Email"
+            type="email"
+            placeholder="you@example.com"
+            :error="errors.email"
+          />
+          <FormField
+            name="password"
+            label="Password"
+            type="password"
+            placeholder="password"
+            :error="errors.password"
+          />
+          <CardFooter class="flex flex-col gap-2 px-0">
+            <Button type="submit" class="w-full" :disabled="isSubmitting"
+              >Login</Button
+            >
+            <p class="text-center text-muted-foreground">
+              Don't have an account?
+              <RouterLink to="/register" class="text-primary hover:underline"
+                >Register</RouterLink
+              >
+            </p>
+          </CardFooter>
+        </form>
+        <div v-if="inputError" class="error-message">{{ inputError }}</div>
+      </CardContent>
+    </Card>
   </div>
 </template>
-
-<style scoped>
-.error-message {
-  color: #e74c3c;
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  min-height: 1.25rem;
-}
-</style>
