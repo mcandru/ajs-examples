@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { isLoggedIn, user, isLoading, logout } from "@/stores/auth";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "vue-toastification";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 
 const router = useRouter();
 const toast = useToast();
@@ -18,15 +27,27 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <div v-if="isLoggedIn && user">
-    <h1>{{ user.email }}'s Profile</h1>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <button @click="handleLogout">Logout</button>
-  </div>
-  <div v-else-if="isLoading">
-    <p>Loading...</p>
-  </div>
-  <div v-else>
-    <p>Not logged in</p>
+  <div class="container m-auto max-w-2xl">
+    <div v-if="isLoggedIn && user">
+      <Card>
+        <CardHeader>
+          <CardTitle class="text-2xl">Profile</CardTitle>
+          <CardDescription>Manage your account settings</CardDescription>
+        </CardHeader>
+        <CardContent class="space-y-6">
+          <div>
+            <p class="text-muted-foreground">Email</p>
+            <p>{{ user.email }}</p>
+          </div>
+          <Button variant="destructive" @click="handleLogout">Logout</Button>
+        </CardContent>
+      </Card>
+    </div>
+    <div v-else-if="isLoading">
+      <p><Spinner /></p>
+    </div>
+    <div v-else>
+      <p>Not logged in</p>
+    </div>
   </div>
 </template>
