@@ -8,6 +8,10 @@ import { noteSchema } from "@/schemas/note";
 import axios from "axios";
 import { useForm, Field } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 const toast = useToast();
 
@@ -90,34 +94,53 @@ const deleteNote = async (noteToDelete: NoteType) => {
 </script>
 
 <template>
-  <div v-if="isLoading">Loading...</div>
-  <div v-else>
-    <form @submit="addNewNote">
-      <div>
-        <Field
-          name="newNote"
-          :rules="validationSchema"
-          type="text"
-          placeholder="Enter a new note"
-        />
-        <span class="error-message">{{ errors.newNote }}</span>
+  <div class="container m-auto max-w-2xl">
+    <div v-if="isLoading"><Spinner class="size-8" /></div>
+    <div v-else>
+      <Card>
+        <CardHeader>
+          <CardTitle>Add New Note</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form @submit="addNewNote" class="space-y-4">
+            <div>
+              <Field
+                name="newNote"
+                :rules="validationSchema"
+                v-slot="{ field }"
+              >
+                <Input
+                  v-bind="field"
+                  type="text"
+                  placeholder="Enter a new note"
+                  :class="{ 'border-destructive': errors.newNote }"
+                />
+              </Field>
+              <span class="error-message">{{ errors.newNote }}</span>
+            </div>
+            <Button type="submit" :disabled="isSubmitting">Add Note</Button>
+          </form>
+        </CardContent>
+      </Card>
+      <div class="flex justify-between items-center my-6">
+        <h2 class="text-2xl font-bold">Your Notes</h2>
+        <Button variant="outline" @click="hideImportant = !hideImportant">
+          {{ hideImportant ? "Show All" : "Hide Important" }}
+        </Button>
       </div>
-      <button type="submit" :disabled="isSubmitting">Submit</button>
-    </form>
-
-    <button @click="hideImportant = !hideImportant">
-      {{ hideImportant ? "Show All" : "Hide Important" }}
-    </button>
-
-    <ul>
-      <Note
-        v-for="note in filteredNotes"
-        :key="note.id"
-        :note="note"
-        @delete="deleteNote"
-        @toggle-important="toggleImportant(note)"
-      />
-    </ul>
+      <div v-if="!notes" class="text-muted-foreground">
+        No notes yet. Create your first note above!
+      </div>
+      <ul v-else class="space-y-3">
+        <Note
+          v-for="note in filteredNotes"
+          :key="note.id"
+          :note="note"
+          @delete="deleteNote"
+          @toggle-important="toggleImportant(note)"
+        />
+      </ul>
+    </div>
   </div>
 </template>
 
