@@ -7,6 +7,7 @@ import { useToast } from "vue-toastification";
 import axios from "axios";
 import { useForm, Field } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
+import Button from "@/components/ui/button/Button.vue";
 
 const router = useRouter();
 const toast = useToast();
@@ -60,7 +61,7 @@ const onSubmit = handleSubmit(async (values) => {
         <Field name="password" type="password" placeholder="Password" />
         <span class="error-message">{{ errors.password }}</span>
       </div>
-      <button type="submit" :disabled="isSubmitting">Login</button>
+      <Button type="submit" :disabled="isSubmitting">Login</Button>
     </form>
     <div v-if="inputError" class="error-message">{{ inputError }}</div>
   </div>
