@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+import { RouterView } from "vue-router";
 import { isLoggedIn, isLoading } from "@/stores/auth";
 import { StickyNote } from "lucide-vue-next";
-import { Button } from "@/components/ui/button";
 import NavButton from "@/components/NavButton.vue";
 </script>
 
 <template>
   <header class="border-b">
-    <div class="container flex items-center justify-between">
+    <div class="container flex items-center justify-between h-16 px-4">
       <div class="flex items-center gap-2">
         <StickyNote />
         <h1 class="text-2xl font-bold">Notes</h1>
@@ -21,14 +20,7 @@ import NavButton from "@/components/NavButton.vue";
       </nav>
     </div>
   </header>
-  <RouterView />
+  <main class="py-6">
+    <RouterView />
+  </main>
 </template>
-
-<style scoped>
-nav {
-  margin-bottom: 20px;
-}
-nav button {
-  margin-right: 10px;
-}
-</style>
