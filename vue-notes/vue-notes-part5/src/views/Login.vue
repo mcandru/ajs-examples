@@ -17,6 +17,12 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
 
 const router = useRouter();
 const toast = useToast();
@@ -62,9 +68,15 @@ const onSubmit = handleSubmit(async (values) => {
         <CardDescription>Welcome back!</CardDescription>
       </CardHeader>
       <CardContent v-if="isLoggedIn">
-        <p class="text-center text-muted-foreground">
-          You are already logged in!
-        </p>
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>Already Logged In!</EmptyTitle>
+            <EmptyDescription
+              >You are already logged in. If you meant to login with a different
+              account, log out first.</EmptyDescription
+            >
+          </EmptyHeader>
+        </Empty>
       </CardContent>
       <form v-else @submit="onSubmit">
         <CardContent>
@@ -92,7 +104,9 @@ const onSubmit = handleSubmit(async (values) => {
             >
           </p>
         </CardFooter>
-        <div v-if="inputError" class="error-message">{{ inputError }}</div>
+        <div v-if="inputError" class="text-sm text-destructive">
+          {{ inputError }}
+        </div>
       </form>
     </Card>
   </div>
