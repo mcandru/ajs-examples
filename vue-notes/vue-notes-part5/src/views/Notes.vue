@@ -4,20 +4,16 @@ import type { Note as NoteType } from "@/types";
 import Note from "@/components/Note.vue";
 import noteService from "@/services/notes";
 import { useToast } from "vue-toastification";
-import { noteSchema } from "@/schemas/note";
 import axios from "axios";
-import { useForm, Field } from "vee-validate";
-import { toTypedSchema } from "@vee-validate/zod";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import {
   Empty,
   EmptyTitle,
   EmptyDescription,
   EmptyHeader,
 } from "@/components/ui/empty";
+import NoteForm from "@/components/NoteForm.vue";
 
 const toast = useToast();
 
@@ -27,14 +23,6 @@ const filteredNotes = computed(() => {
   return notes.value.filter((note) => !note.important || !hideImportant.value);
 });
 const isLoading = ref(true);
-
-const validationSchema = toTypedSchema(noteSchema);
-
-const { handleSubmit, isSubmitting, errors, resetForm } = useForm({
-  initialValues: {
-    newNote: "",
-  },
-});
 
 onMounted(async () => {
   try {
@@ -50,11 +38,10 @@ onMounted(async () => {
   }
 });
 
-const addNewNote = handleSubmit(async (values) => {
+const addNewNote = async (note: string) => {
   try {
-    const response = await noteService.createNote(values.newNote);
+    const response = await noteService.createNote(note);
     notes.value.push(response);
-    resetForm();
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const errorMessage =
@@ -64,7 +51,7 @@ const addNewNote = handleSubmit(async (values) => {
       toast.error("Failed to create note");
     }
   }
-});
+};
 
 const toggleImportant = async (note: NoteType) => {
   try {
@@ -107,32 +94,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
   <div class="container m-auto max-w-2xl p-4">
     <div v-if="isLoading"><Spinner class="size-8" /></div>
     <div v-else>
-      <Card>
-        <CardHeader>
-          <CardTitle>Add New Note</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form @submit="addNewNote" class="space-y-4">
-            <div>
-              <Field
-                name="newNote"
-                :rules="validationSchema"
-                :validateOnModelUpdate="false"
-                v-slot="{ field }"
-              >
-                <Input
-                  v-bind="field"
-                  type="text"
-                  placeholder="Enter a new note"
-                  :class="{ 'border-destructive': errors.newNote }"
-                />
-              </Field>
-              <span class="text-sm text-destructive">{{ errors.newNote }}</span>
-            </div>
-            <Button type="submit" :disabled="isSubmitting">Add Note</Button>
-          </form>
-        </CardContent>
-      </Card>
+      <NoteForm @submit="addNewNote" />
       <div class="flex justify-between items-center my-6">
         <h2 class="text-2xl font-bold">Your Notes</h2>
         <Button variant="outline" @click="hideImportant = !hideImportant">
