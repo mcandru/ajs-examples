@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import { registerSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
 import axios from "axios";
-import { useForm, Field } from "vee-validate";
+import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import {
   Card,
