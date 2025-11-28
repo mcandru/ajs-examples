@@ -11,4 +11,16 @@ describe("Note App", () => {
     // where "Welcome back!" is visible
     await expect(page.getByText("Welcome back!")).toBeVisible();
   });
+
+  test("user can log in", async ({ page }) => {
+    await page.goto("http://localhost:5173/");
+
+    // Fill in the login form
+    await page.getByRole("textbox").first().fill("alice@example.com");
+    await page.getByRole("textbox").last().fill("password123");
+    await page.getByTestId("login-submit").click();
+
+    // Expect to be logged in and see the notes page
+    await expect(page.getByText("Your Notes")).toBeVisible();
+  });
 });
