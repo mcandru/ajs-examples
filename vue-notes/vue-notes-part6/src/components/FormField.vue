@@ -18,11 +18,12 @@ defineProps<{
       :validate-on-model-update="false"
       v-slot="{ field, errorMessage }"
     >
-      <Label v-if="label" for="name">{{ label }}</Label>
+      <Label v-if="label" :for="name">{{ label }}</Label>
       <Input
         v-bind="field"
         :type="type"
         :placeholder="placeholder"
+        :data-testid="`form-field-${name}`"
         :class="{ 'border-destructive': errorMessage }"
       />
       <span class="text-sm text-destructive">{{ errorMessage }}</span>

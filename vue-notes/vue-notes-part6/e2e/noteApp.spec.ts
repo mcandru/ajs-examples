@@ -16,8 +16,8 @@ describe("Note App", () => {
     await page.goto("http://localhost:5173/");
 
     // Fill in the login form
-    await page.getByRole("textbox").first().fill("alice@example.com");
-    await page.getByRole("textbox").last().fill("password123");
+    await page.getByTestId("form-field-email").fill("alice@example.com");
+    await page.getByTestId("form-field-password").fill("password123");
     await page.getByTestId("login-submit").click();
 
     // Expect to be logged in and see the notes page
