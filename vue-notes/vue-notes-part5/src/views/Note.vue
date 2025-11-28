@@ -13,7 +13,7 @@ import {
   CardContent,
   CardAction,
 } from "@/components/ui/card";
-import { Trash2, Star } from "lucide-vue-next";
+import { Trash2, Star, ArrowLeft } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -65,8 +65,13 @@ const deleteNote = async () => {
     <!-- Display a back button that goes back to notes. Could also use router.back() if
      you want to preserve the full history-->
     <div v-if="isLoading"><Spinner class="size-8" /></div>
-    <RouterLink to="/">Back to Notes</RouterLink>
-
+    <div class="mb-6">
+      <Button variant="ghost">
+        <RouterLink to="/" class="flex items-center gap-2"
+          ><ArrowLeft />Back to Notes</RouterLink
+        >
+      </Button>
+    </div>
     <Card>
       <CardHeader>
         <CardTitle class="text-2xl">Note Details</CardTitle>
