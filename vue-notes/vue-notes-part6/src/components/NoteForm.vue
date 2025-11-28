@@ -40,12 +40,18 @@ const onSubmit = handleSubmit(async (values) => {
               v-bind="field"
               type="text"
               placeholder="Enter a new note"
+              data-testid="note-content-input"
               :class="{ 'border-destructive': errors.content }"
             />
           </Field>
           <span class="text-sm text-destructive">{{ errors.content }}</span>
         </div>
-        <Button type="submit" :disabled="isSubmitting">Add Note</Button>
+        <Button
+          type="submit"
+          :disabled="isSubmitting"
+          data-testid="create-note-button"
+          >Add Note</Button
+        >
       </form>
     </CardContent>
   </Card>
