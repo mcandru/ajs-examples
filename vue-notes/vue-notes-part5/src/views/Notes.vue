@@ -6,12 +6,18 @@ import noteService from "@/services/notes";
 import { useToast } from "vue-toastification";
 import { noteSchema } from "@/schemas/note";
 import axios from "axios";
-import { useForm, Field as VeeField } from "vee-validate";
+import { useForm, Field } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  Empty,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyHeader,
+} from "@/components/ui/empty";
 
 const toast = useToast();
 
@@ -104,7 +110,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
         <CardContent>
           <form @submit="addNewNote" class="space-y-4">
             <div>
-              <VeeField
+              <Field
                 name="newNote"
                 :rules="validationSchema"
                 :validateOnModelUpdate="false"
@@ -116,7 +122,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
                   placeholder="Enter a new note"
                   :class="{ 'border-destructive': errors.newNote }"
                 />
-              </VeeField>
+              </Field>
               <span class="error-message">{{ errors.newNote }}</span>
             </div>
             <Button type="submit" :disabled="isSubmitting">Add Note</Button>
@@ -129,8 +135,16 @@ const deleteNote = async (noteToDelete: NoteType) => {
           {{ hideImportant ? "Show All" : "Hide Important" }}
         </Button>
       </div>
-      <div v-if="!notes" class="text-muted-foreground">
-        No notes yet. Create your first note above!
+      <div v-if="notes.length < 1" class="text-muted-foreground">
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>No notes yet</EmptyTitle>
+            <EmptyDescription
+              >You haven't created any notes yet. Get started by creating your
+              first note</EmptyDescription
+            >
+          </EmptyHeader>
+        </Empty>
       </div>
       <ul v-else class="space-y-3">
         <Note
