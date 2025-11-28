@@ -6,13 +6,12 @@ import noteService from "@/services/notes";
 import { useToast } from "vue-toastification";
 import { noteSchema } from "@/schemas/note";
 import axios from "axios";
-import { useForm, Field } from "vee-validate";
+import { useForm, Field as VeeField } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import FormField from "@/components/FormField.vue";
 
 const toast = useToast();
 
@@ -105,7 +104,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
         <CardContent>
           <form @submit="addNewNote" class="space-y-4">
             <div>
-              <Field
+              <VeeField
                 name="newNote"
                 :rules="validationSchema"
                 :validateOnModelUpdate="false"
@@ -117,7 +116,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
                   placeholder="Enter a new note"
                   :class="{ 'border-destructive': errors.newNote }"
                 />
-              </Field>
+              </VeeField>
               <span class="error-message">{{ errors.newNote }}</span>
             </div>
             <Button type="submit" :disabled="isSubmitting">Add Note</Button>
@@ -145,21 +144,3 @@ const deleteNote = async (noteToDelete: NoteType) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.error-message {
-  color: red;
-  margin-top: 4px;
-  margin-bottom: 8px;
-  font-size: 0.8em;
-}
-
-.input-error {
-  border-color: red;
-  outline-color: red;
-}
-
-.input-error:focus {
-  outline-color: red;
-}
-</style>

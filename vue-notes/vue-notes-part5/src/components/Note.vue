@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Note } from "@/types/index";
 import { RouterLink } from "vue-router";
-import { Card, CardContent } from "@/components/ui/card";
 import Button from "@/components/ui/button/Button.vue";
 import { Star, Trash2 } from "lucide-vue-next";
+import { Item, ItemContent, ItemActions } from "@/components/ui/item";
 
 defineProps<{
   note: Note;
@@ -17,32 +17,28 @@ const emit = defineEmits<{
 
 <template>
   <li>
-    <Card>
-      <CardContent>
-        <div class="flex items-center justify-between">
-          <div>
-            <RouterLink :to="`notes/${note.id}`">{{ note.content }}</RouterLink>
-          </div>
-          <div>
-            <Button
-              variant="ghost"
-              class="action-button"
-              @click="emit('toggle-important')"
-            >
-              <Star
-                :class="
-                  note.important
-                    ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-gray-400'
-                "
-              />
-            </Button>
-            <Button variant="ghost" @click="emit('delete', note)"
-              ><Trash2 class="text-red-400"
-            /></Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <Item variant="outline">
+      <ItemContent>
+        <RouterLink :to="`notes/${note.id}`">{{ note.content }}</RouterLink>
+      </ItemContent>
+      <ItemActions>
+        <Button
+          variant="ghost"
+          class="action-button"
+          @click="emit('toggle-important')"
+        >
+          <Star
+            :class="
+              note.important
+                ? 'fill-yellow-400 text-yellow-400'
+                : 'text-gray-400'
+            "
+          />
+        </Button>
+        <Button variant="ghost" @click="emit('delete', note)"
+          ><Trash2 class="text-red-400"
+        /></Button>
+      </ItemActions>
+    </Item>
   </li>
 </template>
