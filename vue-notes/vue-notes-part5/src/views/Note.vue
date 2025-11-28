@@ -65,44 +65,46 @@ const deleteNote = async () => {
     <!-- Display a back button that goes back to notes. Could also use router.back() if
      you want to preserve the full history-->
     <div v-if="isLoading"><Spinner class="size-8" /></div>
-    <div class="mb-6">
-      <Button variant="ghost">
-        <RouterLink to="/" class="flex items-center gap-2"
-          ><ArrowLeft />Back to Notes</RouterLink
-        >
-      </Button>
+    <div v-else>
+      <div class="mb-6">
+        <Button variant="ghost">
+          <RouterLink to="/" class="flex items-center gap-2"
+            ><ArrowLeft />Back to Notes</RouterLink
+          >
+        </Button>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle class="text-2xl">Note Details</CardTitle>
+          <CardAction>
+            <Button variant="ghost" :disabled="!note" @click="toggleImportant">
+              <Star
+                :class="
+                  note?.important
+                    ? 'fill-yellow-400 text-yellow-400'
+                    : 'text-gray-400'
+                "
+              />
+            </Button>
+            <Button variant="ghost" :disabled="!note" @click="deleteNote"
+              ><Trash2
+            /></Button>
+          </CardAction>
+        </CardHeader>
+        <CardContent v-if="note">
+          <p>{{ note.content }}</p>
+        </CardContent>
+        <CardContent v-else>
+          <Empty>
+            <EmptyHeader>
+              <EmptyTitle>Note does not exist</EmptyTitle>
+              <EmptyDescription
+                >Please select a note that exists</EmptyDescription
+              >
+            </EmptyHeader>
+          </Empty>
+        </CardContent>
+      </Card>
     </div>
-    <Card>
-      <CardHeader>
-        <CardTitle class="text-2xl">Note Details</CardTitle>
-        <CardAction>
-          <Button variant="ghost" :disabled="!note" @click="toggleImportant">
-            <Star
-              :class="
-                note?.important
-                  ? 'fill-yellow-400 text-yellow-400'
-                  : 'text-gray-400'
-              "
-            />
-          </Button>
-          <Button variant="ghost" :disabled="!note" @click="deleteNote"
-            ><Trash2
-          /></Button>
-        </CardAction>
-      </CardHeader>
-      <CardContent v-if="note">
-        <p>{{ note.content }}</p>
-      </CardContent>
-      <CardContent v-else>
-        <Empty>
-          <EmptyHeader>
-            <EmptyTitle>Note does not exist</EmptyTitle>
-            <EmptyDescription
-              >Please select a note that exists</EmptyDescription
-            >
-          </EmptyHeader>
-        </Empty>
-      </CardContent>
-    </Card>
   </div>
 </template>

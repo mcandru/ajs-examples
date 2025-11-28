@@ -92,12 +92,3 @@ const onSubmit = handleSubmit(async (values) => {
     </Card>
   </div>
 </template>
-
-<style scoped>
-.error-message {
-  color: #e74c3c;
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  min-height: 1.25rem;
-}
-</style>

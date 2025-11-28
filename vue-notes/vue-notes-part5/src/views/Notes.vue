@@ -39,8 +39,12 @@ const { handleSubmit, isSubmitting, errors, resetForm } = useForm({
 onMounted(async () => {
   try {
     notes.value = await noteService.getAllNotes();
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to load notes");
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to load notes";
+      toast.error(errorMessage);
+    }
   } finally {
     isLoading.value = false;
   }
@@ -123,7 +127,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
                   :class="{ 'border-destructive': errors.newNote }"
                 />
               </Field>
-              <span class="error-message">{{ errors.newNote }}</span>
+              <span class="text-sm text-destructive">{{ errors.newNote }}</span>
             </div>
             <Button type="submit" :disabled="isSubmitting">Add Note</Button>
           </form>
