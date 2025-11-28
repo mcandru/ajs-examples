@@ -29,8 +29,14 @@ const { handleSubmit, isSubmitting, errors, resetForm } = useForm({
 onMounted(async () => {
   try {
     notes.value = await noteService.getAllNotes();
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to load notes");
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to load notes";
+      toast.error(errorMessage);
+    } else {
+      toast.error("Failed to load notes");
+    }
   } finally {
     isLoading.value = false;
   }
