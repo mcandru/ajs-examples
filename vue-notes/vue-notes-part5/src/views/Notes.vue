@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import FormField from "@/components/FormField.vue";
 
 const toast = useToast();
 
@@ -107,6 +108,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
               <Field
                 name="newNote"
                 :rules="validationSchema"
+                :validateOnModelUpdate="false"
                 v-slot="{ field }"
               >
                 <Input

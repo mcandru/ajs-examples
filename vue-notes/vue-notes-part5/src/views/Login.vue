@@ -25,7 +25,7 @@ const inputError = ref("");
 
 const validationSchema = toTypedSchema(loginSchema);
 
-const { handleSubmit, isSubmitting, errors } = useForm({
+const { handleSubmit, isSubmitting } = useForm({
   validationSchema,
   initialValues: {
     email: "",
@@ -73,14 +73,12 @@ const onSubmit = handleSubmit(async (values) => {
             label="Email"
             type="email"
             placeholder="you@example.com"
-            :error="errors.email"
           />
           <FormField
             name="password"
             label="Password"
             type="password"
             placeholder="password"
-            :error="errors.password"
           />
         </CardContent>
         <CardFooter class="flex flex-col gap-2">

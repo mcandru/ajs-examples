@@ -8,21 +8,24 @@ defineProps<{
   label?: string;
   type?: string;
   placeholder?: string;
-  error?: string;
 }>();
 </script>
 
 <template>
   <div class="space-y-2">
-    <Field :name="name" v-slot="{ field }">
+    <Field
+      :name="name"
+      :validate-on-model-update="false"
+      v-slot="{ field, errorMessage }"
+    >
       <Label v-if="label" for="name">{{ label }}</Label>
       <Input
         v-bind="field"
         :type="type"
         :placeholder="placeholder"
-        :class="{ 'border-destructive': error }"
+        :class="{ 'border-destructive': errorMessage }"
       />
-      <span class="text-sm text-destructive">{{ error }}</span>
+      <span class="text-sm text-destructive">{{ errorMessage }}</span>
     </Field>
   </div>
 </template>
