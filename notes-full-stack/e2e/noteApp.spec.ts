@@ -1,5 +1,9 @@
 import { test, expect } from "@playwright/test";
 const { describe, beforeEach } = test;
+import crypto from "crypto";
+
+const USER_EMAIL = `${crypto.randomBytes(8).toString("hex")}@example.com`;
+const USER_PASSWORD = "Password123!";
 
 describe("Note App", () => {
   beforeEach(async ({ page }) => {
@@ -15,10 +19,24 @@ describe("Note App", () => {
     await expect(page.getByText("Welcome back!")).toBeVisible();
   });
 
+  test("user can register", async ({ page }) => {
+    // Go to the registration page
+    await page.goto("http://localhost:5173/register");
+
+    // Fill in the registration form
+    await page.getByTestId("form-field-email").fill(USER_EMAIL);
+    await page.getByTestId("form-field-password").fill(USER_PASSWORD);
+    await page.getByTestId("form-field-confirmPassword").fill(USER_PASSWORD);
+    await page.getByTestId("register-submit").click();
+
+    // Expect to be redirected to the notes page
+    await expect(page.getByText("Your Notes")).toBeVisible();
+  });
+
   test("user can log in", async ({ page }) => {
     // Fill in the login form
-    await page.getByTestId("form-field-email").fill("alice@example.com");
-    await page.getByTestId("form-field-password").fill("password123");
+    await page.getByTestId("form-field-email").fill(USER_EMAIL);
+    await page.getByTestId("form-field-password").fill(USER_PASSWORD);
     await page.getByTestId("login-submit").click();
 
     // Expect to be logged in and see the notes page
@@ -28,8 +46,8 @@ describe("Note App", () => {
   describe("when logged in", () => {
     beforeEach(async ({ page }) => {
       // Log in before each test in this describe block
-      await page.getByTestId("form-field-email").fill("alice@example.com");
-      await page.getByTestId("form-field-password").fill("password123");
+      await page.getByTestId("form-field-email").fill(USER_EMAIL);
+      await page.getByTestId("form-field-password").fill(USER_PASSWORD);
       await page.getByTestId("login-submit").click();
     });
 
