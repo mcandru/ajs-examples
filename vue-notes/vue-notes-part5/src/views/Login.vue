@@ -92,6 +92,9 @@ const onSubmit = handleSubmit(async (values) => {
             type="password"
             placeholder="password"
           />
+          <div v-if="inputError" class="text-sm text-destructive">
+            {{ inputError }}
+          </div>
         </CardContent>
         <CardFooter class="flex flex-col gap-2">
           <Button type="submit" class="w-full" :disabled="isSubmitting"
@@ -104,9 +107,6 @@ const onSubmit = handleSubmit(async (values) => {
             >
           </p>
         </CardFooter>
-        <div v-if="inputError" class="text-sm text-destructive">
-          {{ inputError }}
-        </div>
       </form>
     </Card>
   </div>
