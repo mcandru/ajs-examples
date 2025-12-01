@@ -5,34 +5,27 @@ import { login, isLoggedIn } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
 import axios from "axios";
+import { useForm, Field } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
 
 const router = useRouter();
 const toast = useToast();
 
-const email = ref("");
-const password = ref("");
-const isSubmitting = ref(false);
-const inputError = ref<string | null>(null);
+const inputError = ref("");
 
-const handleSubmit = async () => {
-  // Clear previous errors
-  inputError.value = null;
+const validationSchema = toTypedSchema(loginSchema);
 
-  const loginData = loginSchema.safeParse({
-    email: email.value,
-    password: password.value,
-  });
+const { handleSubmit, isSubmitting, values, errors } = useForm({
+  validationSchema,
+  initialValues: {
+    email: "",
+    password: "",
+  },
+});
 
-  if (!loginData.success) {
-    inputError.value =
-      loginData.error.issues[0]?.message || "Invalid login details.";
-    return;
-  }
-
-  // Submit to API
-  isSubmitting.value = true;
+const onSubmit = handleSubmit(async (values) => {
   try {
-    await login(email.value, password.value);
+    await login(values.email, values.password);
     toast.success("Successfully logged in!");
     router.push("/");
   } catch (error: unknown) {
@@ -47,10 +40,8 @@ const handleSubmit = async () => {
         toast.error("An unexpected error occurred. Please try again later.");
       }
     }
-  } finally {
-    isSubmitting.value = false;
   }
-};
+});
 </script>
 
 <template>
@@ -60,12 +51,14 @@ const handleSubmit = async () => {
     <p>You are logged in!</p>
   </div>
   <div v-else>
-    <form @submit.prevent="handleSubmit">
+    <form @submit="onSubmit">
       <div>
-        <input type="email" placeholder="you@example.com" v-model="email" />
+        <Field name="email" type="email" placeholder="you@example.com" />
+        <span class="error-message">{{ errors.email }}</span>
       </div>
       <div>
-        <input type="password" placeholder="Password" v-model="password" />
+        <Field name="password" type="password" placeholder="Password" />
+        <span class="error-message">{{ errors.password }}</span>
       </div>
       <button type="submit" :disabled="isSubmitting">Login</button>
     </form>

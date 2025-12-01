@@ -1,67 +1,62 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted } from "vue";
 import type { Note as NoteType } from "@/types";
 import Note from "@/components/Note.vue";
 import noteService from "@/services/notes";
 import { useToast } from "vue-toastification";
 import { noteSchema } from "@/schemas/note";
 import axios from "axios";
+import { useForm, Field } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
 
 const toast = useToast();
 
 const hideImportant = ref(false);
-const newNote = ref("");
 const notes = ref<NoteType[]>([]);
 const filteredNotes = computed(() => {
   return notes.value.filter((note) => !note.important || !hideImportant.value);
 });
 const isLoading = ref(true);
-const noteError = ref<string>("");
 
-// Real-time validation
-watch(newNote, (value) => {
-  if (value.trim() === "") {
-    noteError.value = "";
-    return;
-  }
+const validationSchema = toTypedSchema(noteSchema);
 
-  const result = noteSchema.safeParse(value);
-  if (!result.success) {
-    noteError.value = result.error.issues[0]?.message || "Invalid note content";
-  } else {
-    noteError.value = "";
-  }
+const { handleSubmit, isSubmitting, errors, resetForm } = useForm({
+  initialValues: {
+    newNote: "",
+  },
 });
 
 onMounted(async () => {
   try {
     notes.value = await noteService.getAllNotes();
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to load notes");
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to load notes";
+      toast.error(errorMessage);
+    } else {
+      toast.error("Failed to load notes");
+    }
   } finally {
     isLoading.value = false;
   }
 });
 
-const addNewNote = async () => {
-  // Clear previous error
-  noteError.value = "";
-
-  const result = noteSchema.safeParse(newNote.value);
-  if (!result.success) {
-    noteError.value = result.error.issues[0]?.message || "Invalid note content";
-    return;
-  }
-
-  // Submit to API
+const addNewNote = handleSubmit(async (values) => {
   try {
-    const response = await noteService.createNote(newNote.value);
+    const response = await noteService.createNote(values.newNote);
     notes.value.push(response);
-    newNote.value = "";
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to create note");
+    resetForm();
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to create note";
+      toast.error(errorMessage);
+    } else {
+      toast.error("Failed to create note");
+    }
   }
-};
+});
 
 const toggleImportant = async (note: NoteType) => {
   try {
@@ -103,17 +98,17 @@ const deleteNote = async (noteToDelete: NoteType) => {
 <template>
   <div v-if="isLoading">Loading...</div>
   <div v-else>
-    <form @submit.prevent="addNewNote">
+    <form @submit="addNewNote">
       <div>
-        <input
+        <Field
+          name="newNote"
+          :rules="validationSchema"
           type="text"
-          v-model="newNote"
           placeholder="Enter a new note"
-          :class="{ 'input-error': noteError }"
         />
-        <div v-if="noteError" class="error-message">{{ noteError }}</div>
+        <span class="error-message">{{ errors.newNote }}</span>
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit" :disabled="isSubmitting">Submit</button>
     </form>
 
     <button @click="hideImportant = !hideImportant">

@@ -7,9 +7,13 @@ const router = useRouter();
 const toast = useToast();
 
 const handleLogout = async () => {
-  await logout();
-  toast.success("Successfully logged out!");
-  router.push("/login");
+  try {
+    await logout();
+    toast.success("Successfully logged out!");
+    router.push("/login");
+  } catch (error: unknown) {
+    toast.error("An error occurred while logging out. Please try again.");
+  }
 };
 </script>
 

@@ -1,45 +1,33 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { register } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import { registerSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
 import axios from "axios";
+import { useForm, Field } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
 
 const router = useRouter();
 const toast = useToast();
 
-const email = ref("");
-const password = ref("");
-const confirmPassword = ref("");
-const inputError = ref<string | null>(null);
-const isSubmitting = ref(false);
+const validationSchema = toTypedSchema(registerSchema);
 
-const handleSubmit = async () => {
-  isSubmitting.value = true;
+const { handleSubmit, isSubmitting, errors } = useForm({
+  validationSchema,
+  initialValues: {
+    email: "",
+    password: "",
+    confirmPassword: "",
+  },
+});
 
-  const validatedData = registerSchema.safeParse({
-    email: email.value,
-    password: password.value,
-    confirmPassword: confirmPassword.value,
-  });
-
-  if (!validatedData.success) {
-    inputError.value =
-      validatedData.error.issues[0]?.message || "Invalid input.";
-    isSubmitting.value = false;
-    return;
-  }
-
-  inputError.value = null;
-
+const onSubmit = handleSubmit(async (values) => {
   try {
-    await register(email.value, password.value);
+    await register(values.email, values.password);
     toast.success("Account created successfully!");
     router.push("/");
   } catch (error: unknown) {
     if (error instanceof axios.AxiosError && error.response) {
-      console.log(error.response.data);
       toast.error(
         error.response.data?.message ||
           "Failed to create account. Please try again."
@@ -47,31 +35,31 @@ const handleSubmit = async () => {
     } else {
       toast.error("An unexpected error occurred. Please try again later.");
     }
-  } finally {
-    isSubmitting.value = false;
   }
-};
+});
 </script>
 
 <template>
   <h1>Register</h1>
 
-  <form @submit.prevent="handleSubmit">
+  <form @submit="onSubmit">
     <div>
-      <input type="email" placeholder="you@example.com" v-model="email" />
+      <Field name="email" type="email" placeholder="you@example.com" />
+      <span class="error-message">{{ errors.email }}</span>
     </div>
     <div>
-      <input type="password" placeholder="Password" v-model="password" />
+      <Field name="password" type="password" placeholder="Password" />
+      <span class="error-message">{{ errors.password }}</span>
     </div>
     <div>
-      <input
+      <Field
+        name="confirmPassword"
         type="password"
         placeholder="Confirm Password"
-        v-model="confirmPassword"
       />
+      <span class="error-message">{{ errors.confirmPassword }}</span>
     </div>
     <button type="submit" :disabled="isSubmitting">Register</button>
-    <div v-if="inputError" class="error-message">{{ inputError }}</div>
   </form>
 </template>
 
