@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Note } from "@/types/index.ts";
+import type { Note } from "@/types/index";
 import { RouterLink } from "vue-router";
 defineProps<{
   note: Note;

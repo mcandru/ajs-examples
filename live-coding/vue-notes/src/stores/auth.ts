@@ -1,10 +1,11 @@
 import { ref } from "vue";
 import authService from "@/services/auth";
 import type { User } from "@/types";
+import axios from "axios";
 
 export const isLoggedIn = ref(false);
 export const user = ref<User | null>(null);
-export const isLoading = ref(true);
+export const isLoading = ref(true); // Start as true to prevent race condition
 export const hasCheckedAuth = ref(false);
 
 export const checkAuth = async (): Promise<void> => {
@@ -14,8 +15,17 @@ export const checkAuth = async (): Promise<void> => {
     isLoggedIn.value = response.authenticated;
     user.value = response.user || null;
   } catch (error) {
-    isLoggedIn.value = false;
-    user.value = null;
+    if (
+      error instanceof axios.AxiosError &&
+      error.response &&
+      error.response.status === 401
+    ) {
+      // Unauthorized, user is not logged in
+      isLoggedIn.value = false;
+      user.value = null;
+    } else {
+      throw error;
+    }
   } finally {
     isLoading.value = false;
     hasCheckedAuth.value = true;

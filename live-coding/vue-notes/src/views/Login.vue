@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { login } from "@/stores/auth";
+import { login, isLoggedIn } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
-import axios from "axios";
 import { useToast } from "vue-toastification";
+import axios from "axios";
 import { useForm, Field } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 
@@ -15,7 +15,7 @@ const inputError = ref("");
 
 const validationSchema = toTypedSchema(loginSchema);
 
-const { handleSubmit, errors, isSubmitting } = useForm({
+const { handleSubmit, isSubmitting, values, errors } = useForm({
   validationSchema,
   initialValues: {
     email: "",
@@ -24,50 +24,53 @@ const { handleSubmit, errors, isSubmitting } = useForm({
 });
 
 const onSubmit = handleSubmit(async (values) => {
-  inputError.value = "";
-
   try {
     await login(values.email, values.password);
     toast.success("Successfully logged in!");
+    router.push("/");
   } catch (error: unknown) {
     if (error instanceof axios.AxiosError) {
       if (error.response && error.response.status === 401) {
         inputError.value = "Invalid email or password.";
       } else if (error.response && error.response.status === 500) {
         toast.error(
-          "Had an issue contacting the server. Please contact support if the issue persists"
+          "Had an issue contacting the server. Please contact support if the issue persists."
         );
       } else {
-        toast.error("An unexpected error occurred. Please try again later");
+        toast.error("An unexpected error occurred. Please try again later.");
       }
     }
   }
-
-  router.push("/");
 });
 </script>
 
 <template>
   <h1>Login</h1>
 
-  <div>
+  <div v-if="isLoggedIn">
+    <p>You are logged in!</p>
+  </div>
+  <div v-else>
     <form @submit="onSubmit">
       <div>
-        <Field type="email" name="email" placeholder="you@example.com" />
-        <span class="input-error">{{ errors.email }}</span>
+        <Field name="email" type="email" placeholder="you@example.com" />
+        <span class="error-message">{{ errors.email }}</span>
       </div>
       <div>
-        <Field type="password" name="password" placeholder="Password" />
-        <span class="input-error">{{ errors.password }}</span>
+        <Field name="password" type="password" placeholder="Password" />
+        <span class="error-message">{{ errors.password }}</span>
       </div>
       <button type="submit" :disabled="isSubmitting">Login</button>
     </form>
-    <div class="input-error">{{ inputError }}</div>
+    <div v-if="inputError" class="error-message">{{ inputError }}</div>
   </div>
 </template>
 
 <style scoped>
-.input-error {
-  color: red;
+.error-message {
+  color: #e74c3c;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  min-height: 1.25rem;
 }
 </style>

@@ -4,28 +4,43 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import type { Note } from "@/types";
 import noteService from "@/services/notes";
+import { useToast } from "vue-toastification";
 
 const props = defineProps<{ id: string }>();
 
 const router = useRouter();
+const toast = useToast();
 const note = ref<Note | null>(null);
 const isLoading = ref(true);
 
 onMounted(async () => {
-  note.value = await noteService.getNote(props.id);
-  isLoading.value = false;
+  try {
+    note.value = await noteService.getNote(props.id);
+  } catch (error: unknown) {
+    toast.error("Error loading note.");
+  } finally {
+    isLoading.value = false;
+  }
 });
 
 const toggleImportant = async () => {
   if (!note.value) return;
   const { id, content, important } = note.value;
-  const result = await noteService.updateNote(id, content, !important);
-  note.value.important = result.important;
+  try {
+    await noteService.updateNote(id, content, !important);
+    note.value.important = !important;
+  } catch (error: unknown) {
+    toast.error("Failed to update note importance.");
+  }
 };
 
 const deleteNote = async () => {
-  await noteService.deleteNote(props.id);
-  router.push("/");
+  try {
+    await noteService.deleteNote(props.id);
+    router.push("/");
+  } catch (error: unknown) {
+    toast.error("Failed to delete note.");
+  }
 };
 </script>
 
