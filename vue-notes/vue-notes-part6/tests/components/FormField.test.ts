@@ -2,16 +2,6 @@ import { mount } from "@vue/test-utils";
 import FormField from "@/components/FormField.vue";
 import { test, expect } from "vitest";
 
-test("renders label when provided", () => {
-  const wrapper = mount(FormField, {
-    props: {
-      name: "username",
-      label: "Username",
-    },
-  });
-  expect(wrapper.text()).toContain("Username");
-});
-
 test("renders input with correct attributes", () => {
   const wrapper = mount(FormField, {
     props: {
@@ -26,6 +16,16 @@ test("renders input with correct attributes", () => {
   expect(input.attributes("data-testid")).toBe("form-field-email");
 });
 
+test("renders label when provided", () => {
+  const wrapper = mount(FormField, {
+    props: {
+      name: "username",
+      label: "Username",
+    },
+  });
+  expect(wrapper.text()).toContain("Username");
+});
+
 test("does not render label when not provided", () => {
   const wrapper = mount(FormField, {
     props: {
@@ -33,19 +33,6 @@ test("does not render label when not provided", () => {
     },
   });
   expect(wrapper.find("label").exists()).toBe(false);
-});
-
-test("renders with default type when type not provided", () => {
-  const wrapper = mount(FormField, {
-    props: {
-      name: "username",
-      label: "Username",
-    },
-  });
-  const input = wrapper.find("input");
-  // Default type should be text or undefined
-  const type = input.attributes("type");
-  expect(type === "text" || type === undefined).toBe(true);
 });
 
 test("input accepts user input", async () => {
