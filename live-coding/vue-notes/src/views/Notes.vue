@@ -8,6 +8,8 @@ import { noteSchema } from "@/schemas/note";
 import axios from "axios";
 import { useForm, Field } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const toast = useToast();
 
@@ -96,34 +98,39 @@ const deleteNote = async (noteToDelete: NoteType) => {
 </script>
 
 <template>
-  <div v-if="isLoading">Loading...</div>
-  <div v-else>
-    <form @submit="addNewNote">
-      <div>
-        <Field
-          name="newNote"
-          :rules="validationSchema"
-          type="text"
-          placeholder="Enter a new note"
-        />
-        <span class="error-message">{{ errors.newNote }}</span>
+  <div class="container m-auto max-w-2xl p-4">
+    <div v-if="isLoading">Loading...</div>
+    <div v-else>
+      <form @submit="addNewNote">
+        <div>
+          <Field name="newNote" :rules="validationSchema" v-slot="slotProps">
+            <Input
+              v-bind="slotProps.field"
+              type="text"
+              placeholder="Enter a new note"
+              :class="{ 'border-destructive': errors.newNote }"
+            />
+          </Field>
+          <span class="error-message">{{ errors.newNote }}</span>
+        </div>
+        <Button type="submit" :disabled="isSubmitting">Submit</Button>
+      </form>
+      <div class="flex justify-between items-center my-6">
+        <h2 class="text-2xl font-bold">Your Notes</h2>
+        <Button variant="outline" @click="hideImportant = !hideImportant">
+          {{ hideImportant ? "Show All" : "Hide Important" }}
+        </Button>
       </div>
-      <button type="submit" :disabled="isSubmitting">Submit</button>
-    </form>
-
-    <button @click="hideImportant = !hideImportant">
-      {{ hideImportant ? "Show All" : "Hide Important" }}
-    </button>
-
-    <ul class="space-y-3">
-      <Note
-        v-for="note in filteredNotes"
-        :key="note.id"
-        :note="note"
-        @delete="deleteNote"
-        @toggle-important="toggleImportant(note)"
-      />
-    </ul>
+      <ul class="space-y-3">
+        <Note
+          v-for="note in filteredNotes"
+          :key="note.id"
+          :note="note"
+          @delete="deleteNote"
+          @toggle-important="toggleImportant(note)"
+        />
+      </ul>
+    </div>
   </div>
 </template>
 
