@@ -2,7 +2,7 @@
 import { RouterView } from "vue-router";
 import { isLoggedIn, isLoading } from "@/stores/auth";
 import { StickyNote } from "lucide-vue-next";
-import NavButton from "./components/NavButton.vue";
+import NavButton from "@/components/NavButton.vue";
 </script>
 
 <template>
@@ -20,8 +20,7 @@ import NavButton from "./components/NavButton.vue";
       </nav>
     </div>
   </header>
-
-  <main>
+  <main class="py-6">
     <RouterView />
   </main>
 </template>

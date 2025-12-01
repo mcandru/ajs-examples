@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Note } from "@/types/index";
 import { RouterLink } from "vue-router";
-import { Item, ItemContent, ItemActions } from "@/components/ui/item";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button/Button.vue";
 import { Star, Trash2 } from "lucide-vue-next";
+import { Item, ItemContent, ItemActions } from "@/components/ui/item";
+
 defineProps<{
   note: Note;
 }>();
@@ -17,15 +18,10 @@ const emit = defineEmits<{
 <template>
   <li>
     <Item variant="outline">
-      <ItemContent
-        ><RouterLink :to="`notes/${note.id}`">{{
-          note.content
-        }}</RouterLink></ItemContent
-      >
+      <ItemContent>
+        <RouterLink :to="`notes/${note.id}`">{{ note.content }}</RouterLink>
+      </ItemContent>
       <ItemActions>
-        <Button variant="ghost" @click="emit('delete', note)"
-          ><Trash2
-        /></Button>
         <Button
           variant="ghost"
           class="action-button"
@@ -39,6 +35,9 @@ const emit = defineEmits<{
             "
           />
         </Button>
+        <Button variant="ghost" @click="emit('delete', note)"
+          ><Trash2 class="text-red-400"
+        /></Button>
       </ItemActions>
     </Item>
   </li>

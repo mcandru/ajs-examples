@@ -4,12 +4,15 @@ import type { Note as NoteType } from "@/types";
 import Note from "@/components/Note.vue";
 import noteService from "@/services/notes";
 import { useToast } from "vue-toastification";
-import { noteSchema } from "@/schemas/note";
 import axios from "axios";
-import { useForm, Field } from "vee-validate";
-import { toTypedSchema } from "@vee-validate/zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  Empty,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyHeader,
+} from "@/components/ui/empty";
 import NoteForm from "@/components/NoteForm.vue";
 
 const toast = useToast();
@@ -21,14 +24,6 @@ const filteredNotes = computed(() => {
 });
 const isLoading = ref(true);
 
-const validationSchema = toTypedSchema(noteSchema);
-
-const { handleSubmit, isSubmitting, errors, resetForm } = useForm({
-  initialValues: {
-    newNote: "",
-  },
-});
-
 onMounted(async () => {
   try {
     notes.value = await noteService.getAllNotes();
@@ -37,8 +32,6 @@ onMounted(async () => {
       const errorMessage =
         error.response?.data?.message || "Failed to load notes";
       toast.error(errorMessage);
-    } else {
-      toast.error("Failed to load notes");
     }
   } finally {
     isLoading.value = false;
@@ -49,7 +42,6 @@ const addNewNote = async (note: string) => {
   try {
     const response = await noteService.createNote(note);
     notes.value.push(response);
-    resetForm();
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const errorMessage =
@@ -100,7 +92,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
 
 <template>
   <div class="container m-auto max-w-2xl p-4">
-    <div v-if="isLoading">Loading...</div>
+    <div v-if="isLoading"><Spinner class="size-8" /></div>
     <div v-else>
       <NoteForm @submit="addNewNote" />
       <div class="flex justify-between items-center my-6">
@@ -109,7 +101,18 @@ const deleteNote = async (noteToDelete: NoteType) => {
           {{ hideImportant ? "Show All" : "Hide Important" }}
         </Button>
       </div>
-      <ul class="space-y-3">
+      <div v-if="notes.length < 1" class="text-muted-foreground">
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>No notes yet</EmptyTitle>
+            <EmptyDescription
+              >You haven't created any notes yet. Get started by creating your
+              first note</EmptyDescription
+            >
+          </EmptyHeader>
+        </Empty>
+      </div>
+      <ul v-else class="space-y-3">
         <Note
           v-for="note in filteredNotes"
           :key="note.id"
@@ -121,21 +124,3 @@ const deleteNote = async (noteToDelete: NoteType) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.error-message {
-  color: red;
-  margin-top: 4px;
-  margin-bottom: 8px;
-  font-size: 0.8em;
-}
-
-.input-error {
-  border-color: red;
-  outline-color: red;
-}
-
-.input-error:focus {
-  outline-color: red;
-}
-</style>

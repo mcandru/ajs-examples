@@ -1,45 +1,51 @@
 <script setup lang="ts">
+import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { noteSchema } from "@/schemas/note";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm, Field } from "vee-validate";
-import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const emit = defineEmits<{
-  submit: [note: string];
-}>();
+const emit = defineEmits<{ submit: [note: string] }>();
 
 const validationSchema = toTypedSchema(noteSchema);
 
 const { handleSubmit, isSubmitting, errors, resetForm } = useForm({
+  validationSchema,
   initialValues: {
-    newNote: "",
+    content: "",
   },
 });
 
-const onSubmit = handleSubmit((values) => {
-  emit("submit", values.newNote);
+const onSubmit = handleSubmit(async (values) => {
+  emit("submit", values.content);
   resetForm();
 });
 </script>
 
 <template>
   <Card>
+    <CardHeader>
+      <CardTitle>Add New Note</CardTitle>
+    </CardHeader>
     <CardContent>
       <form @submit="onSubmit" class="space-y-4">
         <div>
-          <Field name="newNote" :rules="validationSchema" v-slot="slotProps">
+          <Field
+            name="content"
+            :validateOnModelUpdate="false"
+            v-slot="{ field }"
+          >
             <Input
-              v-bind="slotProps.field"
+              v-bind="field"
               type="text"
               placeholder="Enter a new note"
-              :class="{ 'border-destructive': errors.newNote }"
+              :class="{ 'border-destructive': errors.content }"
             />
           </Field>
-          <span class="error-message">{{ errors.newNote }}</span>
+          <span class="text-sm text-destructive">{{ errors.content }}</span>
         </div>
-        <Button type="submit" :disabled="isSubmitting">Submit</Button>
+        <Button type="submit" :disabled="isSubmitting">Add Note</Button>
       </form>
     </CardContent>
   </Card>

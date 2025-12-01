@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-
-defineProps<{ to: string }>();
+const props = defineProps<{
+  to: string;
+}>();
 </script>
 
 <template>
-  <RouterLink :to="to" v-slot="{ isActive }"
-    ><Button variant="ghost" :class="{ 'bg-accent': isActive }"><slot /></Button
-  ></RouterLink>
+  <RouterLink :to="props.to" v-slot="{ navigate, isActive }">
+    <Button variant="ghost" :class="{ 'bg-accent': isActive }" @click="navigate"
+      ><slot
+    /></Button>
+  </RouterLink>
 </template>

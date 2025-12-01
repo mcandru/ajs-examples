@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import type { AlertVariants } from "."
 import { cn } from "@/lib/utils"
-import { alertVariants } from "."
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
-  variant?: AlertVariants["variant"]
 }>()
 </script>
 
 <template>
   <div
-    data-slot="alert"
-    :class="cn(alertVariants({ variant }), props.class)"
-    role="alert"
+    data-slot="field-group"
+    :class="cn(
+      'group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4',
+      props.class,
+    )"
   >
     <slot />
   </div>
