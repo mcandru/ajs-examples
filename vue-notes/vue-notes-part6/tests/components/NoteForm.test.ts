@@ -30,17 +30,15 @@ test("input accepts text input", async () => {
   expect((input.element as HTMLInputElement).value).toBe("Test note content");
 });
 
-test("submit button is initially enabled", () => {
+test("emits submit event with note content", async () => {
   const wrapper = mount(NoteForm);
+  const input = wrapper.find('[data-testid="note-content-input"]');
   const button = wrapper.find('[data-testid="create-note-button"]');
 
-  expect(button.attributes("disabled")).toBeUndefined();
-});
+  await input.setValue("New note from test");
+  await button.trigger("click");
 
-test("form element exists and can be submitted", () => {
-  const wrapper = mount(NoteForm);
-  const form = wrapper.find("form");
-
-  expect(form.exists()).toBe(true);
-  expect(form.attributes("class")).toContain("space-y-4");
+  expect(wrapper.emitted()).toHaveProperty("submit");
+  const submitEvents = wrapper.emitted("submit");
+  expect(submitEvents![0]).toEqual(["New note from test"]);
 });

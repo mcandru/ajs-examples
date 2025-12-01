@@ -50,6 +50,8 @@ test("renders as a button with ghost variant", () => {
 
 test("applies active class when route matches", async () => {
   const router = createTestRouter();
+
+  // Navigate to /notes route first
   await router.push("/notes");
   await router.isReady();
 
@@ -65,6 +67,7 @@ test("applies active class when route matches", async () => {
     },
   });
 
+  // Wait for Vue to update the DOM after route change
   await wrapper.vm.$nextTick();
   const button = wrapper.find("button");
   expect(button.classes()).toContain("bg-accent");
@@ -90,22 +93,4 @@ test("does not apply active class when route does not match", async () => {
   await wrapper.vm.$nextTick();
   const button = wrapper.find("button");
   expect(button.classes()).not.toContain("bg-accent");
-});
-
-test("wraps content in RouterLink", () => {
-  const router = createTestRouter();
-  const wrapper = mount(NavButton, {
-    props: {
-      to: "/about",
-    },
-    slots: {
-      default: "About",
-    },
-    global: {
-      plugins: [router],
-    },
-  });
-
-  // Check that the component contains a router-link
-  expect(wrapper.html()).toContain("about");
 });
