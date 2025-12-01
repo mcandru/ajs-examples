@@ -115,7 +115,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
       {{ hideImportant ? "Show All" : "Hide Important" }}
     </button>
 
-    <ul>
+    <ul class="space-y-3">
       <Note
         v-for="note in filteredNotes"
         :key="note.id"
