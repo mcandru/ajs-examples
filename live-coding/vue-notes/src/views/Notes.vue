@@ -10,6 +10,7 @@ import { useForm, Field } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import NoteForm from "@/components/NoteForm.vue";
 
 const toast = useToast();
 
@@ -44,9 +45,9 @@ onMounted(async () => {
   }
 });
 
-const addNewNote = handleSubmit(async (values) => {
+const addNewNote = async (note: string) => {
   try {
-    const response = await noteService.createNote(values.newNote);
+    const response = await noteService.createNote(note);
     notes.value.push(response);
     resetForm();
   } catch (error: unknown) {
@@ -58,7 +59,7 @@ const addNewNote = handleSubmit(async (values) => {
       toast.error("Failed to create note");
     }
   }
-});
+};
 
 const toggleImportant = async (note: NoteType) => {
   try {
@@ -101,20 +102,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
   <div class="container m-auto max-w-2xl p-4">
     <div v-if="isLoading">Loading...</div>
     <div v-else>
-      <form @submit="addNewNote" class="space-y-4">
-        <div>
-          <Field name="newNote" :rules="validationSchema" v-slot="slotProps">
-            <Input
-              v-bind="slotProps.field"
-              type="text"
-              placeholder="Enter a new note"
-              :class="{ 'border-destructive': errors.newNote }"
-            />
-          </Field>
-          <span class="error-message">{{ errors.newNote }}</span>
-        </div>
-        <Button type="submit" :disabled="isSubmitting">Submit</Button>
-      </form>
+      <NoteForm @submit="addNewNote" />
       <div class="flex justify-between items-center my-6">
         <h2 class="text-2xl font-bold">Your Notes</h2>
         <Button variant="outline" @click="hideImportant = !hideImportant">

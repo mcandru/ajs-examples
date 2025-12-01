@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+import { RouterView } from "vue-router";
 import { isLoggedIn, isLoading } from "@/stores/auth";
 import { StickyNote } from "lucide-vue-next";
-import { Button } from "@/components/ui/button";
 import NavButton from "./components/NavButton.vue";
 </script>
 
