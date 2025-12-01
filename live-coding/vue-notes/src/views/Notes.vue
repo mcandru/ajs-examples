@@ -101,7 +101,7 @@ const deleteNote = async (noteToDelete: NoteType) => {
   <div class="container m-auto max-w-2xl p-4">
     <div v-if="isLoading">Loading...</div>
     <div v-else>
-      <form @submit="addNewNote">
+      <form @submit="addNewNote" class="space-y-4">
         <div>
           <Field name="newNote" :rules="validationSchema" v-slot="slotProps">
             <Input

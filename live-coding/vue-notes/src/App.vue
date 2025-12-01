@@ -1,30 +1,28 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
 import { isLoggedIn, isLoading } from "@/stores/auth";
+import { StickyNote } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
+import NavButton from "./components/NavButton.vue";
 </script>
 
 <template>
-  <h1>Notes</h1>
+  <header class="border-b">
+    <div class="container flex items-center justify-between h-16 px-4 m-auto">
+      <div class="flex items-center gap-2">
+        <StickyNote />
+        <h1 class="text-2xl font-bold">Notes</h1>
+      </div>
+      <nav v-if="!isLoading">
+        <NavButton v-if="isLoggedIn" to="/">Notes</NavButton>
+        <NavButton v-if="!isLoggedIn" to="/login">Login</NavButton>
+        <NavButton v-if="!isLoggedIn" to="/register">Register</NavButton>
+        <NavButton v-if="isLoggedIn" to="/profile">Profile</NavButton>
+      </nav>
+    </div>
+  </header>
 
-  <nav v-if="!isLoading">
-    <RouterLink to="/" v-if="isLoggedIn">Notes</RouterLink>
-    <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
-    <RouterLink v-if="!isLoggedIn" to="/register">Register</RouterLink>
-    <RouterLink v-if="isLoggedIn" to="/profile">Profile</RouterLink>
-  </nav>
-
-  <RouterView />
+  <main>
+    <RouterView />
+  </main>
 </template>
-
-<style scoped>
-nav {
-  margin-bottom: 20px;
-}
-nav a {
-  margin-right: 10px;
-}
-
-.router-link-exact-active {
-  font-weight: bold;
-}
-</style>
