@@ -5,8 +5,18 @@ import { login, isLoggedIn } from "@/stores/auth";
 import { loginSchema } from "@/schemas/auth";
 import { useToast } from "vue-toastification";
 import axios from "axios";
-import { useForm, Field } from "vee-validate";
+import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import FormField from "@/components/FormField.vue";
+import { Button } from "@/components/ui/button";
 
 const router = useRouter();
 const toast = useToast();
@@ -45,24 +55,46 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <h1>Login</h1>
-
-  <div v-if="isLoggedIn">
-    <p>You are logged in!</p>
-  </div>
-  <div v-else>
-    <form @submit="onSubmit">
-      <div>
-        <Field name="email" type="email" placeholder="you@example.com" />
-        <span class="error-message">{{ errors.email }}</span>
+  <div class="flex items-center justify-center p-4">
+    <Card class="w-full max-wd-md">
+      <CardHeader>
+        <CardTitle>Login</CardTitle>
+        <CardDescription>Welcome back!</CardDescription>
+      </CardHeader>
+      <CardContent v-if="isLoggedIn">
+        <p>You are logged in!</p>
+      </CardContent>
+      <div v-else>
+        <form @submit="onSubmit">
+          <CardContent>
+            <FormField
+              name="email"
+              type="email"
+              label="Email"
+              placeholder="you@example.com"
+            />
+            <FormField
+              name="password"
+              type="password"
+              label="Password"
+              placeholder="password"
+            />
+            <div v-if="inputError" class="error-message">{{ inputError }}</div>
+          </CardContent>
+          <CardFooter class="flex flex-col gap-2">
+            <Button type="submit" class="w-full" :disabled="isSubmitting"
+              >Login</Button
+            >
+            <p class="text-center text-muted-foreground">
+              Don't have an account?
+              <RouterLink to="/register" class="text-primary hover:underline"
+                >Register</RouterLink
+              >
+            </p>
+          </CardFooter>
+        </form>
       </div>
-      <div>
-        <Field name="password" type="password" placeholder="Password" />
-        <span class="error-message">{{ errors.password }}</span>
-      </div>
-      <button type="submit" :disabled="isSubmitting">Login</button>
-    </form>
-    <div v-if="inputError" class="error-message">{{ inputError }}</div>
+    </Card>
   </div>
 </template>
 
