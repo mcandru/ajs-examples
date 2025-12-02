@@ -39,12 +39,7 @@ const handleLogout = async () => {
             <p class="text-muted-foreground">Email</p>
             <p>{{ user.email }}</p>
           </div>
-          <Button
-            variant="destructive"
-            @click="handleLogout"
-            data-testid="logout-button"
-            >Logout</Button
-          >
+          <Button variant="destructive" @click="handleLogout">Logout</Button>
         </CardContent>
       </Card>
     </div>

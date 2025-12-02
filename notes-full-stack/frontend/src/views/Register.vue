@@ -78,11 +78,7 @@ const onSubmit = handleSubmit(async (values) => {
           />
         </CardContent>
         <CardFooter class="flex flex-col gap-2">
-          <Button
-            type="submit"
-            class="w-full"
-            data-testid="register-submit"
-            :disabled="isSubmitting"
+          <Button type="submit" class="w-full" :disabled="isSubmitting"
             >Register</Button
           >
           <p class="text-center text-muted-foreground">

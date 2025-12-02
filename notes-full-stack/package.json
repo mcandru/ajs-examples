@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "install:all": "cd frontend && npm install && cd ../backend && npm install",
     "start:backend": "cd backend && npm run dev",
     "start:frontend": "cd frontend && npm run dev",
     "build:ui": "cd frontend && npm run build && rm -rf ../backend/dist && cp -r dist ../backend/dist",
