@@ -18,7 +18,7 @@ defineProps<{
       :validate-on-model-update="false"
       v-slot="{ field, errorMessage }"
     >
-      <Label v-if="label" for="name">{{ label }}</Label>
+      <Label v-if="label" :for="name">{{ label }}</Label>
       <Input
         v-bind="field"
         :type="type"
