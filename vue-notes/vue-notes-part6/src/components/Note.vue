@@ -1,0 +1,48 @@
+<script setup lang="ts">
+import type { Note } from "@/types/index";
+import { RouterLink } from "vue-router";
+import Button from "@/components/ui/button/Button.vue";
+import { Star, Trash2 } from "lucide-vue-next";
+import { Item, ItemContent, ItemActions } from "@/components/ui/item";
+
+defineProps<{
+  note: Note;
+}>();
+
+const emit = defineEmits<{
+  delete: [note: Note];
+  "toggle-important": [];
+}>();
+</script>
+
+<template>
+  <li>
+    <Item variant="outline">
+      <ItemContent>
+        <RouterLink :to="`notes/${note.id}`">{{ note.content }}</RouterLink>
+      </ItemContent>
+      <ItemActions>
+        <Button
+          variant="ghost"
+          class="action-button"
+          data-testid="toggle-important-button"
+          @click="emit('toggle-important')"
+        >
+          <Star
+            :class="
+              note.important
+                ? 'fill-yellow-400 text-yellow-400'
+                : 'text-gray-400'
+            "
+          />
+        </Button>
+        <Button
+          variant="ghost"
+          @click="emit('delete', note)"
+          data-testid="delete-note-button"
+          ><Trash2 class="text-red-400"
+        /></Button>
+      </ItemActions>
+    </Item>
+  </li>
+</template>
