@@ -22,8 +22,8 @@ test("should increment count when increment button is clicked", async () => {
   expect(true).toBe(false);
 });
 
-test("should decrement count when decrement button is clicked", async () => 
-  const wrapper = mount(Counter);{
+test("should decrement count when decrement button is clicked", async () => {
+  const wrapper = mount(Counter);
   // TODO: Similar to the increment test, but test the decrement button
   // The count should go from 0 to -1
   expect(true).toBe(false);
