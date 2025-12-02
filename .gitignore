@@ -142,3 +142,7 @@ vite.config.ts.timestamp-*
 
 .vscode
 .DS_Store
+
+# Playwright test artifacts
+playwright-report/
+test-results/
