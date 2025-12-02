@@ -8,6 +8,7 @@
     "start": "node index.js",
     "dev": "node --env-file=.env --watch index.js",
     "seed": "node --env-file=.env utils/seed.js",
+    "seed:test": "cross-env MONGODB_URI=mongodb://localhost:27017/test-db node utils/seed.js",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "test": "cross-env NODE_ENV=test MONGODB_URI=mongodb://localhost:27017/test-db SESSION_SECRET=test-secret jest --runInBand",
