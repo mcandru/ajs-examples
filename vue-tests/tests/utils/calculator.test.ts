@@ -1,10 +1,6 @@
 import { test, expect } from "vitest";
 import { add, subtract, multiply, divide } from "@/utils/calculator";
 
-// EXERCISE 1: Unit Testing Pure Functions
-// These are simple unit tests for pure functions (functions that always return
-// the same output for the same input and have no side effects).
-
 test("add: should add two numbers correctly", () => {
   // TODO: Write an assertion to check that add(2, 3) equals 5
   expect(true).toBe(false);
