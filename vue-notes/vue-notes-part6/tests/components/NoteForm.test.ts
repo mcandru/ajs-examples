@@ -1,6 +1,6 @@
-import { mount } from "@vue/test-utils";
+import { mount, flushPromises } from "@vue/test-utils";
 import NoteForm from "@/components/NoteForm.vue";
-import { test, expect } from "vitest";
+import { test, expect, vi } from "vitest";
 
 test("renders form with title", () => {
   const wrapper = mount(NoteForm);
@@ -33,12 +33,18 @@ test("input accepts text input", async () => {
 test("emits submit event with note content", async () => {
   const wrapper = mount(NoteForm);
   const input = wrapper.find('[data-testid="note-content-input"]');
-  const button = wrapper.find('[data-testid="create-note-button"]');
+  const form = wrapper.find("form");
 
   await input.setValue("New note from test");
-  await button.trigger("click");
+  await form.trigger("submit.prevent");
 
-  expect(wrapper.emitted()).toHaveProperty("submit");
+  await flushPromises(); // This waits for all pending promises
+  await flushPromises(); // This waits for all pending promises
+
+  await vi.waitFor(() => {
+    expect(wrapper.emitted("submit")).toBeTruthy();
+  });
+
   const submitEvents = wrapper.emitted("submit");
   expect(submitEvents![0]).toEqual(["New note from test"]);
 });
