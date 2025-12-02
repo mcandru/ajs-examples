@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import Counter from './components/Counter.vue';
-import TodoList from './components/TodoList.vue';
+import Counter from "./components/Counter.vue";
+import TodoList from "./components/TodoList.vue";
 </script>
 
 <template>
   <div id="app">
-    <h1>Vue Testing Practice</h1>
+    <h1>Vue Tests</h1>
     <div class="components">
       <Counter />
       <TodoList />
@@ -21,7 +21,7 @@ import TodoList from './components/TodoList.vue';
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
   padding: 20px;
   background: #f5f5f5;
