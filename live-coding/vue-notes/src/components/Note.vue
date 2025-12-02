@@ -35,7 +35,10 @@ const emit = defineEmits<{
             "
           />
         </Button>
-        <Button variant="ghost" @click="emit('delete', note)"
+        <Button
+          variant="ghost"
+          @click="emit('delete', note)"
+          data-testid="delete-note-button"
           ><Trash2 class="text-red-400"
         /></Button>
       </ItemActions>
