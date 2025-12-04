@@ -1,15 +1,15 @@
 import type { Note } from "@/types";
-import axios from "axios";
+import api from "@/config/api";
 
 const BASE_URL = "/api/notes";
 
 const getAllNotes = async (): Promise<Note[]> => {
-  const response = await axios.get(`${BASE_URL}`);
+  const response = await api.get(`${BASE_URL}/`);
   return response.data;
 };
 
 const getNote = async (noteId: string): Promise<Note> => {
-  const response = await axios.get(`${BASE_URL}/${noteId}`);
+  const response = await api.get(`${BASE_URL}/${noteId}`);
   return response.data;
 };
 
@@ -17,7 +17,7 @@ const createNote = async (
   content: string,
   important = false
 ): Promise<Note> => {
-  const response = await axios.post(`${BASE_URL}`, { content, important });
+  const response = await api.post(`${BASE_URL}/`, { content, important });
   return response.data;
 };
 
@@ -26,7 +26,7 @@ const updateNote = async (
   content: string,
   important: boolean
 ): Promise<Note> => {
-  const response = await axios.put(`${BASE_URL}/${noteId}`, {
+  const response = await api.put(`${BASE_URL}/${noteId}`, {
     content,
     important,
   });
@@ -34,7 +34,7 @@ const updateNote = async (
 };
 
 const deleteNote = async (id: string): Promise<void> => {
-  await axios.delete(`${BASE_URL}/${id}`);
+  await api.delete(`${BASE_URL}/${id}`);
 };
 
 export default { getAllNotes, getNote, createNote, updateNote, deleteNote };

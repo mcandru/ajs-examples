@@ -9,6 +9,7 @@ import notesRouter from "./controllers/notes.js";
 import authRouter from "./controllers/auth.js";
 import adminRouter from "./controllers/admin.js";
 import helmet from "helmet";
+import cors from "cors";
 
 const createApp = () => {
   const app = express();
@@ -18,6 +19,13 @@ const createApp = () => {
   // Trust first proxy (required for Render to properly handle HTTPS)
   // https://expressjs.com/en/guide/behind-proxies.html
   app.set("trust proxy", 1);
+
+  app.use(
+    cors({
+      origin: process.env.CLIENT_URL,
+      credentials: true,
+    })
+  );
 
   // Middleware to parse JSON from request bodies.
   app.use(express.json());

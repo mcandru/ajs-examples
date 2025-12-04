@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { User } from "@/types";
+import api from "@/config/api";
 
 // TypeScript is just for checking at compile time. If the server returns
 // different data, you'll get a runtime error when you try to use it.
@@ -20,7 +21,7 @@ const login = async (
   email: string,
   password: string
 ): Promise<LoginResponse> => {
-  const response = await axios.post(`${BASE_URL}/login`, {
+  const response = await api.post(`${BASE_URL}/login`, {
     email,
     password,
   });
@@ -40,7 +41,7 @@ const register = async (
 
 const getProfile = async (): Promise<UserResponse> => {
   try {
-    const response = await axios.get(`${BASE_URL}/me`);
+    const response = await api.get(`${BASE_URL}/me`);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
@@ -51,7 +52,7 @@ const getProfile = async (): Promise<UserResponse> => {
 };
 
 const logout = async (): Promise<void> => {
-  await axios.post(`${BASE_URL}/logout`);
+  await api.post(`${BASE_URL}/logout`);
 };
 
 export default { login, register, getProfile, logout };

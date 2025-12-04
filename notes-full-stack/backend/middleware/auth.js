@@ -15,9 +15,9 @@ export const sessionMiddleware = () =>
     }),
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production", // true in production with HTTPS
-      sameSite: "strict",
+      sameSite: "lax",
     },
   });
 
