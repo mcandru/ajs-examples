@@ -22,8 +22,8 @@ const createApp = () => {
 
   app.use(
     cors({
-      origin: process.env.CLIENT_URL,
-      credentials: true,
+      origin: process.env.CLIENT_URL, // Frontend URL that is allowed to access the backend
+      credentials: true, // Allow cookies to be sent with requests
     })
   );
 
