@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://notes-full-stack.onrender.com/api/:path*"
+    }
+  ]
+}
