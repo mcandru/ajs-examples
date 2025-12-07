@@ -22,11 +22,11 @@ const createApp = () => {
   // Middleware to parse JSON from request bodies.
   app.use(express.json());
 
-  // Serving static files for serving frontend in production
-  app.use(express.static("dist"));
-
   // Security middleware
   app.use(helmet());
+
+  // Serving static files for serving frontend in production
+  app.use(express.static("dist"));
 
   // Session middleware
   app.use(sessionMiddleware());
