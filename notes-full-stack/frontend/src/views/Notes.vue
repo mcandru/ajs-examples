@@ -1,0 +1,126 @@
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import type { Note as NoteType } from "@/types";
+import Note from "@/components/Note.vue";
+import noteService from "@/services/notes";
+import { useToast } from "vue-toastification";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  Empty,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyHeader,
+} from "@/components/ui/empty";
+import NoteForm from "@/components/NoteForm.vue";
+
+const toast = useToast();
+
+const hideImportant = ref(false);
+const notes = ref<NoteType[]>([]);
+const filteredNotes = computed(() => {
+  return notes.value.filter((note) => !note.important || !hideImportant.value);
+});
+const isLoading = ref(true);
+
+onMounted(async () => {
+  try {
+    notes.value = await noteService.getAllNotes();
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to load notes";
+      toast.error(errorMessage);
+    }
+  } finally {
+    isLoading.value = false;
+  }
+});
+
+const addNewNote = async (note: string) => {
+  try {
+    const response = await noteService.createNote(note);
+    notes.value.push(response);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to create note";
+      toast.error(errorMessage);
+    } else {
+      toast.error("Failed to create note");
+    }
+  }
+};
+
+const toggleImportant = async (note: NoteType) => {
+  try {
+    const result = await noteService.updateNote(
+      note.id,
+      note.content,
+      !note.important
+    );
+    note.important = result.important;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to update note";
+      toast.error(errorMessage);
+    } else {
+      const errorMessage = "Failed to update note";
+      toast.error(errorMessage);
+    }
+  }
+};
+
+const deleteNote = async (noteToDelete: NoteType) => {
+  try {
+    await noteService.deleteNote(noteToDelete.id);
+    notes.value = notes.value.filter((note) => note !== noteToDelete);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete note";
+      toast.error(errorMessage);
+    } else {
+      const errorMessage = "Failed to delete note";
+      toast.error(errorMessage);
+    }
+  }
+};
+</script>
+
+<template>
+  <div class="container m-auto max-w-2xl p-4">
+    <div v-if="isLoading"><Spinner class="size-8" /></div>
+    <div v-else>
+      <NoteForm @submit="addNewNote" />
+      <div class="flex justify-between items-center my-6">
+        <h2 class="text-2xl font-bold">Your Notes</h2>
+        <Button variant="outline" @click="hideImportant = !hideImportant">
+          {{ hideImportant ? "Show All" : "Hide Important" }}
+        </Button>
+      </div>
+      <div v-if="notes.length < 1" class="text-muted-foreground">
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>No notes yet</EmptyTitle>
+            <EmptyDescription
+              >You haven't created any notes yet. Get started by creating your
+              first note</EmptyDescription
+            >
+          </EmptyHeader>
+        </Empty>
+      </div>
+      <ul v-else class="space-y-3">
+        <Note
+          v-for="note in filteredNotes"
+          :key="note.id"
+          :note="note"
+          @delete="deleteNote"
+          @toggle-important="toggleImportant(note)"
+        />
+      </ul>
+    </div>
+  </div>
+</template>

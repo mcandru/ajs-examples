@@ -32,15 +32,10 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "@playwright/test": "^1.57.0",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.1",
-=======
-    "@types/node": "^24.10.1",
-    "@vitejs/plugin-vue": "^6.0.1",
     "@vitest/coverage-v8": "^4.0.14",
->>>>>>> master
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
     "jsdom": "^27.2.0",

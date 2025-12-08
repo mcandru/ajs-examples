@@ -1,0 +1,25 @@
+{
+  "name": "notes-fullstack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "cd frontend && npm install --production=false && cd ../backend && npm install",
+    "start:backend": "cd backend && npm run dev",
+    "start:frontend": "cd frontend && npm run dev",
+    "build:ui": "cd frontend && npm run build && rm -rf ../backend/dist && cp -r dist ../backend/dist",
+    "start": "cd backend && npm start",
+    "dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "seed:test": "cd backend && npm run seed:test",
+    "start:test": "npm run seed:test && concurrently \"cd backend && npm run start:test\" \"cd frontend && npm run dev\"",
+    "test:e2e": "playwright test --project chromium"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^24.10.1",
+    "concurrently": "^9.2.1"
+  }
+}
