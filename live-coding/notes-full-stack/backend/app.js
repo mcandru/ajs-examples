@@ -25,6 +25,9 @@ const createApp = () => {
   // Security middleware
   app.use(helmet());
 
+  // Serving static files for serving frontend in production
+  app.use(express.static("dist"));
+
   // Session middleware
   app.use(sessionMiddleware());
 
