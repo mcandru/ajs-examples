@@ -16,7 +16,12 @@ import NavButton from "@/components/NavButton.vue";
         <NavButton v-if="isLoggedIn" to="/">Notes</NavButton>
         <NavButton v-if="!isLoggedIn" to="/login">Login</NavButton>
         <NavButton v-if="!isLoggedIn" to="/register">Register</NavButton>
-        <NavButton v-if="isLoggedIn" to="/profile">Profile</NavButton>
+        <NavButton
+          v-if="isLoggedIn"
+          to="/profile"
+          data-testid="nav-profile-link"
+          >Profile</NavButton
+        >
       </nav>
     </div>
   </header>
